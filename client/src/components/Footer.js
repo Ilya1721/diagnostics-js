@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = (props) => {
   return (
     <nav className="navbar mt-5 fixed-bottom navbar-expand-sm navbar-dark bg-dark">
-      <a className="navbar-brand" href="#">
+      <Link className="navbar-brand" to="/">
         КН-17-2
-      </a>
+      </Link>
       <button
         className="navbar-toggler"
         type="button"

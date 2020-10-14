@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 class Doctors extends React.Component {
   render() {
@@ -11,7 +10,7 @@ class Doctors extends React.Component {
             <div className="input-group">
               <select name="category" className="form-control w-25">
                 <option value="employees.last_name">Прізвище</option>
-                <option value="employees.first_name">Ім`я</option>
+                <option value="employees.first_name">Ім'я</option>
                 <option value="employees.father_name">По-батькові</option>
                 <option value="jobs.name">Посада</option>
                 <option value="departments.name">Відділення</option>
@@ -35,7 +34,10 @@ class Doctors extends React.Component {
         <div className="card mt-3">
           <div className="row font-weight-bold">
             <div className="col-2 text-left">
-              <img src="https://diagnostics-bucket.s3.eu-central-1.amazonaws.com/doctors/doctor.png" />
+              <img
+                alt=""
+                src="https://diagnostics-bucket.s3.eu-central-1.amazonaws.com/doctors/doctor.png"
+              />
             </div>
             <div className="col-8 text-left">
               <div className="card-body text-left">

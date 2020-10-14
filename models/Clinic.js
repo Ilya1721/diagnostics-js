@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const City = require("./City");
+const ClinicType = require("./ClinicType");
 
 const ClinicSchema = new Schema({
   city: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref: City,
   },
   name: {
     type: String,
@@ -22,9 +25,10 @@ const ClinicSchema = new Schema({
     type: String,
     required: true,
   },
-  type: {
-    type: String,
+  clinicType: {
+    type: Schema.Types.ObjectId,
     required: true,
+    ref: ClinicType,
   },
   schedule: {
     type: String,
@@ -36,4 +40,4 @@ const ClinicSchema = new Schema({
   },
 });
 
-module.exports = Clinic = mongoose.model("clinic", ClinicSchema);
+module.exports = Clinic = mongoose.model("Clinic", ClinicSchema, "clinics");

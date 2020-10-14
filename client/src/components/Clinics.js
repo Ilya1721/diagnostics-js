@@ -11,7 +11,7 @@ class Clinics extends React.Component {
   }
 
   componentDidMount() {
-    axios.get("/clinics").then((res) =>
+    axios.get("/api/clinics").then((res) =>
       this.setState({
         clinics: res.data,
       })
@@ -46,20 +46,20 @@ class Clinics extends React.Component {
             </div>
           </form>
         </div>
-        {this.state.clinics > 0 &&
+        {this.state.clinics.length > 0 &&
           this.state.clinics.map((clinic) => (
-            <div className="card mt-3">
+            <div key={clinic._id} className="card mt-3">
               <div className="row mt-2">
                 <div className="col-2">
                   <img
                     src={clinic.image}
-                    alt="No-Image"
+                    alt=""
                     style={{ width: "125px", height: "150px" }}
                   />
                 </div>
                 <div className="col-6">
                   <h4>{clinic.name}</h4>
-                  <p>{clinic.type}</p>
+                  <p>{clinic.clinicType.name}</p>
                 </div>
                 <div className="col-2">
                   <p>

@@ -3,10 +3,6 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
-const clinics = require("./routes/api/clinics");
-
-const app = express();
-
 //Load config
 dotenv.config({
   path: "./config/config.env",
@@ -14,6 +10,11 @@ dotenv.config({
 
 connectDB();
 
+//Require api
+const clinics = require("./routes/api/clinics");
+
+//Initialize app
+const app = express();
 //Body Parser Middleware
 app.use(express.json());
 //Routes

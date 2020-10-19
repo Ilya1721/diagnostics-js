@@ -1,6 +1,23 @@
 import React from "react";
+import axios from "axios";
 
 class Doctors extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      doctors: [],
+    };
+  }
+
+  componentDidMount() {
+    axios.get("/api/employees").then((res) =>
+      this.setState({
+        doctors: res.data,
+      })
+    );
+  }
+
   render() {
     return (
       <div className="container">
@@ -31,34 +48,28 @@ class Doctors extends React.Component {
             </div>
           </form>
         </div>
-        <div className="card mt-3">
-          <div className="row font-weight-bold">
-            <div className="col-2 text-left">
-              <img
-                alt=""
-                src="https://diagnostics-bucket.s3.eu-central-1.amazonaws.com/doctors/doctor.png"
-              />
-            </div>
-            <div className="col-8 text-left">
-              <div className="card-body text-left">
-                Вишинський Ілля Олександрович
-                <p className="font-weight-normal">
-                  Автор численних наукових праць, а також науково-популярних
-                  статей і книг, найвідоміша з яких — «Здоров'я дитини і
-                  здоровий глузд її родичів» — витримала понад 15 перевидань.
-                </p>
+        {this.state.doctors.length > 0 &&
+          this.state.doctors.map((doctor) => (
+            <div className="card mt-3">
+              <div className="row font-weight-bold">
+                <div className="col-2 text-left">
+                  <img alt="" src={doctor.image} />
+                </div>
+                <div className="col-8 text-left">
+                  <div className="card-body text-left">
+                    {doctor.lastName} {doctor.firstName} {doctor.fatherName}
+                    <p className="font-weight-normal">{doctor.about}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="row my-3 font-weight-bold">
+                <div className="col text-center">{doctor.job.name}</div>
+                <div className="col text-center">{doctor.clinic.name}</div>
+                <div className="col text-center">{doctor.department.name}</div>
+                <div className="col">{doctor.phoneNumber}</div>
               </div>
             </div>
-          </div>
-          <div className="row my-3 font-weight-bold">
-            <div className="col text-center">Лікар</div>
-            <div className="col text-center">
-              Хмельницька міська дитяча лікарня
-            </div>
-            <div className="col text-center">Терапевтичний відділ</div>
-            <div className="col">0936521458</div>
-          </div>
-        </div>
+          ))}
       </div>
     );
   }

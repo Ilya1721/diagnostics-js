@@ -1,24 +1,16 @@
 import React from "react";
-import axios from "axios";
+import { connect } from "react-redux";
+import { getClinics } from "../actions/clinic/clinicActions";
+import PropTypes from "prop-types";
 
 class Clinics extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      clinics: [],
-    };
-  }
-
   componentDidMount() {
-    axios.get("/api/clinics").then((res) =>
-      this.setState({
-        clinics: res.data,
-      })
-    );
+    this.props.getClinics();
   }
 
   render() {
+    console.log(this.props);
+    const { clinics, loading } = this.props.clinic;
     return (
       <div className="container mt-3">
         <h3 className="text-center">Клініки</h3>
@@ -46,8 +38,8 @@ class Clinics extends React.Component {
             </div>
           </form>
         </div>
-        {this.state.clinics.length > 0 &&
-          this.state.clinics.map((clinic) => (
+        {!loading &&
+          clinics.map((clinic) => (
             <div key={clinic._id} className="card mt-3">
               <div className="row mt-2">
                 <div className="col-2">
@@ -79,4 +71,13 @@ class Clinics extends React.Component {
   }
 }
 
-export default Clinics;
+Clinics.propTypes = {
+  getClinics: PropTypes.func.isRequired,
+  clinic: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  clinic: state.clinic,
+});
+
+export default connect(mapStateToProps, { getClinics })(Clinics);

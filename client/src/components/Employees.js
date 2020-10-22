@@ -1,29 +1,21 @@
 import React from "react";
-import axios from "axios";
+import { connect } from "react-redux";
+import { getEmployees } from "../actions/employee/employeeActions";
+import PropTypes from "prop-types";
 
-class Doctors extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      doctors: [],
-    };
-  }
-
+class Employees extends React.Component {
   componentDidMount() {
-    axios.get("/api/employees").then((res) =>
-      this.setState({
-        doctors: res.data,
-      })
-    );
+    this.props.getEmployees();
   }
 
   render() {
+    console.log(this.props);
+    const { employees, loading } = this.props.employee;
     return (
       <div className="container">
         <h2 className="text-center mt-3">Лікарі</h2>
         <div className="col text-center">
-          <form action="/doctors/filter" method="GET" className="form-inline">
+          <form action="/employees/filter" method="GET" className="form-inline">
             <div className="input-group">
               <select name="category" className="form-control w-25">
                 <option value="employees.last_name">Прізвище</option>
@@ -48,25 +40,28 @@ class Doctors extends React.Component {
             </div>
           </form>
         </div>
-        {this.state.doctors.length > 0 &&
-          this.state.doctors.map((doctor) => (
-            <div className="card mt-3">
+        {!loading &&
+          employees.map((employee) => (
+            <div key={employee._id} className="card mt-3">
               <div className="row font-weight-bold">
                 <div className="col-2 text-left">
-                  <img alt="" src={doctor.image} />
+                  <img alt="" src={employee.image} />
                 </div>
                 <div className="col-8 text-left">
                   <div className="card-body text-left">
-                    {doctor.lastName} {doctor.firstName} {doctor.fatherName}
-                    <p className="font-weight-normal">{doctor.about}</p>
+                    {employee.lastName} {employee.firstName}{" "}
+                    {employee.fatherName}
+                    <p className="font-weight-normal">{employee.about}</p>
                   </div>
                 </div>
               </div>
               <div className="row my-3 font-weight-bold">
-                <div className="col text-center">{doctor.job.name}</div>
-                <div className="col text-center">{doctor.clinic.name}</div>
-                <div className="col text-center">{doctor.department.name}</div>
-                <div className="col">{doctor.phoneNumber}</div>
+                <div className="col text-center">{employee.job.name}</div>
+                <div className="col text-center">{employee.clinic.name}</div>
+                <div className="col text-center">
+                  {employee.department.name}
+                </div>
+                <div className="col">{employee.phoneNumber}</div>
               </div>
             </div>
           ))}
@@ -75,4 +70,13 @@ class Doctors extends React.Component {
   }
 }
 
-export default Doctors;
+Employees.propTypes = {
+  getEmployees: PropTypes.func.isRequired,
+  employee: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  employee: state.employee,
+});
+
+export default connect(mapStateToProps, { getEmployees })(Employees);

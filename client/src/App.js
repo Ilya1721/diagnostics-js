@@ -7,7 +7,7 @@ import Navbar from "./components/Navbar";
 import Welcome from "./components/Welcome";
 import Footer from "./components/Footer";
 import Clinics from "./components/Clinics";
-import Doctors from "./components/Doctors";
+import Employees from "./components/Employees";
 
 class App extends React.Component {
   render() {
@@ -24,7 +24,7 @@ class App extends React.Component {
                 <Clinics />
               </Route>
               <Route exact path="/doctors">
-                <Doctors />
+                <Employees />
               </Route>
             </Switch>
           </main>

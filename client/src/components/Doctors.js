@@ -1,26 +1,26 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getEmployees } from "../actions/employee/employeeActions";
+import { getUsers } from "../actions/user/userActions";
 import PropTypes from "prop-types";
 
-class Employees extends React.Component {
+class Doctors extends React.Component {
   componentDidMount() {
-    this.props.getEmployees();
+    this.props.getUsers();
   }
 
   render() {
     console.log(this.props);
-    const { employees, loading } = this.props.employee;
+    const { users, loading } = this.props.user;
     return (
       <div className="container">
         <h2 className="text-center mt-3">Лікарі</h2>
         <div className="col text-center">
-          <form action="/employees/filter" method="GET" className="form-inline">
+          <form action="/users/filter" method="GET" className="form-inline">
             <div className="input-group">
               <select name="category" className="form-control w-25">
-                <option value="employees.last_name">Прізвище</option>
-                <option value="employees.first_name">Ім'я</option>
-                <option value="employees.father_name">По-батькові</option>
+                <option value="users.last_name">Прізвище</option>
+                <option value="users.first_name">Ім'я</option>
+                <option value="users.father_name">По-батькові</option>
                 <option value="jobs.name">Посада</option>
                 <option value="departments.name">Відділення</option>
               </select>
@@ -41,27 +41,24 @@ class Employees extends React.Component {
           </form>
         </div>
         {!loading &&
-          employees.map((employee) => (
-            <div key={employee._id} className="card mt-3">
+          users.map((user) => (
+            <div key={user._id} className="card mt-3">
               <div className="row font-weight-bold">
                 <div className="col-2 text-left">
-                  <img alt="" src={employee.image} />
+                  <img alt="" src={user.image} />
                 </div>
                 <div className="col-8 text-left">
                   <div className="card-body text-left">
-                    {employee.lastName} {employee.firstName}{" "}
-                    {employee.fatherName}
-                    <p className="font-weight-normal">{employee.about}</p>
+                    {user.lastName} {user.firstName} {user.fatherName}
+                    <p className="font-weight-normal">{user.about}</p>
                   </div>
                 </div>
               </div>
               <div className="row my-3 font-weight-bold">
-                <div className="col text-center">{employee.job.name}</div>
-                <div className="col text-center">{employee.clinic.name}</div>
-                <div className="col text-center">
-                  {employee.department.name}
-                </div>
-                <div className="col">{employee.phoneNumber}</div>
+                <div className="col text-center">{user.job.name}</div>
+                <div className="col text-center">{user.clinic.name}</div>
+                <div className="col text-center">{user.department.name}</div>
+                <div className="col">{user.phoneNumber}</div>
               </div>
             </div>
           ))}
@@ -70,13 +67,13 @@ class Employees extends React.Component {
   }
 }
 
-Employees.propTypes = {
-  getEmployees: PropTypes.func.isRequired,
-  employee: PropTypes.object.isRequired,
+Doctors.propTypes = {
+  getUsers: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  employee: state.employee,
+  user: state.user,
 });
 
-export default connect(mapStateToProps, { getEmployees })(Employees);
+export default connect(mapStateToProps, { getUsers })(Doctors);

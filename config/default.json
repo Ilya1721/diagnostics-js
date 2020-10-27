@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://ilya:1@cluster0-z02kw.mongodb.net/diagnostics?retryWrites=true&w=majority",
+  "jwtSecret": "dg_myJwtSecret"
+}

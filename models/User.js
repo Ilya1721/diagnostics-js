@@ -6,7 +6,24 @@ const Job = require("./Job");
 const Department = require("./Department");
 const Clinic = require("./Clinic");
 
-const EmployeeSchema = new Schema({
+const UserSchema = new Schema({
+  login: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  registerDate: {
+    type: Date,
+    default: Date.now,
+  },
   clinic: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -32,6 +49,10 @@ const EmployeeSchema = new Schema({
     required: true,
   },
   lastName: {
+    type: String,
+    required: true,
+  },
+  firstName: {
     type: String,
     required: true,
   },
@@ -61,8 +82,4 @@ const EmployeeSchema = new Schema({
   },
 });
 
-module.exports = Employee = mongoose.model(
-  "Employee",
-  EmployeeSchema,
-  "employees"
-);
+module.exports = User = mongoose.model("User", UserSchema, "users");

@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import clinicReducer from "./clinicReducer";
-import employeeReducer from "./employeeReducer";
+import userReducer from "./userReducer";
 
 export default combineReducers({
   clinic: clinicReducer,
-  employee: employeeReducer,
+  user: userReducer,
 });

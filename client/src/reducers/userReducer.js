@@ -1,24 +1,24 @@
 import {
-  GET_EMPLOYEES,
-  ADD_EMPLOYEE,
-  DELETE_EMPLOYEE,
-  EMPLOYEES_LOADING,
-} from "../actions/employee/employeeTypes";
+  GET_USERS,
+  ADD_USER,
+  DELETE_USER,
+  USERS_LOADING,
+} from "../actions/user/userTypes";
 
 const initialState = {
-  employees: [],
+  users: [],
   loading: false,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_EMPLOYEES:
+    case GET_USERS:
       return {
         ...state,
-        employees: action.payload,
+        users: action.payload,
         loading: false,
       };
-    case EMPLOYEES_LOADING:
+    case USERS_LOADING:
       return {
         ...state,
         loading: true,

@@ -12,7 +12,7 @@ connectDB();
 
 //Require api
 const clinics = require("./routes/api/clinics");
-const employees = require("./routes/api/employees");
+const users = require("./routes/api/users");
 
 //Initialize app
 const app = express();
@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 //Routes
 app.use("/api/clinics", clinics);
-app.use("/api/employees", employees);
+app.use("/api/users", users);
 
 const PORT = process.env.PORT || 5000;
 

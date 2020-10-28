@@ -2,14 +2,21 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
+import { loadUser } from "./actions/auth/authActions";
 
 import Navbar from "./components/Navbar";
 import Welcome from "./components/Welcome";
 import Footer from "./components/Footer";
 import Clinics from "./components/Clinics";
 import Doctors from "./components/Doctors";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 class App extends React.Component {
+  componentDidMount() {
+    store.dispatch(loadUser());
+  }
+
   render() {
     return (
       <Provider store={store}>
@@ -25,6 +32,12 @@ class App extends React.Component {
               </Route>
               <Route exact path="/doctors">
                 <Doctors />
+              </Route>
+              <Route exact path="/login">
+                <Login />
+              </Route>
+              <Route exact path="/register">
+                <Register />
               </Route>
             </Switch>
           </main>

@@ -1,6 +1,57 @@
 import React from "react";
+import { connect } from "react-redux";
+import { register } from "../../actions/auth/authActions";
+import PropTypes from "prop-types";
 
 class Register extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      user: {
+        login: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        lastName: "",
+        firstName: "",
+        fatherName: "",
+        about: "",
+        city: "",
+        country: "",
+        street: "",
+        house: "",
+        flat: "",
+        phoneNumber: "",
+        clinic: "",
+        job: "",
+        department: "",
+        image: "",
+      },
+      msg: null,
+    };
+  }
+
+  static propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    register: PropTypes.func.isRequired,
+  };
+
+  onBaseInputChange = (e) => {
+    this.setState({
+      ...this.state,
+      user: {
+        ...this.state.user,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
+  onSubmit = (e) => {
+    e.preventDefault();
+  };
+
   render() {
     return (
       <div className="container">
@@ -12,12 +63,12 @@ class Register extends React.Component {
               <div className="card-body">
                 <form
                   method="POST"
-                  action="/register"
-                  enctype="multipart/form-data"
+                  onSubmit={this.onSubmit}
+                  encType="multipart/form-data"
                 >
                   <div className="form-group row">
                     <label
-                      htmlFor="name"
+                      htmlFor="login"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       Login
@@ -25,13 +76,15 @@ class Register extends React.Component {
 
                     <div className="col-md-6">
                       <input
-                        id="name"
+                        id="login"
                         type="text"
-                        className="form-control "
-                        name="name"
+                        className="form-control"
+                        name="login"
                         required
-                        autoComplete="name"
+                        autoComplete="login"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.login}
                       />
                     </div>
                   </div>
@@ -52,6 +105,8 @@ class Register extends React.Component {
                         name="email"
                         required
                         autoComplete="email"
+                        onChange={this.onBaseInputChange}
+                        value={this.state.email}
                       />
                     </div>
                   </div>
@@ -72,13 +127,15 @@ class Register extends React.Component {
                         name="password"
                         required
                         autoComplete="new-password"
+                        onChange={this.onBaseInputChange}
+                        value={this.state.password}
                       />
                     </div>
                   </div>
 
                   <div className="form-group row">
                     <label
-                      htmlFor="password-confirm"
+                      htmlFor="passwordConfirm"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       Confirm Password
@@ -86,12 +143,14 @@ class Register extends React.Component {
 
                     <div className="col-md-6">
                       <input
-                        id="password-confirm"
+                        id="passwordConfirm"
                         type="password"
                         className="form-control"
-                        name="password_confirmation"
+                        name="passwordConfirm"
                         required
                         autoComplete="new-password"
+                        onChange={this.onBaseInputChange}
+                        value={this.state.passwordConfirm}
                       />
                     </div>
                   </div>
@@ -100,7 +159,7 @@ class Register extends React.Component {
 
                   <div className="form-group row">
                     <label
-                      htmlFor="last_name"
+                      htmlFor="lastName"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       Прізвище
@@ -108,41 +167,45 @@ class Register extends React.Component {
 
                     <div className="col-md-6">
                       <input
-                        id="last_name"
+                        id="lastName"
                         type="text"
                         className="form-control"
-                        name="last_name"
+                        name="lastName"
                         required
-                        autoComplete="last_name"
+                        autoComplete="lastName"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.lastName}
                       />
                     </div>
                   </div>
 
                   <div className="form-group row">
                     <label
-                      htmlFor="first_name"
+                      htmlFor="firstName"
                       className="col-md-4 col-form-label text-md-right"
                     >
-                      Ім`я
+                      Ім'я
                     </label>
 
                     <div className="col-md-6">
                       <input
-                        id="first_name"
+                        id="firstName"
                         type="text"
                         className="form-control"
-                        name="first_name"
+                        name="firstName"
                         required
-                        autoComplete="first_name"
+                        autoComplete="firstName"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.firstName}
                       />
                     </div>
                   </div>
 
                   <div className="form-group row">
                     <label
-                      htmlFor="father_name"
+                      htmlFor="fatherName"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       По-батькові
@@ -150,13 +213,15 @@ class Register extends React.Component {
 
                     <div className="col-md-6">
                       <input
-                        id="father_name"
+                        id="fatherName"
                         type="text"
                         className="form-control"
-                        name="father_name"
+                        name="fatherName"
                         required
-                        autoComplete="father_name"
+                        autoComplete="fatherName"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.fatherName}
                       />
                     </div>
                   </div>
@@ -177,6 +242,8 @@ class Register extends React.Component {
                         name="about"
                         autoComplete="about"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.about}
                       ></textarea>
                     </div>
                   </div>
@@ -198,6 +265,8 @@ class Register extends React.Component {
                         required
                         autoComplete="city"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.city}
                       />
                     </div>
                   </div>
@@ -219,6 +288,8 @@ class Register extends React.Component {
                         required
                         autoComplete="country"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.country}
                       />
                     </div>
                   </div>
@@ -240,6 +311,8 @@ class Register extends React.Component {
                         required
                         autoComplete="street"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.street}
                       />
                     </div>
                   </div>
@@ -261,6 +334,8 @@ class Register extends React.Component {
                         required
                         autoComplete="house"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.house}
                       />
                     </div>
                   </div>
@@ -282,13 +357,15 @@ class Register extends React.Component {
                         required
                         autoComplete="flat"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.flat}
                       />
                     </div>
                   </div>
 
                   <div className="form-group row">
                     <label
-                      htmlFor="phone_number"
+                      htmlFor="phoneNumber"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       Номер телефону
@@ -296,33 +373,38 @@ class Register extends React.Component {
 
                     <div className="col-md-6">
                       <input
-                        id="phone_number"
+                        id="phoneNumber"
                         type="text"
                         className="form-control"
-                        name="phone_number"
+                        name="phoneNumber"
                         required
-                        autoComplete="phone_number"
+                        autoComplete="phoneNumber"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.phoneNumber}
                       />
                     </div>
                   </div>
 
                   <div className="form-group row">
                     <label
-                      htmlFor="clinic_id"
+                      htmlFor="clinic"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       Клініка
                     </label>
                     <div className="col-md-6">
                       <select
-                        id="clinic_id"
+                        id="clinic"
                         className="form-control"
-                        name="clinic_id"
+                        name="clinic"
                         required
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.clinic}
                       >
                         <option value="1">Хмельницька поліклініка № 4</option>
+                        <option value="2">Хмельницька поліклініка № 3</option>
                       </select>
                     </div>
                   </div>
@@ -344,6 +426,8 @@ class Register extends React.Component {
                         required
                         autoComplete="job"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.job}
                       />
                     </div>
                   </div>
@@ -365,6 +449,8 @@ class Register extends React.Component {
                         required
                         autoComplete="department"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.department}
                       />
                     </div>
                   </div>
@@ -383,6 +469,8 @@ class Register extends React.Component {
                         type="file"
                         className="form-control-file"
                         name="image"
+                        onChange={this.onBaseInputChange}
+                        value={this.state.image}
                       />
                     </div>
                   </div>
@@ -404,4 +492,9 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
+});
+
+export default connect(mapStateToProps, { register })(Register);

@@ -1,6 +1,25 @@
 import React from "react";
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: "",
+      password: "",
+      rememberMe: false,
+    };
+  }
+
+  onSubmit = (e) => {};
+
+  onBaseInputChange = (e) => {
+    this.setState({
+      ...this.state,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   render() {
     return (
       <div className="container">
@@ -10,7 +29,7 @@ class Login extends React.Component {
               <div className="card-header">Login</div>
 
               <div className="card-body">
-                <form method="POST" action="/login">
+                <form method="POST">
                   <div className="form-group row">
                     <label
                       htmlFor="email"
@@ -28,6 +47,8 @@ class Login extends React.Component {
                         required
                         autoComplete="email"
                         autoFocus
+                        onChange={this.onBaseInputChange}
+                        value={this.state.email}
                       />
                     </div>
                   </div>
@@ -48,6 +69,8 @@ class Login extends React.Component {
                         name="password"
                         required
                         autoComplete="current-password"
+                        onChange={this.onBaseInputChange}
+                        value={this.state.password}
                       />
                     </div>
                   </div>
@@ -60,8 +83,9 @@ class Login extends React.Component {
                           type="checkbox"
                           name="remember"
                           id="remember"
+                          onChange={this.onBaseInputChange}
+                          value={this.state.rememberMe}
                         />
-
                         <label className="form-check-label" htmlFor="remember">
                           Remember Me
                         </label>

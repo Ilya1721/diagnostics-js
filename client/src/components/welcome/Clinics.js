@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getClinics } from "../actions/clinic/clinicActions";
+import { getClinics } from "../../actions/clinic/clinicActions";
 import PropTypes from "prop-types";
 
 class Clinics extends React.Component {

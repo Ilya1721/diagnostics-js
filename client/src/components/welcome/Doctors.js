@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getUsers } from "../actions/user/userActions";
+import { getUsers } from "../../actions/user/userActions";
 import PropTypes from "prop-types";
 
 class Doctors extends React.Component {

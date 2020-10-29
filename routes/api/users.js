@@ -28,46 +28,13 @@ router.get("/", (req, res) => {
 // @desc register new user
 // @access public
 router.post("/", (req, res) => {
-  const {
-    login,
-    email,
-    password,
-    clinic,
-    city,
-    job,
-    department,
-    about,
-    lastName,
-    firstName,
-    fatherName,
-    street,
-    house,
-    flat,
-    phoneNumber,
-    image,
-  } = req.body;
+  const data = req.body;
 
-  if (
-    !login ||
-    !email ||
-    !password ||
-    !clinic ||
-    !city ||
-    !job ||
-    !department ||
-    !about ||
-    !lastName ||
-    !firstName ||
-    !fatherName ||
-    !street ||
-    !house ||
-    !house ||
-    !flat ||
-    !phoneNumber ||
-    !image
-  ) {
+  if ({ ...data }) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
+
+  const email = data.email;
 
   User.findOne({
     email,
@@ -75,22 +42,7 @@ router.post("/", (req, res) => {
     if (user) return res.status(400).json({ msg: "User already exists" });
 
     const newUser = new User({
-      login,
-      email,
-      password,
-      clinic,
-      city,
-      job,
-      department,
-      about,
-      lastName,
-      firstName,
-      fatherName,
-      street,
-      house,
-      flat,
-      phoneNumber,
-      image,
+      ...data,
     });
 
     // Create salt & hash

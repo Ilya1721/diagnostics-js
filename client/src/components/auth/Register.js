@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { register } from "../../actions/auth/authActions";
+import { getCities } from "../../actions/city/cityActions";
+import { getClinics } from "../../actions/clinic/clinicActions";
 import PropTypes from "prop-types";
 
 class Register extends React.Component {
@@ -28,15 +30,12 @@ class Register extends React.Component {
         department: "",
         image: "",
       },
+      countries: [],
+      cities: [],
+      clinics: [],
       msg: null,
     };
   }
-
-  static propTypes = {
-    isAuthenticated: PropTypes.bool,
-    error: PropTypes.object.isRequired,
-    register: PropTypes.func.isRequired,
-  };
 
   onBaseInputChange = (e) => {
     this.setState({
@@ -48,11 +47,73 @@ class Register extends React.Component {
     });
   };
 
+  onCountryChange = (e) => {
+    const { cities } = this.props.city;
+    const { clinics } = this.props.clinic;
+    const updatedCities = cities.filter(
+      (city) => city.country._id === e.target.value
+    );
+    const updatedClinics = clinics.filter(
+      (clinic) => clinic.city._id === updatedCities[0]._id
+    );
+    this.setState({
+      ...this.state,
+      cities: updatedCities,
+      clinics: updatedClinics,
+      user: {
+        ...this.state.user,
+        country: e.target.value,
+      },
+    });
+  };
+
+  onCityChange = (e) => {
+    console.log("on city change");
+    const { clinics } = this.props.clinic;
+    const updatedClinics = clinics.filter(
+      (clinic) => clinic.city._id === e.target.value
+    );
+    this.setState({
+      ...this.state,
+      clinics: updatedClinics,
+      user: {
+        ...this.state.user,
+        clinic: e.target.value,
+      },
+    });
+  };
+
   onSubmit = (e) => {
     e.preventDefault();
   };
 
+  componentDidMount() {
+    this.props.getCities();
+    this.props.getClinics();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      const { cities, isLoading } = this.props.city;
+      const { clinics } = this.props.clinic;
+      const defaultCountries = cities.map((city) => city.country);
+      const defaultCities = cities.filter(
+        (city) => city.country === defaultCountries[0]
+      );
+      const defaultClinics = clinics.filter(
+        (clinic) => clinic.city._id === defaultCities[0]._id
+      );
+      this.setState({
+        ...this.state,
+        countries: defaultCountries,
+        cities: defaultCities,
+        clinics: defaultClinics,
+      });
+    }
+  }
+
   render() {
+    const { cities, countries, clinics } = this.state;
     return (
       <div className="container">
         <div className="row justify-content-center">
@@ -250,47 +311,53 @@ class Register extends React.Component {
 
                   <div className="form-group row">
                     <label
-                      htmlFor="city"
-                      className="col-md-4 col-form-label text-md-right"
-                    >
-                      Місто
-                    </label>
-
-                    <div className="col-md-6">
-                      <input
-                        id="city"
-                        type="text"
-                        className="form-control"
-                        name="city"
-                        required
-                        autoComplete="city"
-                        autoFocus
-                        onChange={this.onBaseInputChange}
-                        value={this.state.city}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group row">
-                    <label
                       htmlFor="country"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       Країна
                     </label>
-
                     <div className="col-md-6">
-                      <input
+                      <select
                         id="country"
-                        type="text"
                         className="form-control"
                         name="country"
                         required
-                        autoComplete="country"
                         autoFocus
-                        onChange={this.onBaseInputChange}
+                        onChange={this.onCountryChange}
                         value={this.state.country}
-                      />
+                      >
+                        {countries.map((country) => (
+                          <option key={country._id} value={country._id}>
+                            {country.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-group row">
+                    <label
+                      htmlFor="city"
+                      className="col-md-4 col-form-label text-md-right"
+                    >
+                      Місто
+                    </label>
+                    <div className="col-md-6">
+                      <select
+                        id="city"
+                        className="form-control"
+                        name="city"
+                        required
+                        autoFocus
+                        onChange={this.onCityChange}
+                        value={this.state.city}
+                      >
+                        {cities.map((city) => (
+                          <option key={city._id} value={city._id}>
+                            {city.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -403,8 +470,11 @@ class Register extends React.Component {
                         onChange={this.onBaseInputChange}
                         value={this.state.clinic}
                       >
-                        <option value="1">Хмельницька поліклініка № 4</option>
-                        <option value="2">Хмельницька поліклініка № 3</option>
+                        {clinics.map((clinic) => (
+                          <option key={clinic._id} value={clinic._id}>
+                            {clinic.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -492,9 +562,23 @@ class Register extends React.Component {
   }
 }
 
+Register.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  error: PropTypes.object.isRequired,
+  register: PropTypes.func.isRequired,
+  city: PropTypes.object.isRequired,
+  getCities: PropTypes.func.isRequired,
+  clinic: PropTypes.object.isRequired,
+  getClinics: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  city: state.city,
   error: state.error,
+  clinic: state.clinic,
 });
 
-export default connect(mapStateToProps, { register })(Register);
+export default connect(mapStateToProps, { register, getCities, getClinics })(
+  Register
+);

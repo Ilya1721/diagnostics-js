@@ -14,6 +14,7 @@ connectDB();
 const clinics = require("./routes/api/clinics");
 const users = require("./routes/api/users");
 const auth = require("./routes/api/auth");
+const cities = require("./routes/api/cities");
 
 //Initialize app
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/clinics", clinics);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+app.use("/api/cities", cities);
 
 const PORT = process.env.PORT || 5000;
 

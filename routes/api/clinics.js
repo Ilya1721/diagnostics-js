@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
     "SELECT cl.id AS clinic_id, cl.name AS clinic_name, " +
       "cl.street AS clinic_street, cl.house AS clinic_house, " +
       "cl.type AS clinic_type, cl.schedule AS clinic_schedule, " +
-      "cl.image as clinic_image, c.name AS city_name, c.id AS city_id " +
+      "cl.image as clinic_image, c.name AS city_name, c.id AS city_id, " +
       "cl.phone_number AS clinic_phoneNumber " +
       "FROM clinics cl JOIN cities c",
     (err, results, fields) => {

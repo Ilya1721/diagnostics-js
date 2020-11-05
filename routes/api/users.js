@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const ObjectId = require("mongoose").Types.ObjectId;
+const conn = require("../../config/db");
 const { enterAllFieldsMsg, userExistsMsg } = require("../../strings");
 const bcrypt = require("bcryptjs");
 const config = require("config");
@@ -12,16 +12,18 @@ const User = require("../../models/User");
 // @desc get all users that are doctors
 // @access public
 router.get("/", (req, res) => {
-  //Fix find with query params from request
-  User.find({
-    job: ObjectId("5f8d9c1d26cef4e6e292545a"),
-  })
-    .populate("city")
-    .populate("job")
-    .populate("department")
-    .populate("clinic")
-    .then((employees) => res.json(employees))
-    .catch((err) => console.log(err));
+  conn.query(
+    "SELECT e.id as employee_id, e.last_name, e.first_name, e.father_name, " +
+      "e.street, e.house, e.flat, e.phone_number, e.image, e.about, " +
+      "d.name AS department_name, c.name AS clinic_name, " +
+      "j.name AS job_name FROM employees e INNER JOIN departments d ON " +
+      "e.department_id = d.id INNER JOIN clinics c ON d.clinic_id = c.id " +
+      "INNER JOIN jobs j ON e.job_id = j.id",
+    (err, results, fields) => {
+      if (err) res.status(400).json(err);
+      res.json(results);
+    }
+  );
 });
 
 // @route POST /api/users

@@ -7,6 +7,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  REGISTER_FORM,
 } from "../actions/auth/authTypes";
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
   isAuthenticated: null,
   isLoading: null,
   user: null,
+  registerData: null,
 };
 
 export default function (state = initialState, action) {
@@ -49,6 +51,11 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
+      };
+    case REGISTER_FORM:
+      return {
+        ...state,
+        registerData: action.payload,
       };
     default:
       return state;

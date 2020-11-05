@@ -9,7 +9,6 @@ class Doctors extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     const { users, loading } = this.props.user;
     return (
       <div className="container">
@@ -42,23 +41,23 @@ class Doctors extends React.Component {
         </div>
         {!loading &&
           users.map((user) => (
-            <div key={user._id} className="card mt-3">
+            <div key={user.employee_id} className="card mt-3">
               <div className="row font-weight-bold">
                 <div className="col-2 text-left">
                   <img alt="" src={user.image} />
                 </div>
                 <div className="col-8 text-left">
                   <div className="card-body text-left">
-                    {user.lastName} {user.firstName} {user.fatherName}
+                    {user.last_name} {user.first_name} {user.father_name}
                     <p className="font-weight-normal">{user.about}</p>
                   </div>
                 </div>
               </div>
               <div className="row my-3 font-weight-bold">
-                <div className="col text-center">{user.job.name}</div>
-                <div className="col text-center">{user.clinic.name}</div>
-                <div className="col text-center">{user.department.name}</div>
-                <div className="col">{user.phoneNumber}</div>
+                <div className="col text-center">{user.job_name}</div>
+                <div className="col text-center">{user.clinic_name}</div>
+                <div className="col text-center">{user.department_name}</div>
+                <div className="col">{user.phone_number}</div>
               </div>
             </div>
           ))}

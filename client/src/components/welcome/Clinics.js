@@ -9,7 +9,7 @@ class Clinics extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+    //console.log(this.props);
     const { clinics, loading } = this.props.clinic;
     return (
       <div className="container mt-3">
@@ -31,7 +31,7 @@ class Clinics extends React.Component {
                 aria-label="Search"
               />
               <div className="input-group-append">
-                <button className="btn btn-success" type="submit">
+                <button className="btn btn-success" type="button">
                   Find<span className="glyphicon glyphicon-search"></span>
                 </button>
               </div>
@@ -40,27 +40,30 @@ class Clinics extends React.Component {
         </div>
         {!loading &&
           clinics.map((clinic) => (
-            <div key={clinic._id} className="card mt-3">
+            <div key={clinic.clinic_id} className="card mt-3">
               <div className="row mt-2">
                 <div className="col-2">
                   <img
-                    src={clinic.image}
+                    src={clinic.clinic_image}
                     alt=""
                     style={{ width: "125px", height: "150px" }}
                   />
                 </div>
                 <div className="col-6">
-                  <h4>{clinic.name}</h4>
-                  <p>{clinic.clinicType.name}</p>
+                  <h4>{clinic.clinic_name}</h4>
+                  <p>{clinic.clinic_type}</p>
                 </div>
                 <div className="col-2">
                   <p>
-                    {clinic.street}, {clinic.house}, {clinic.city.name}
+                    {clinic.clinic_street}, {clinic.clinic_house},{" "}
+                    {clinic.city_name}
                   </p>
-                  <p>{clinic.phoneNumber}</p>
+                  <p>{clinic.clinic_phoneNumber}</p>
                   <p>
                     Пн - Пт:{" "}
-                    <span className="font-weight-bold">{clinic.schedule}</span>
+                    <span className="font-weight-bold">
+                      {clinic.clinic_schedule}
+                    </span>
                   </p>
                 </div>
               </div>

@@ -1,20 +1,11 @@
-const mongoose = require("mongoose");
+const mysql = require("mysql");
 const config = require("config");
 
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(config.get("mongoURI"), {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-    });
+const conn = mysql.createConnection({
+  host: config.get("host"),
+  user: config.get("user"),
+  password: config.get("password"),
+  database: config.get("database"),
+});
 
-    console.log(`MongoDB connected: ${conn.connection.host}`);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
-};
-
-module.exports = connectDB;
+module.exports = conn;

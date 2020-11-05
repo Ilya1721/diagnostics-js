@@ -4,6 +4,7 @@ import userReducer from "./userReducer";
 import errorReducer from "./errorReducer";
 import authReducer from "./authReducer";
 import cityReducer from "./cityReducer";
+import countryReducer from "./countryReducer";
 
 export default combineReducers({
   clinic: clinicReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   error: errorReducer,
   auth: authReducer,
   city: cityReducer,
+  country: countryReducer,
 });

@@ -9,6 +9,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  REGISTER_FORM,
 } from "./authTypes";
 
 // Check token and load user
@@ -23,6 +24,16 @@ export const loadUser = () => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({ type: AUTH_ERROR });
     });
+};
+
+// Get register form data
+export const getRegisterData = () => (dispatch) => {
+  axios.get("/api/auth/register").then((res) =>
+    dispatch({
+      type: REGISTER_FORM,
+      payload: res.data,
+    })
+  );
 };
 
 // Register User

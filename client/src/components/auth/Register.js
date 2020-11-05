@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { register } from "../../actions/auth/authActions";
 import { getCities } from "../../actions/city/cityActions";
+import { getCountries } from "../../actions/country/countryActions";
 import { getClinics } from "../../actions/clinic/clinicActions";
 import PropTypes from "prop-types";
 
@@ -51,10 +52,10 @@ class Register extends React.Component {
     const { cities } = this.props.city;
     const { clinics } = this.props.clinic;
     const updatedCities = cities.filter(
-      (city) => city.country._id === e.target.value
+      (city) => city.country_id === e.target.value
     );
     const updatedClinics = clinics.filter(
-      (clinic) => clinic.city._id === updatedCities[0]._id
+      (clinic) => clinic.city_id === updatedCities[0].city_id
     );
     this.setState({
       ...this.state,
@@ -71,7 +72,7 @@ class Register extends React.Component {
     console.log("on city change");
     const { clinics } = this.props.clinic;
     const updatedClinics = clinics.filter(
-      (clinic) => clinic.city._id === e.target.value
+      (clinic) => clinic.city_id === e.target.value
     );
     this.setState({
       ...this.state,
@@ -89,19 +90,21 @@ class Register extends React.Component {
 
   componentDidMount() {
     this.props.getCities();
+    this.props.getCountries();
     this.props.getClinics();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       const { cities, isLoading } = this.props.city;
+      const { countries } = this.props.country;
       const { clinics } = this.props.clinic;
-      const defaultCountries = cities.map((city) => city.country);
+      const defaultCountries = countries;
       const defaultCities = cities.filter(
-        (city) => city.country === defaultCountries[0]
+        (city) => city.country_id === defaultCountries[0].id
       );
       const defaultClinics = clinics.filter(
-        (clinic) => clinic.city._id === defaultCities[0]._id
+        (clinic) => clinic.city_id === defaultCities[0].city_id
       );
       this.setState({
         ...this.state,
@@ -327,7 +330,7 @@ class Register extends React.Component {
                         value={this.state.country}
                       >
                         {countries.map((country) => (
-                          <option key={country._id} value={country._id}>
+                          <option key={country.id} value={country.id}>
                             {country.name}
                           </option>
                         ))}
@@ -353,7 +356,7 @@ class Register extends React.Component {
                         value={this.state.city}
                       >
                         {cities.map((city) => (
-                          <option key={city._id} value={city._id}>
+                          <option key={city.id} value={city.id}>
                             {city.name}
                           </option>
                         ))}
@@ -471,7 +474,10 @@ class Register extends React.Component {
                         value={this.state.clinic}
                       >
                         {clinics.map((clinic) => (
-                          <option key={clinic._id} value={clinic._id}>
+                          <option
+                            key={clinic.clinic_id}
+                            value={clinic.clinic_id}
+                          >
                             {clinic.name}
                           </option>
                         ))}
@@ -570,15 +576,21 @@ Register.propTypes = {
   getCities: PropTypes.func.isRequired,
   clinic: PropTypes.object.isRequired,
   getClinics: PropTypes.func.isRequired,
+  country: PropTypes.object.isRequired,
+  getCountries: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   city: state.city,
+  country: state.country,
   error: state.error,
   clinic: state.clinic,
 });
 
-export default connect(mapStateToProps, { register, getCities, getClinics })(
-  Register
-);
+export default connect(mapStateToProps, {
+  register,
+  getCities,
+  getCountries,
+  getClinics,
+})(Register);

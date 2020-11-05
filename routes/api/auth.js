@@ -57,4 +57,19 @@ router.get("/user", auth, (req, res) => {
     .then((user) => res.json(user));
 });
 
+// @route GET /api/auth/register
+// @desc Get register form data
+// @access public
+router.get("/register", (req, res) => {
+  conn.query(
+    "SELECT c.name AS city_name, c.id AS city_id, co.name AS country_name, " +
+      "co.id AS country_id, cl.name AS clinic_name, cl.id AS clinic_id " +
+      "FROM cities c, countries co, clinics cl",
+    (err, results, fields) => {
+      if (err) res.status(400).json(err);
+      res.json(results);
+    }
+  );
+});
+
 module.exports = router;

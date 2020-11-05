@@ -1,4 +1,7 @@
 {
-  "mongoURI": "mongodb+srv://ilya:1@cluster0-z02kw.mongodb.net/diagnostics?retryWrites=true&w=majority",
+  "host": "localhost",
+  "user": "root",
+  "password": "1234",
+  "database": "diagnostics",
   "jwtSecret": "dg_myJwtSecret"
 }

@@ -1,24 +1,24 @@
 import {
-  GET_COUNTRIES,
-  ADD_COUNTRY,
-  DELETE_COUNTRY,
-  COUNTRIES_LOADING,
-} from "../actions/country/countryTypes";
+  GET_JOBS,
+  ADD_JOB,
+  DELETE_JOB,
+  JOBS_LOADING,
+} from "../actions/job/jobTypes";
 
 const initialState = {
-  countries: [],
+  jobs: [],
   isLoading: false,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_COUNTRIES:
+    case GET_JOBS:
       return {
         ...state,
-        countries: action.payload,
+        jobs: action.payload,
         isLoading: false,
       };
-    case COUNTRIES_LOADING:
+    case JOBS_LOADING:
       return {
         ...state,
         isLoading: true,

@@ -4,6 +4,8 @@ import { register } from "../../actions/auth/authActions";
 import { getCities } from "../../actions/city/cityActions";
 import { getCountries } from "../../actions/country/countryActions";
 import { getClinics } from "../../actions/clinic/clinicActions";
+import { getJobs } from "../../actions/job/jobActions";
+import { getDepartments } from "../../actions/department/departmentActions";
 import PropTypes from "prop-types";
 
 class Register extends React.Component {
@@ -34,6 +36,8 @@ class Register extends React.Component {
       countries: [],
       cities: [],
       clinics: [],
+      jobs: [],
+      departments: [],
       msg: null,
     };
   }
@@ -55,7 +59,7 @@ class Register extends React.Component {
       (city) => city.country_id === e.target.value
     );
     const updatedClinics = clinics.filter(
-      (clinic) => clinic.city_id === updatedCities[0].city_id
+      (clinic) => clinic.city_id === updatedCities[0].id
     );
     this.setState({
       ...this.state,
@@ -69,7 +73,6 @@ class Register extends React.Component {
   };
 
   onCityChange = (e) => {
-    console.log("on city change");
     const { clinics } = this.props.clinic;
     const updatedClinics = clinics.filter(
       (clinic) => clinic.city_id === e.target.value
@@ -92,32 +95,43 @@ class Register extends React.Component {
     this.props.getCities();
     this.props.getCountries();
     this.props.getClinics();
+    this.props.getJobs();
+    this.props.getDepartments();
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props);
     if (prevProps !== this.props) {
       const { cities, isLoading } = this.props.city;
       const { countries } = this.props.country;
       const { clinics } = this.props.clinic;
-      const defaultCountries = countries;
-      const defaultCities = cities.filter(
-        (city) => city.country_id === defaultCountries[0].id
-      );
-      const defaultClinics = clinics.filter(
-        (clinic) => clinic.city_id === defaultCities[0].city_id
-      );
-      this.setState({
-        ...this.state,
-        countries: defaultCountries,
-        cities: defaultCities,
-        clinics: defaultClinics,
-      });
+      const { jobs } = this.props.job;
+      const { departments } = this.props.department;
+      if (clinics.length > 0) {
+        const defaultCities = cities.filter(
+          (city) => city.country_id === countries[0].id
+        );
+        const defaultClinics = clinics.filter(
+          (clinic) => clinic.city_id === defaultCities[0].id
+        );
+        const defaultDepartments = departments.filter(
+          (department) => department.clinic_id === defaultClinics[0].clinic_id
+        );
+        console.log(defaultDepartments);
+        console.log(departments);
+        this.setState({
+          ...this.state,
+          countries: countries,
+          cities: defaultCities,
+          clinics: defaultClinics,
+          jobs: jobs,
+          departments: defaultDepartments,
+        });
+      }
     }
   }
 
   render() {
-    const { cities, countries, clinics } = this.state;
+    const { cities, countries, clinics, jobs, departments } = this.state;
     return (
       <div className="container">
         <div className="row justify-content-center">
@@ -479,7 +493,7 @@ class Register extends React.Component {
                             key={clinic.clinic_id}
                             value={clinic.clinic_id}
                           >
-                            {clinic.name}
+                            {clinic.clinic_name}
                           </option>
                         ))}
                       </select>
@@ -493,19 +507,22 @@ class Register extends React.Component {
                     >
                       Посада
                     </label>
-
                     <div className="col-md-6">
-                      <input
+                      <select
                         id="job"
-                        type="text"
                         className="form-control"
                         name="job"
                         required
-                        autoComplete="job"
                         autoFocus
                         onChange={this.onBaseInputChange}
                         value={this.state.job}
-                      />
+                      >
+                        {jobs.map((job) => (
+                          <option key={job.id} value={job.id}>
+                            {job.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -516,19 +533,22 @@ class Register extends React.Component {
                     >
                       Відділ
                     </label>
-
                     <div className="col-md-6">
-                      <input
+                      <select
                         id="department"
-                        type="text"
                         className="form-control"
                         name="department"
                         required
-                        autoComplete="department"
                         autoFocus
                         onChange={this.onBaseInputChange}
                         value={this.state.department}
-                      />
+                      >
+                        {departments.map((department) => (
+                          <option key={department.id} value={department.id}>
+                            {department.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -579,6 +599,10 @@ Register.propTypes = {
   getClinics: PropTypes.func.isRequired,
   country: PropTypes.object.isRequired,
   getCountries: PropTypes.func.isRequired,
+  job: PropTypes.object.isRequired,
+  getJobs: PropTypes.func.isRequired,
+  department: PropTypes.object.isRequired,
+  getDepartments: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -587,6 +611,8 @@ const mapStateToProps = (state) => ({
   country: state.country,
   error: state.error,
   clinic: state.clinic,
+  job: state.job,
+  department: state.department,
 });
 
 export default connect(mapStateToProps, {
@@ -594,4 +620,6 @@ export default connect(mapStateToProps, {
   getCities,
   getCountries,
   getClinics,
+  getJobs,
+  getDepartments,
 })(Register);

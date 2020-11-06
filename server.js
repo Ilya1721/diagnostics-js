@@ -23,6 +23,8 @@ const users = require("./routes/api/users");
 const auth = require("./routes/api/auth");
 const cities = require("./routes/api/cities");
 const countries = require("./routes/api/countries");
+const jobs = require("./routes/api/jobs");
+const departments = require("./routes/api/departments");
 
 //Initialize app
 const app = express();
@@ -34,6 +36,8 @@ app.use("/api/users", users);
 app.use("/api/auth", auth);
 app.use("/api/cities", cities);
 app.use("/api/countries", countries);
+app.use("/api/jobs", jobs);
+app.use("/api/departments", departments);
 
 const PORT = process.env.PORT || 5000;
 

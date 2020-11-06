@@ -8,12 +8,12 @@ import axios from "axios";
 
 export const getClinics = () => (dispatch) => {
   dispatch(setClinicsLoading());
-  axios.get("/api/clinics").then((res) =>
+  axios.get("/api/clinics").then((res) => {
     dispatch({
       type: GET_CLINICS,
       payload: res.data,
-    })
-  );
+    });
+  });
 };
 
 export const setClinicsLoading = () => {

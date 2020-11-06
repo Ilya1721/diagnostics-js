@@ -1,24 +1,24 @@
 import {
-  GET_COUNTRIES,
-  ADD_COUNTRY,
-  DELETE_COUNTRY,
-  COUNTRIES_LOADING,
-} from "../actions/country/countryTypes";
+  GET_DEPARTMENTS,
+  ADD_DEPARTMENT,
+  DELETE_DEPARTMENT,
+  DEPARTMENTS_LOADING,
+} from "../actions/department/departmentTypes";
 
 const initialState = {
-  countries: [],
+  departments: [],
   isLoading: false,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_COUNTRIES:
+    case GET_DEPARTMENTS:
       return {
         ...state,
-        countries: action.payload,
+        departments: action.payload,
         isLoading: false,
       };
-    case COUNTRIES_LOADING:
+    case DEPARTMENTS_LOADING:
       return {
         ...state,
         isLoading: true,

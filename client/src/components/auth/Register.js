@@ -6,6 +6,7 @@ import { getCountries } from "../../actions/country/countryActions";
 import { getClinics } from "../../actions/clinic/clinicActions";
 import { getJobs } from "../../actions/job/jobActions";
 import { getDepartments } from "../../actions/department/departmentActions";
+import { uploadImage } from "../../aws/awsApi";
 import PropTypes from "prop-types";
 
 class Register extends React.Component {
@@ -50,6 +51,11 @@ class Register extends React.Component {
         [e.target.name]: e.target.value,
       },
     });
+  };
+
+  onImageChange = (e) => {
+    console.log(e.target.files[0]);
+    uploadImage(e.target.files[0]);
   };
 
   onCountryChange = (e) => {
@@ -116,8 +122,6 @@ class Register extends React.Component {
         const defaultDepartments = departments.filter(
           (department) => department.clinic_id === defaultClinics[0].clinic_id
         );
-        console.log(defaultDepartments);
-        console.log(departments);
         this.setState({
           ...this.state,
           countries: countries,
@@ -566,7 +570,7 @@ class Register extends React.Component {
                         type="file"
                         className="form-control-file"
                         name="image"
-                        onChange={this.onBaseInputChange}
+                        onChange={this.onImageChange}
                         value={this.state.image}
                       />
                     </div>

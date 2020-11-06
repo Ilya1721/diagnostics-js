@@ -3,5 +3,7 @@
   "user": "root",
   "password": "1234",
   "database": "diagnostics",
-  "jwtSecret": "dg_myJwtSecret"
+  "jwtSecret": "dg_myJwtSecret",
+  "aws_access_key_id": "AKIAZISVDMGSBRKDC3XG",
+  "aws_secret_access_key": "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"
 }

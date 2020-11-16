@@ -1,27 +1,37 @@
-const aws = require("aws-sdk");
+const AWS = require("aws-sdk");
 const axios = require("axios");
 const { getImgBuffer } = require("./imgBuffer");
 
-class awsObject {
+class AwsClass {
   s3Bucket = null;
+  filePath = null;
 
-  constructor() {
-    axios.get("/api/aws/config").then((res) => {
-      const { aws_access_key_id, aws_secret_access_key } = res.data;
+  constructor(data) {
+    const { aws_access_key_id, aws_secret_access_key } = data;
+    console.log(aws_access_key_id);
 
-      aws.config.update({
-        accessKeyId: aws_access_key_id,
-        secretAccessKey: aws_secret_access_key,
-        region: "eu-central-1",
-      });
+    AWS.config.update({
+      accessKeyId: aws_access_key_id,
+      secretAccessKey: aws_secret_access_key,
+      region: "eu-central-1",
+    });
 
-      this.s3Bucket = new aws.s3({
-        params: {
-          Bucket: "diagnostics-bucket",
-        },
-      });
+    this.s3Bucket = new AWS.S3({
+      params: {
+        Bucket: "diagnostics-bucket",
+      },
     });
   }
+
+  static build() {
+    return axios.get("/api/aws/config").then((res) => {
+      return new AwsClass(res.data);
+    });
+  }
+
+  getFilePath = () => {
+    return this.filePath;
+  };
 
   uploadImage = (path, buffer) => {
     const s3Url =
@@ -38,6 +48,7 @@ class awsObject {
         if (err) {
           reject(err);
         } else {
+          this.filePath = s3Url + path;
           resolve(s3Url + path);
         }
       });
@@ -45,4 +56,4 @@ class awsObject {
   };
 }
 
-module.exports = awsObject;
+module.exports = AwsClass;

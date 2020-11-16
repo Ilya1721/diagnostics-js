@@ -6,7 +6,8 @@ import { getCountries } from "../../actions/country/countryActions";
 import { getClinics } from "../../actions/clinic/clinicActions";
 import { getJobs } from "../../actions/job/jobActions";
 import { getDepartments } from "../../actions/department/departmentActions";
-import { uploadImage } from "../../aws/awsApi";
+import AwsClass from "../../aws/awsApi";
+import { getImgBuffer } from "../../aws/imgBuffer";
 import PropTypes from "prop-types";
 
 class Register extends React.Component {
@@ -40,6 +41,7 @@ class Register extends React.Component {
       jobs: [],
       departments: [],
       msg: null,
+      imageFile: {},
     };
   }
 
@@ -54,8 +56,10 @@ class Register extends React.Component {
   };
 
   onImageChange = (e) => {
-    console.log(e.target.files[0]);
-    uploadImage(e.target.files[0]);
+    this.setState({
+      ...this.state,
+      imageFile: e.target.files[0],
+    });
   };
 
   onCountryChange = (e) => {
@@ -94,7 +98,18 @@ class Register extends React.Component {
   };
 
   onSubmit = (e) => {
+    const { user, imageFile } = this.state;
+    console.log(imageFile);
     e.preventDefault();
+    const awsObject = AwsClass.build().then((aws) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result;
+        const buffer = getImgBuffer(base64);
+        aws.uploadImage(imageFile.name, buffer).then((res) => console.log(res));
+      };
+      reader.readAsDataURL(imageFile);
+    });
   };
 
   componentDidMount() {
@@ -567,11 +582,11 @@ class Register extends React.Component {
                     <div className="col-md-6">
                       <input
                         id="image"
+                        ref={this.imageFileRef}
                         type="file"
                         className="form-control-file"
                         name="image"
                         onChange={this.onImageChange}
-                        value={this.state.image}
                       />
                     </div>
                   </div>

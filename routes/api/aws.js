@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const config = require("config");
 
 // @route GET /api/aws/config
 router.get("/config", (req, res) => {

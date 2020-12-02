@@ -4,7 +4,7 @@ const { getImgBuffer } = require("./imgBuffer");
 
 class AwsClass {
   s3Bucket = null;
-  filePath = null;
+  fullFilePath = null;
 
   constructor(data) {
     const { aws_access_key_id, aws_secret_access_key } = data;
@@ -30,14 +30,14 @@ class AwsClass {
   }
 
   getFilePath = () => {
-    return this.filePath;
+    return this.fullFilePath;
   };
 
-  uploadImage = (path, buffer) => {
-    const s3Url =
-      "https://diagnostics-bucket.s3.eu-central-1.amazonaws.com/doctors";
+  uploadImage = (filePath, buffer, email) => {
+    const s3Path = "https://diagnostics-bucket.s3.eu-central-1.amazonaws.com/";
+    const bucketPath = `doctors/${email}/`;
     const data = {
-      Key: path,
+      Key: bucketPath + filePath,
       Body: buffer,
       ContentEncoding: "base64",
       ContentType: "image/png",
@@ -48,8 +48,8 @@ class AwsClass {
         if (err) {
           reject(err);
         } else {
-          this.filePath = s3Url + path;
-          resolve(s3Url + path);
+          this.filePath = s3Path + bucketPath + filePath;
+          resolve(s3Path + bucketPath + filePath);
         }
       });
     });

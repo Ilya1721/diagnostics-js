@@ -99,14 +99,26 @@ class Register extends React.Component {
 
   onSubmit = (e) => {
     const { user, imageFile } = this.state;
-    console.log(imageFile);
     e.preventDefault();
     const awsObject = AwsClass.build().then((aws) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result;
         const buffer = getImgBuffer(base64);
-        aws.uploadImage(imageFile.name, buffer).then((res) => console.log(res));
+        aws.uploadImage(imageFile.name, buffer, user.email).then((res) =>
+          this.setState(
+            {
+              ...this.state,
+              user: {
+                ...this.state.user,
+                image: res,
+              },
+            },
+            () => {
+              console.log(this.state.user);
+            }
+          )
+        );
       };
       reader.readAsDataURL(imageFile);
     });
@@ -127,7 +139,7 @@ class Register extends React.Component {
       const { clinics } = this.props.clinic;
       const { jobs } = this.props.job;
       const { departments } = this.props.department;
-      if (clinics.length > 0) {
+      if (departments.length > 0) {
         const defaultCities = cities.filter(
           (city) => city.country_id === countries[0].id
         );
@@ -144,6 +156,14 @@ class Register extends React.Component {
           clinics: defaultClinics,
           jobs: jobs,
           departments: defaultDepartments,
+          user: {
+            ...this.state.user,
+            country: countries[0].id,
+            city: defaultCities[0].id,
+            clinic: defaultClinics[0].clinic_id,
+            job: jobs[0].id,
+            department: defaultDepartments[0].id,
+          },
         });
       }
     }

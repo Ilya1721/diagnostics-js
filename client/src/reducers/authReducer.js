@@ -12,10 +12,10 @@ import {
 
 const initialState = {
   token: localStorage.getItem("token"),
-  isAuthenticated: null,
-  isLoading: null,
-  user: null,
-  registerData: null,
+  isAuthenticated: false,
+  isLoading: false,
+  user: {},
+  registerData: [],
 };
 
 export default function (state = initialState, action) {
@@ -53,6 +53,7 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
     case REGISTER_FORM:
+      console.log(action.payload);
       return {
         ...state,
         registerData: action.payload,

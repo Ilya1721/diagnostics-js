@@ -58,7 +58,7 @@ router.get("/user", auth, (req, res) => {
 // @desc Get register form data
 // @access public
 router.get("/register", (req, res) => {
-  conn.query("SELECT email from users", (err, results, fields) => {
+  conn.query("SELECT email FROM users", (err, results, fields) => {
     if (err) res.status(400).json(err);
     console.log(results);
     res.json(results);

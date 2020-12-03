@@ -42,6 +42,8 @@ class Register extends React.Component {
       jobs: [],
       departments: [],
       emails: [],
+      errors: { isEmailError: false },
+      isOverallError: false,
       msg: null,
       imageFile: {},
     };
@@ -55,6 +57,30 @@ class Register extends React.Component {
         [e.target.name]: e.target.value,
       },
     });
+  };
+
+  onEmailChange = (e) => {
+    const email = e.target.value;
+    if (this.state.emails.includes(email)) {
+      alert("Користувач з таким email уже існує");
+      this.setState({
+        ...this.state,
+        errors: { ...this.state.errors, isEmailError: true },
+        isOverallError: true,
+        user: {
+          ...this.state.user,
+          [e.target.name]: e.target.value,
+        },
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        user: {
+          ...this.state.user,
+          [e.target.name]: e.target.value,
+        },
+      });
+    }
   };
 
   onImageChange = (e) => {
@@ -101,29 +127,34 @@ class Register extends React.Component {
 
   onSubmit = (e) => {
     const { user, imageFile } = this.state;
+    const { errors } = this.state;
     e.preventDefault();
-    const awsObject = AwsClass.build().then((aws) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result;
-        const buffer = getImgBuffer(base64);
-        aws.uploadImage(imageFile.name, buffer, user.email).then((res) =>
-          this.setState(
-            {
-              ...this.state,
-              user: {
-                ...this.state.user,
-                image: res,
+    if (this.state.isOverallError) {
+      alert("Помилка реєстрації");
+    } else {
+      const awsObject = AwsClass.build().then((aws) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result;
+          const buffer = getImgBuffer(base64);
+          aws.uploadImage(imageFile.name, buffer, user.email).then((res) =>
+            this.setState(
+              {
+                ...this.state,
+                user: {
+                  ...this.state.user,
+                  image: res,
+                },
               },
-            },
-            () => {
-              this.props.register(this.state.user);
-            }
-          )
-        );
-      };
-      reader.readAsDataURL(imageFile);
-    });
+              () => {
+                this.props.register(this.state.user);
+              }
+            )
+          );
+        };
+        reader.readAsDataURL(imageFile);
+      });
+    }
   };
 
   componentDidMount() {
@@ -142,9 +173,9 @@ class Register extends React.Component {
       const { clinics } = this.props.clinic;
       const { jobs } = this.props.job;
       const { departments } = this.props.department;
-      console.log(this.props.registerData);
-      const { emails } = this.props.registerData;
-      if (emails.length > 0) {
+      const { registerData } = this.props.auth;
+      const emails = registerData.map((obj) => obj.email);
+      if (departments.length > 0) {
         const defaultCities = cities.filter(
           (city) => city.country_id === countries[0].id
         );
@@ -229,7 +260,7 @@ class Register extends React.Component {
                         name="email"
                         required
                         autoComplete="email"
-                        onChange={this.onBaseInputChange}
+                        onChange={this.onEmailChange}
                         value={this.state.email}
                       />
                     </div>
@@ -648,19 +679,18 @@ Register.propTypes = {
   getJobs: PropTypes.func.isRequired,
   department: PropTypes.object.isRequired,
   getDepartments: PropTypes.func.isRequired,
-  registerData: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   getRegisterData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
   city: state.city,
   country: state.country,
   error: state.error,
   clinic: state.clinic,
   job: state.job,
   department: state.department,
-  registerData: state.auth.registerData,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, {

@@ -6,6 +6,7 @@ import { getCountries } from "../../actions/country/countryActions";
 import { getClinics } from "../../actions/clinic/clinicActions";
 import { getJobs } from "../../actions/job/jobActions";
 import { getDepartments } from "../../actions/department/departmentActions";
+import { getRegisterData } from "../../actions/auth/authActions";
 import AwsClass from "../../aws/awsApi";
 import { getImgBuffer } from "../../aws/imgBuffer";
 import PropTypes from "prop-types";
@@ -40,6 +41,7 @@ class Register extends React.Component {
       clinics: [],
       jobs: [],
       departments: [],
+      emails: [],
       msg: null,
       imageFile: {},
     };
@@ -115,7 +117,7 @@ class Register extends React.Component {
               },
             },
             () => {
-              console.log(this.state.user);
+              this.props.register(this.state.user);
             }
           )
         );
@@ -130,6 +132,7 @@ class Register extends React.Component {
     this.props.getClinics();
     this.props.getJobs();
     this.props.getDepartments();
+    this.props.getRegisterData();
   }
 
   componentDidUpdate(prevProps) {
@@ -139,7 +142,9 @@ class Register extends React.Component {
       const { clinics } = this.props.clinic;
       const { jobs } = this.props.job;
       const { departments } = this.props.department;
-      if (departments.length > 0) {
+      console.log(this.props.registerData);
+      const { emails } = this.props.registerData;
+      if (emails.length > 0) {
         const defaultCities = cities.filter(
           (city) => city.country_id === countries[0].id
         );
@@ -155,6 +160,7 @@ class Register extends React.Component {
           cities: defaultCities,
           clinics: defaultClinics,
           jobs: jobs,
+          emails: emails,
           departments: defaultDepartments,
           user: {
             ...this.state.user,
@@ -642,6 +648,8 @@ Register.propTypes = {
   getJobs: PropTypes.func.isRequired,
   department: PropTypes.object.isRequired,
   getDepartments: PropTypes.func.isRequired,
+  registerData: PropTypes.object.isRequired,
+  getRegisterData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -652,6 +660,7 @@ const mapStateToProps = (state) => ({
   clinic: state.clinic,
   job: state.job,
   department: state.department,
+  registerData: state.auth.registerData,
 });
 
 export default connect(mapStateToProps, {
@@ -661,4 +670,5 @@ export default connect(mapStateToProps, {
   getClinics,
   getJobs,
   getDepartments,
+  getRegisterData,
 })(Register);

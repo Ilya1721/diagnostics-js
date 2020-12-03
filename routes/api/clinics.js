@@ -13,7 +13,6 @@ router.get("/", (req, res) => {
       "FROM clinics cl JOIN cities c",
     (err, results, fields) => {
       if (err) res.status(400).json(err);
-      console.log(results);
       res.json(results);
     }
   );

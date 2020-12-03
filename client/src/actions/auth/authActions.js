@@ -28,12 +28,12 @@ export const loadUser = () => (dispatch, getState) => {
 
 // Get register form data
 export const getRegisterData = () => (dispatch) => {
-  axios.get("/api/auth/register").then((res) =>
+  axios.get("/api/auth/register").then((res) => {
     dispatch({
       type: REGISTER_FORM,
       payload: res.data,
-    })
-  );
+    });
+  });
 };
 
 // Register User

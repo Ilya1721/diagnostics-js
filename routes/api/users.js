@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const conn = require("../../config/db");
-const { enterAllFieldsMsg, userExistsMsg } = require("../../strings");
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
@@ -38,40 +37,55 @@ router.post("/", (req, res) => {
 
   const email = data.email;
 
-  User.findOne({
-    email,
-  }).then((user) => {
-    if (user) return res.status(400).json({ msg: "User already exists" });
-
-    const newUser = new User({
-      ...data,
-    });
-
-    // Create salt & hash
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err;
-        newUser.password = hash;
-        newUser.save().then((user) => {
-          jwt.sign(
-            { id: user.id },
-            config.get("jwtSecret"),
-            { expiresIn: 36000 },
-            (err, token) => {
+  conn.query("SELECT email from users", (err, results, fields) => {
+    if (err) res.status(400).json(err);
+    if (results.includes(email)) {
+      return res.status(400).json({ msg: "User already exists" });
+    } else {
+      conn.query(
+        "INSERT employees(city_id, job_id, department_id, " +
+          "about, last_name, first_name, father_name, street, house, flat, " +
+          "phone_number, image) VALUES " +
+          `(${data.city}, ${data.job}, ` +
+          `${data.department}, ${data.about}, ${data.lastName}, ${data.firstName}, ` +
+          `${data.fatherName}, ${data.street}, ${data.house}, ${data.flat}, ` +
+          `${data.phoneNumber}, ${data.image});`,
+        (err, results, fields) => {
+          if (err) res.status(400).json(err);
+          const employee_id = results.id;
+          bcrypt.getSalt(10, (err, salt) => {
+            bcrypt.hash(data.password, salt, (err, hash) => {
               if (err) throw err;
-              res.json({
-                token,
-                user: {
-                  id: user.id,
-                  login: user.login,
-                  email: user.email,
-                },
-              });
-            }
-          );
-        });
-      });
-    });
+              conn.query(
+                "INSERT users(employee_id, login, email, password) " +
+                  "VALUES " +
+                  `(${employee_id}, ${data.login}, ${data.email}), ` +
+                  `${hash});`,
+                (err, results, fields) => {
+                  if (err) res.status(400).json(err);
+                  jwt.sign(
+                    { id: results.id },
+                    config.get("jwtSecret"),
+                    { expiresIn: 36000 },
+                    (err, token) => {
+                      if (err) throw err;
+                      res.json({
+                        token,
+                        user: {
+                          id: results.id,
+                          login: results.login,
+                          email: results.email,
+                        },
+                      });
+                    }
+                  );
+                }
+              );
+            });
+          });
+        }
+      );
+    }
   });
 });
 

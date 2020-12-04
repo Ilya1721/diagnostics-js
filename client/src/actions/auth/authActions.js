@@ -26,10 +26,38 @@ export const loadUser = () => (dispatch, getState) => {
     });
 };
 
+// Login user
+export const loginUser = (data) => (dispatch) => {
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  // Request body
+  const body = JSON.stringify(data);
+
+  axios
+    .post("/api/auth", body, config)
+    .then((res) => {
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
+      );
+      dispatch({
+        type: LOGIN_FAIL,
+      });
+    });
+};
+
 // Get register form data
 export const getRegisterData = () => (dispatch) => {
   axios.get("/api/auth/register").then((res) => {
-    console.log(res.data);
     dispatch({
       type: REGISTER_FORM,
       payload: res.data,

@@ -13,6 +13,7 @@ import {
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: false,
+  isWrongCredentials: false,
   isLoading: false,
   user: {},
   registerData: [],
@@ -39,6 +40,7 @@ export default function (state = initialState, action) {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
+        isWrongCredentials: false,
       };
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -51,6 +53,7 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
+        isWrongCredentials: true,
       };
     case REGISTER_FORM:
       console.log(action.payload);

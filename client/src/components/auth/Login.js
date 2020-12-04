@@ -1,4 +1,7 @@
 import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { loginUser } from "../../actions/auth/authActions";
 
 class Login extends React.Component {
   constructor(props) {
@@ -11,7 +14,11 @@ class Login extends React.Component {
     };
   }
 
-  onSubmit = (e) => {};
+  onSubmit = (e) => {
+    const { email, password } = this.state;
+    e.preventDefault();
+    this.props.loginUser({ email, password });
+  };
 
   onBaseInputChange = (e) => {
     this.setState({
@@ -19,6 +26,17 @@ class Login extends React.Component {
       [e.target.name]: e.target.value,
     });
   };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      const { isAuthenticated, isWrongCredentials } = this.props.auth;
+      if (isAuthenticated) {
+        alert("Ви успішно зайшли");
+      } else if (isWrongCredentials) {
+        alert("Неправильний логін або пароль");
+      }
+    }
+  }
 
   render() {
     return (
@@ -29,7 +47,7 @@ class Login extends React.Component {
               <div className="card-header">Login</div>
 
               <div className="card-body">
-                <form method="POST">
+                <form method="POST" onSubmit={this.onSubmit}>
                   <div className="form-group row">
                     <label
                       htmlFor="email"
@@ -114,4 +132,12 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { loginUser })(Login);

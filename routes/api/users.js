@@ -31,7 +31,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
   const data = req.body;
 
-  if ({ ...data }) {
+  if (!{ ...data }) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
 
@@ -43,38 +43,38 @@ router.post("/", (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     } else {
       conn.query(
-        "INSERT employees(city_id, job_id, department_id, " +
+        "INSERT INTO employees(city_id, job_id, department_id, " +
           "about, last_name, first_name, father_name, street, house, flat, " +
           "phone_number, image) VALUES " +
           `(${data.city}, ${data.job}, ` +
-          `${data.department}, ${data.about}, ${data.lastName}, ${data.firstName}, ` +
-          `${data.fatherName}, ${data.street}, ${data.house}, ${data.flat}, ` +
-          `${data.phoneNumber}, ${data.image});`,
+          `${data.department}, "${data.about}", "${data.lastName}", "${data.firstName}", ` +
+          `"${data.fatherName}", "${data.street}", "${data.house}", "${data.flat}", ` +
+          `"${data.phoneNumber}", "${data.image}");`,
         (err, results, fields) => {
           if (err) res.status(400).json(err);
-          const employee_id = results.id;
-          bcrypt.getSalt(10, (err, salt) => {
+          const employee_id = results.insertId;
+          bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(data.password, salt, (err, hash) => {
-              if (err) throw err;
+              if (err) res.status(400).json(err);
               conn.query(
-                "INSERT users(employee_id, login, email, password) " +
+                "INSERT INTO users(employee_id, login, email, password) " +
                   "VALUES " +
-                  `(${employee_id}, ${data.login}, ${data.email}), ` +
-                  `${hash});`,
+                  `(${employee_id}, "${data.login}", "${data.email}", ` +
+                  `"${hash}");`,
                 (err, results, fields) => {
                   if (err) res.status(400).json(err);
                   jwt.sign(
-                    { id: results.id },
+                    { id: results.insertId },
                     config.get("jwtSecret"),
                     { expiresIn: 36000 },
                     (err, token) => {
-                      if (err) throw err;
+                      if (err) res.status(400).json(err);
                       res.json({
                         token,
                         user: {
-                          id: results.id,
-                          login: results.login,
-                          email: results.email,
+                          id: results.insertId,
+                          login: data.login,
+                          email: data.email,
                         },
                       });
                     }

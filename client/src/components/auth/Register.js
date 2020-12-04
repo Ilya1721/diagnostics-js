@@ -75,6 +75,8 @@ class Register extends React.Component {
     } else {
       this.setState({
         ...this.state,
+        errors: { ...this.state.errors, isEmailError: false },
+        isOverallError: false,
         user: {
           ...this.state.user,
           [e.target.name]: e.target.value,

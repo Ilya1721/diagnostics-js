@@ -31,6 +31,12 @@ const aws = require("./routes/api/aws");
 const app = express();
 //Body Parser Middleware
 app.use(express.json());
+//Passport Middleware
+/*usePassport();
+app.use(express.static("public"));
+app.use(session({ secret: "cats", resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());*/
 //Routes
 app.use("/api/clinics", clinics);
 app.use("/api/users", users);

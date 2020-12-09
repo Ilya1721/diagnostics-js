@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, createContext, useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loginUser } from "../../actions/auth/authActions";
@@ -28,6 +28,7 @@ class Login extends React.Component {
   };
 
   componentDidUpdate(prevProps) {
+    console.log(this.props.auth);
     if (prevProps !== this.props) {
       const { isAuthenticated, isWrongCredentials } = this.props.auth;
       if (isAuthenticated) {

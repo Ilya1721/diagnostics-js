@@ -51,7 +51,7 @@ router.post("/", (req, res) => {
 // @route GET /api/auth/user
 // @desc Get user data
 // @access private
-router.get("/user", auth, (req, res) => {
+/*router.get("/user", auth, (req, res) => {
   console.log(req);
   conn.query(
     `SELECT password FROM users WHERE users.id=${req.user.id}`,
@@ -60,7 +60,7 @@ router.get("/user", auth, (req, res) => {
       res.json(results);
     }
   );
-});
+});*/
 
 // @route GET /api/auth/register
 // @desc Get register form data

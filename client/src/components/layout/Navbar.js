@@ -2,22 +2,56 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { logOutUser } from "../../actions/auth/authActions";
 
 class Navbar extends React.Component {
   onLogout = (e) => {
     e.preventDefault();
   };
 
-  componentDidMount() {
-    console.log(localStorage.getItem("token"));
-    console.log(this.props.auth);
-  }
+  logOut = (e) => {
+    e.preventDefault();
+    this.props.logOutUser();
+  };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      console.log(this.props.auth);
+  renderAuth = () => {
+    const { isAuthenticated, user } = this.props.auth;
+    console.log(this.props.auth);
+    if (!isAuthenticated) {
+      return (
+        <div className="top-right links">
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
+        </div>
+      );
+    } else {
+      return (
+        <div className="top-right-dropdown">
+          <a
+            id="navbarDropdown"
+            className="nav-link pointer dropdown-toggle"
+            role="button"
+            to="#"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            v-pre="true"
+          >
+            {user.login} <span className="caret"></span>
+          </a>
+
+          <div
+            className="dropdown-menu dropdown-menu-right"
+            aria-labelledby="navbarDropdown"
+          >
+            <Link className="dropdown-item" to="/" onClick={this.logOut}>
+              Logout
+            </Link>
+          </div>
+        </div>
+      );
     }
-  }
+  };
 
   render() {
     return (
@@ -44,14 +78,7 @@ class Navbar extends React.Component {
                   />
                 </Link>
               </div>
-              <li>
-                <div className="flex-right">
-                  <div className="top-right links">
-                    <Link to="/login">Login</Link>
-                    <Link to="/register">Register</Link>
-                  </div>
-                </div>
-              </li>
+              {this.renderAuth()}
             </ul>
           </div>
         </div>
@@ -62,10 +89,11 @@ class Navbar extends React.Component {
 
 Navbar.propTypes = {
   auth: PropTypes.object.isRequired,
+  logOutUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, {})(Navbar);
+export default connect(mapStateToProps, { logOutUser })(Navbar);

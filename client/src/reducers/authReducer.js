@@ -1,6 +1,7 @@
 import {
   USER_LOADED,
   USER_LOADING,
+  USER_UNLOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -33,8 +34,16 @@ export default function (state = initialState, action) {
         isLoading: false,
         user: action.payload,
       };
+    case USER_UNLOADED:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: {},
+      };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
+      localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         ...action.payload,
@@ -42,8 +51,17 @@ export default function (state = initialState, action) {
         isLoading: false,
         isWrongCredentials: false,
       };
-    case AUTH_ERROR:
     case LOGIN_FAIL:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        token: null,
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        isWrongCredentials: true,
+      };
+    case AUTH_ERROR:
     case LOGOUT_SUCCESS:
     case REGISTER_FAIL:
       localStorage.removeItem("token");
@@ -53,7 +71,6 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
-        isWrongCredentials: true,
       };
     case REGISTER_FORM:
       console.log(action.payload);

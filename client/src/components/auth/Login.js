@@ -58,8 +58,6 @@ class Login extends React.Component {
   };
 
   render() {
-    const { wrongCredentialsMsg, wrongCredentialsClass } = this.state;
-
     return (
       <div className="container">
         <div className="row justify-content-center">

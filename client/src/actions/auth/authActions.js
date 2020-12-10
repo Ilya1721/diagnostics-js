@@ -3,6 +3,7 @@ import { returnErrors } from "../error/errorActions";
 import {
   USER_LOADED,
   USER_LOADING,
+  USER_UNLOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -53,6 +54,14 @@ export const loginUser = (data) => (dispatch) => {
         type: LOGIN_FAIL,
       });
     });
+};
+
+// Log out user
+export const logOutUser = () => (dispatch) => {
+  dispatch({
+    type: USER_UNLOADED,
+    payload: {},
+  });
 };
 
 // Get register form data

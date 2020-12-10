@@ -23,27 +23,29 @@ router.post("/", (req, res) => {
       if (results === undefined)
         return res.status(400).json({ msg: "User does not exists" });
       const result = results[0];
-      bcrypt.compare(password, result.password).then((isMatch) => {
-        if (!isMatch)
-          return res.status(400).json({ msg: "Invalid credentials" });
-        jwt.sign(
-          { id: result.id },
-          config.get("jwtSecret"),
-          { expiresIn: 36000 },
-          (err, token) => {
-            if (err) throw err;
-            console.log("json");
-            res.json({
-              token,
-              user: {
-                id: result.id,
-                login: result.login,
-                email: result.email,
-              },
-            });
-          }
-        );
-      });
+      bcrypt
+        .compare(password, result.password)
+        .then((isMatch) => {
+          if (!isMatch)
+            return res.status(400).json({ msg: "Invalid credentials" });
+          jwt.sign(
+            { id: result.id },
+            config.get("jwtSecret"),
+            { expiresIn: 36000 },
+            (err, token) => {
+              if (err) throw err;
+              res.json({
+                token,
+                user: {
+                  id: result.id,
+                  login: result.login,
+                  email: result.email,
+                },
+              });
+            }
+          );
+        })
+        .catch((err) => res.status(400).json({ msg: "Password error" }));
     }
   );
 });
@@ -51,16 +53,24 @@ router.post("/", (req, res) => {
 // @route GET /api/auth/user
 // @desc Get user data
 // @access private
-/*router.get("/user", auth, (req, res) => {
-  console.log(req);
+router.get("/user", auth, (req, res) => {
   conn.query(
-    `SELECT password FROM users WHERE users.id=${req.user.id}`,
+    "SELECT u.login, u.email, u.id, c.name as city, co.name as country, " +
+      "d.name as department, e.about, e.last_name as lastName, " +
+      "e.first_name as firstName, e.father_name as fatherName, " +
+      "e.street, e.flat, e.house, e.image as avatar, " +
+      "e.phone_number as phoneNumber " +
+      "FROM users u INNER JOIN employees e ON u.employee_id = e.id " +
+      "INNER JOIN cities c ON e.city_id = c.id " +
+      "INNER JOIN countries co ON c.country_id = co.id " +
+      "INNER JOIN departments d ON e.department_id = d.id " +
+      `WHERE u.id = ${req.user.id};`,
     (err, results, fields) => {
       if (err) res.json(err);
-      res.json(results);
+      res.json(results[0]);
     }
   );
-});*/
+});
 
 // @route GET /api/auth/register
 // @desc Get register form data

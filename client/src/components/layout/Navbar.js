@@ -1,11 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class Navbar extends React.Component {
   onLogout = (e) => {
     e.preventDefault();
-    document.getElementById("logout-form").submit();
   };
+
+  componentDidMount() {
+    console.log(localStorage.getItem("token"));
+    console.log(this.props.auth);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      console.log(this.props.auth);
+    }
+  }
 
   render() {
     return (
@@ -48,4 +60,12 @@ class Navbar extends React.Component {
   }
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, {})(Navbar);

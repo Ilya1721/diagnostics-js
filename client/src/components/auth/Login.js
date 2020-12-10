@@ -1,7 +1,8 @@
-import React, { useContext, createContext, useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loginUser } from "../../actions/auth/authActions";
+import { Redirect } from "react-router-dom";
 
 class Login extends React.Component {
   constructor(props) {
@@ -27,19 +28,38 @@ class Login extends React.Component {
     });
   };
 
-  componentDidUpdate(prevProps) {
-    console.log(this.props.auth);
-    if (prevProps !== this.props) {
-      const { isAuthenticated, isWrongCredentials } = this.props.auth;
-      if (isAuthenticated) {
-        alert("Ви успішно зайшли");
-      } else if (isWrongCredentials) {
-        alert("Неправильний логін або пароль");
-      }
+  redirect = () => {
+    const { isAuthenticated } = this.props.auth;
+    if (isAuthenticated) {
+      return <Redirect to="/" />;
     }
-  }
+  };
+
+  setErrorClass = () => {
+    const { isWrongCredentials } = this.props.auth;
+    if (isWrongCredentials) {
+      return "is-invalid";
+    } else {
+      return "";
+    }
+  };
+
+  setErrorMsg = () => {
+    const { isWrongCredentials } = this.props.auth;
+    if (isWrongCredentials) {
+      return (
+        <span className="invalid-feedback" role="alert">
+          <strong>Неправильний логін або пароль</strong>
+        </span>
+      );
+    } else {
+      return <span></span>;
+    }
+  };
 
   render() {
+    const { wrongCredentialsMsg, wrongCredentialsClass } = this.state;
+
     return (
       <div className="container">
         <div className="row justify-content-center">
@@ -61,7 +81,7 @@ class Login extends React.Component {
                       <input
                         id="email"
                         type="email"
-                        className="form-control"
+                        className={`form-control ${this.setErrorClass()}`}
                         name="email"
                         required
                         autoComplete="email"
@@ -69,6 +89,8 @@ class Login extends React.Component {
                         onChange={this.onBaseInputChange}
                         value={this.state.email}
                       />
+
+                      {this.setErrorMsg()}
                     </div>
                   </div>
 
@@ -123,6 +145,8 @@ class Login extends React.Component {
                       </a>
                     </div>
                   </div>
+
+                  {this.redirect()}
                 </form>
               </div>
             </div>

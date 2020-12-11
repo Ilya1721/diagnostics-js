@@ -10,6 +10,7 @@ import { getRegisterData } from "../../actions/auth/authActions";
 import AwsClass from "../../aws/awsApi";
 import { getImgBuffer } from "../../aws/imgBuffer";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 
 class Register extends React.Component {
   constructor(props) {
@@ -42,9 +43,11 @@ class Register extends React.Component {
       jobs: [],
       departments: [],
       emails: [],
-      errors: { isEmailError: false },
+      errors: { isEmailError: false, isPasswordConfirmError: false },
       isOverallError: false,
-      msg: null,
+      emailErrorMsg: "Користувач з таким email уже існує",
+      passwordConfimMsg: "Паролі не співпадають",
+      overallErrorMsg: "Помилка реєстрації, перевірте, будь ласка, усі поля.",
       imageFile: {},
     };
   }
@@ -59,10 +62,67 @@ class Register extends React.Component {
     });
   };
 
+  onPasswordConfirmChange = (e) => {
+    const passwordConfirm = e.target.value;
+    const { user } = this.state;
+    if (passwordConfirm !== user.password) {
+      this.setState({
+        ...this.state,
+        errors: { ...this.state.errors, isPasswordConfirmError: true },
+        isOverallError: true,
+        user: {
+          ...this.state.user,
+          [e.target.name]: e.target.value,
+        },
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        errors: { ...this.state.errors, isPasswordConfirmError: false },
+        isOverallError: false,
+        user: {
+          ...this.state.user,
+          [e.target.name]: e.target.value,
+        },
+      });
+    }
+  };
+
+  setErrorClass = (error) => {
+    if (error) {
+      return "is-invalid";
+    } else {
+      return "";
+    }
+  };
+
+  setErrorMsg = (error, msg) => {
+    if (error) {
+      return (
+        <span className="invalid-feedback" role="alert">
+          <strong>{msg}</strong>
+        </span>
+      );
+    } else {
+      return <span></span>;
+    }
+  };
+
+  setOverralErrorMsg = (error, msg) => {
+    if (error) {
+      return (
+        <span className="text-danger mx-auto mb-4" role="alert">
+          <strong>{msg}</strong>
+        </span>
+      );
+    } else {
+      return <span></span>;
+    }
+  };
+
   onEmailChange = (e) => {
     const email = e.target.value;
     if (this.state.emails.includes(email)) {
-      alert("Користувач з таким email уже існує");
       this.setState({
         ...this.state,
         errors: { ...this.state.errors, isEmailError: true },
@@ -125,6 +185,13 @@ class Register extends React.Component {
         clinic: e.target.value,
       },
     });
+  };
+
+  redirect = () => {
+    const { isAuthenticated } = this.props.auth;
+    if (isAuthenticated) {
+      return <Redirect to="/" />;
+    }
   };
 
   onSubmit = (e) => {
@@ -210,6 +277,13 @@ class Register extends React.Component {
 
   render() {
     const { cities, countries, clinics, jobs, departments } = this.state;
+    const { isEmailError, isPasswordConfirmError } = this.state.errors;
+    const {
+      emailErrorMsg,
+      passwordConfimMsg,
+      isOverallError,
+      overallErrorMsg,
+    } = this.state;
     return (
       <div className="container">
         <div className="row justify-content-center">
@@ -258,13 +332,16 @@ class Register extends React.Component {
                       <input
                         id="email"
                         type="email"
-                        className="form-control"
+                        className={`form-control ${this.setErrorClass(
+                          isEmailError
+                        )}`}
                         name="email"
                         required
                         autoComplete="email"
                         onChange={this.onEmailChange}
                         value={this.state.email}
                       />
+                      {this.setErrorMsg(isEmailError, emailErrorMsg)}
                     </div>
                   </div>
 
@@ -280,13 +357,19 @@ class Register extends React.Component {
                       <input
                         id="password"
                         type="password"
-                        className="form-control"
+                        className={`form-control ${this.setErrorClass(
+                          isPasswordConfirmError
+                        )}`}
                         name="password"
                         required
                         autoComplete="new-password"
                         onChange={this.onBaseInputChange}
                         value={this.state.password}
                       />
+                      {this.setErrorMsg(
+                        isPasswordConfirmError,
+                        passwordConfimMsg
+                      )}
                     </div>
                   </div>
 
@@ -306,7 +389,7 @@ class Register extends React.Component {
                         name="passwordConfirm"
                         required
                         autoComplete="new-password"
-                        onChange={this.onBaseInputChange}
+                        onChange={this.onPasswordConfirmChange}
                         value={this.state.passwordConfirm}
                       />
                     </div>
@@ -649,14 +732,15 @@ class Register extends React.Component {
                       />
                     </div>
                   </div>
-
                   <div className="form-group row mb-0">
+                    {this.setOverralErrorMsg(isOverallError, overallErrorMsg)}
                     <div className="col-md-6 offset-md-4">
                       <button type="submit" className="btn btn-primary">
                         Register
                       </button>
                     </div>
                   </div>
+                  {this.redirect()}
                 </form>
               </div>
             </div>

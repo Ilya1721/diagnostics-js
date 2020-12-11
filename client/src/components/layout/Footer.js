@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = (props) => {
   return (
-    <nav className="navbar mt-5 fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+    <nav className="navbar footer navbar-expand-sm navbar-dark bg-dark">
       <Link className="navbar-brand" to="/">
         КН-17-2
       </Link>
@@ -20,7 +20,7 @@ const Footer = (props) => {
       </button>
       <div className="collapse navbar-collapse" id="navbarCollapse">
         <ul className="navbar-nav mr-auto">
-          <li className="text-white m-auto">© Copyright 2019</li>
+          <li className="text-white m-auto">© Copyright 2021</li>
           <li className="text-white m-auto pl-2">Вишинський І.О.</li>
         </ul>
       </div>

@@ -21,27 +21,29 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <Router>
-          <Navbar />
-          <main className="py-4">
-            <Switch>
-              <Route exact path="/">
-                <Welcome />
-              </Route>
-              <Route exact path="/clinics">
-                <Clinics />
-              </Route>
-              <Route exact path="/doctors">
-                <Doctors />
-              </Route>
-              <Route exact path="/login">
-                <Login />
-              </Route>
-              <Route exact path="/register">
-                <Register />
-              </Route>
-            </Switch>
-          </main>
-          <Footer />
+          <div className="wrapper">
+            <Navbar />
+            <main className="py-4 main">
+              <Switch>
+                <Route exact path="/">
+                  <Welcome />
+                </Route>
+                <Route exact path="/clinics">
+                  <Clinics />
+                </Route>
+                <Route exact path="/doctors">
+                  <Doctors />
+                </Route>
+                <Route exact path="/login">
+                  <Login />
+                </Route>
+                <Route exact path="/register">
+                  <Register />
+                </Route>
+              </Switch>
+            </main>
+            <Footer />
+          </div>
         </Router>
       </Provider>
     );

@@ -78,7 +78,6 @@ router.get("/user", auth, (req, res) => {
 router.get("/register", (req, res) => {
   conn.query("SELECT email FROM users", (err, results, fields) => {
     if (err) res.status(400).json(err);
-    console.log(results);
     res.json(results);
   });
 });

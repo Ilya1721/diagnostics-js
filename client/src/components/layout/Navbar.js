@@ -5,18 +5,43 @@ import { connect } from "react-redux";
 import { logOutUser } from "../../actions/auth/authActions";
 
 class Navbar extends React.Component {
-  onLogout = (e) => {
-    e.preventDefault();
-  };
-
   logOut = (e) => {
     e.preventDefault();
     this.props.logOutUser();
   };
 
+  renderProtectedLinks = () => {
+    const { isAuthenticated } = this.props.auth;
+    if (isAuthenticated) {
+      return (
+        <React.Fragment>
+          <li className="nav-item active">
+            <Link className="nav-link text-secondary" to="/visits">
+              Візити <span className="sr-only">(current)</span>
+            </Link>
+          </li>
+          <li className="nav-item active">
+            <Link className="nav-link text-secondary" to="/personalData">
+              Особисті дані <span className="sr-only">(current)</span>
+            </Link>
+          </li>
+          <li className="nav-item active">
+            <Link className="nav-link text-secondary" to="/statistics">
+              Стастика <span className="sr-only">(current)</span>
+            </Link>
+          </li>
+          <li className="nav-item active">
+            <Link className="nav-link text-secondary" to="/innerData">
+              Внутрішні дані <span className="sr-only">(current)</span>
+            </Link>
+          </li>
+        </React.Fragment>
+      );
+    }
+  };
+
   renderAuth = () => {
     const { isAuthenticated, user } = this.props.auth;
-    console.log(this.props.auth);
     if (!isAuthenticated) {
       return (
         <div className="top-right links">
@@ -78,6 +103,7 @@ class Navbar extends React.Component {
                   />
                 </Link>
               </div>
+              {this.renderProtectedLinks()}
               {this.renderAuth()}
             </ul>
           </div>

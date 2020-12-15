@@ -11,6 +11,7 @@ import Clinics from "./components/welcome/Clinics";
 import Doctors from "./components/welcome/Doctors";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import ProtectedRoutes from "./components/protected/PrivateRoutes";
 
 class App extends React.Component {
   componentDidMount() {
@@ -40,6 +41,7 @@ class App extends React.Component {
                 <Route exact path="/register">
                   <Register />
                 </Route>
+                <ProtectedRoutes />
               </Switch>
             </main>
             <Footer />

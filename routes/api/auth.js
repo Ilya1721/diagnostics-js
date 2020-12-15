@@ -58,12 +58,13 @@ router.get("/user", auth, (req, res) => {
     "SELECT u.login, u.email, u.id, c.name as city, co.name as country, " +
       "d.name as department, e.about, e.last_name as lastName, " +
       "e.first_name as firstName, e.father_name as fatherName, " +
-      "e.street, e.flat, e.house, e.image as avatar, " +
-      "e.phone_number as phoneNumber " +
+      "e.street, e.flat, e.house, e.image as image, " +
+      "e.phone_number as phoneNumber, j.name as job " +
       "FROM users u INNER JOIN employees e ON u.employee_id = e.id " +
       "INNER JOIN cities c ON e.city_id = c.id " +
       "INNER JOIN countries co ON c.country_id = co.id " +
       "INNER JOIN departments d ON e.department_id = d.id " +
+      "INNER JOIN jobs j on e.job_id = j.id " +
       `WHERE u.id = ${req.user.id};`,
     (err, results, fields) => {
       if (err) res.json(err);

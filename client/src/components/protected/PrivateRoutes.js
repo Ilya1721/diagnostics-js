@@ -1,12 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
 
 import Visits from "./Visits";
 import PrivateRoute from "./PrivateRoute";
@@ -14,7 +8,6 @@ import PrivateRoute from "./PrivateRoute";
 class PrivateRoutes extends React.Component {
   render() {
     const { isAuthenticated } = this.props.auth;
-    console.log(isAuthenticated);
     return (
       <React.Fragment>
         <PrivateRoute

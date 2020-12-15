@@ -7,6 +7,7 @@ import cityReducer from "./cityReducer";
 import countryReducer from "./countryReducer";
 import jobReducer from "./jobReducer";
 import departmentReducer from "./departmentReducer";
+import visitReducer from "./visitReducer";
 
 export default combineReducers({
   clinic: clinicReducer,
@@ -17,4 +18,5 @@ export default combineReducers({
   country: countryReducer,
   job: jobReducer,
   department: departmentReducer,
+  visit: visitReducer,
 });

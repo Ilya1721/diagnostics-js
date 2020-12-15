@@ -26,17 +26,12 @@ const countries = require("./routes/api/countries");
 const jobs = require("./routes/api/jobs");
 const departments = require("./routes/api/departments");
 const aws = require("./routes/api/aws");
+const visits = require("./routes/api/visits");
 
 //Initialize app
 const app = express();
 //Body Parser Middleware
 app.use(express.json());
-//Passport Middleware
-/*usePassport();
-app.use(express.static("public"));
-app.use(session({ secret: "cats", resave: true, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());*/
 //Routes
 app.use("/api/clinics", clinics);
 app.use("/api/users", users);
@@ -46,6 +41,7 @@ app.use("/api/countries", countries);
 app.use("/api/jobs", jobs);
 app.use("/api/departments", departments);
 app.use("/api/aws", aws);
+app.use("/api/visits", visits);
 
 const PORT = process.env.PORT || 5000;
 

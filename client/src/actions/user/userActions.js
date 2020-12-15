@@ -1,6 +1,5 @@
 import { GET_USERS, ADD_USER, DELETE_USER, USERS_LOADING } from "./userTypes";
 import axios from "axios";
-const ObjectId = require("mongodb").ObjectId;
 
 export const getUsers = () => (dispatch) => {
   dispatch(setUsersLoading());
@@ -11,7 +10,6 @@ export const getUsers = () => (dispatch) => {
       },
     })
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: GET_USERS,
         payload: res.data,

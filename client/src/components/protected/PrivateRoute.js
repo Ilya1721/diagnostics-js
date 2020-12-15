@@ -1,6 +1,8 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
+import HomeLayout from "../layout/HomeLayout";
+
 const PrivateRoute = ({
   component: Component,
   redirectTo,
@@ -13,7 +15,7 @@ const PrivateRoute = ({
   }
   return (
     <Route exact path={path}>
-      <Component />
+      <HomeLayout Child={Component} />
     </Route>
   );
 };

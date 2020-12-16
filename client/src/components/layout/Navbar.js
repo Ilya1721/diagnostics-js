@@ -21,6 +21,11 @@ class Navbar extends React.Component {
             </Link>
           </li>
           <li className="nav-item active">
+            <Link className="nav-link text-secondary" to="/patients">
+              Пацієнти <span className="sr-only">(current)</span>
+            </Link>
+          </li>
+          <li className="nav-item active">
             <Link className="nav-link text-secondary" to="/personalData">
               Особисті дані <span className="sr-only">(current)</span>
             </Link>

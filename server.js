@@ -27,6 +27,7 @@ const jobs = require("./routes/api/jobs");
 const departments = require("./routes/api/departments");
 const aws = require("./routes/api/aws");
 const visits = require("./routes/api/visits");
+const rooms = require("./routes/api/rooms");
 
 //Initialize app
 const app = express();
@@ -42,6 +43,7 @@ app.use("/api/jobs", jobs);
 app.use("/api/departments", departments);
 app.use("/api/aws", aws);
 app.use("/api/visits", visits);
+app.use("/api/rooms", rooms);
 
 const PORT = process.env.PORT || 5000;
 

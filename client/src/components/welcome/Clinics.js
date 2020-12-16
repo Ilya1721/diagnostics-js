@@ -9,7 +9,6 @@ class Clinics extends React.Component {
   }
 
   render() {
-    //console.log(this.props);
     const { clinics, loading } = this.props.clinic;
     return (
       <div className="container mt-3">

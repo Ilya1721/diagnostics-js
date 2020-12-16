@@ -52,17 +52,6 @@ router.get("/", (req, res) => {
   }
 });
 
-// @route POST /api/visits/create
-router.get("/create", (req, res) => {
-  conn.query(
-    "SELECT r.id AS roomId, r.name AS roomName, " +
-      "c.id AS cityId, c.name AS cityName" +
-      "FROM rooms r, cities c;",
-    (err, results, fields) => {
-      if (err) res.status(400).json(err);
-      res.json(results);
-    }
-  );
-});
+// @route POST /api/visits
 
 module.exports = router;

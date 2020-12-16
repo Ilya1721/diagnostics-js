@@ -3,7 +3,6 @@ import {
   ADD_VISIT,
   DELETE_VISIT,
   VISITS_LOADING,
-  VISITS_CREATE,
 } from "./visitTypes";
 import { GET_ERRORS } from "../error/errorTypes";
 import { returnErrors } from "../error/errorActions";
@@ -31,22 +30,28 @@ export const getVisits = (user) => (dispatch) => {
     });
 };
 
-export const getCreateData = () => (dispatch) => {
+export const createVisit = (data) => (dispatch) => {
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  // Request body
+  const body = JSON.stringify(data);
+
   axios
-    .get("/api/visits/create")
+    .post("/api/visits", body, config)
     .then((res) => {
       dispatch({
-        type: VISITS_CREATE,
+        type: ADD_VISIT,
         payload: res.data,
       });
     })
     .catch((err) => {
       dispatch(
-        returnErrors(
-          err.response.data,
-          err.response.status,
-          "VISIT_CREATE_DATA ERROR"
-        )
+        returnErrors(err.response.data, err.response.status, "ADD_VISIT_FAIL")
       );
     });
 };

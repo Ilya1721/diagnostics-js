@@ -9,7 +9,6 @@ class Visits extends React.Component {
   componentDidMount() {
     const { user } = this.props.auth;
     if (user.id !== undefined) {
-      console.log(user);
       this.props.getVisits(user);
     }
   }
@@ -26,13 +25,6 @@ class Visits extends React.Component {
     return (
       <div className="container">
         <h2 className="text-center mt-3">Візити</h2>
-        <Link
-          className="btn btn-primary text-right"
-          role="button"
-          to="/visits/create"
-        >
-          Додати Запис
-        </Link>
         <div className="row w-100">
           <div className="col-4"></div>
           <div className="col-6 my-3">

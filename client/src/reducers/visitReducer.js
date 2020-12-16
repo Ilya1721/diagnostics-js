@@ -3,11 +3,13 @@ import {
   ADD_VISIT,
   DELETE_VISIT,
   VISITS_LOADING,
+  VISITS_CREATE,
 } from "../actions/visit/visitTypes";
 
 const initialState = {
   visits: [],
   loading: false,
+  createData: [],
 };
 
 export default function (state = initialState, action) {
@@ -22,6 +24,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    case VISITS_CREATE:
+      return {
+        ...state,
+        createData: action.payload,
       };
     default:
       return state;

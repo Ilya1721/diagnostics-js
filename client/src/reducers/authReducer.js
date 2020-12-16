@@ -73,7 +73,6 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
     case REGISTER_FORM:
-      console.log(action.payload);
       return {
         ...state,
         registerData: action.payload,

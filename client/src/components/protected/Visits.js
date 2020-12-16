@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getVisits } from "../../actions/visit/visitActions";
+import moment from "moment";
 
 class Visits extends React.Component {
   componentDidMount() {
@@ -28,7 +29,7 @@ class Visits extends React.Component {
         <Link
           className="btn btn-primary text-right"
           role="button"
-          to="/visit/create"
+          to="/visits/create"
         >
           Додати Запис
         </Link>
@@ -77,12 +78,19 @@ class Visits extends React.Component {
               </div>
               <div className="col px-0">
                 <div className="card border-top-0 border-left-0 border-right-0 rounded-0 container">
-                  <div className="card-body">Початок: {visit.arrived_at}</div>
+                  <div className="card-body">
+                    Початок:{" "}
+                    {moment(visit.arrived_at).format("DD.MM.YYYY H:mm")}
+                  </div>
                 </div>
               </div>
               <div className="col pl-0">
                 <div className="card border-top-0 border-right-0 rounded-0 container">
-                  <div className="card-body">Кінець: {visit.departure_at}</div>
+                  <div className="card-body">
+                    Кінець:{" "}
+                    {visit.departure_at !== null &&
+                      moment(visit.departure_at).format("DD.MM.YYYY H:mm")}
+                  </div>
                 </div>
               </div>
             </div>
@@ -92,16 +100,15 @@ class Visits extends React.Component {
                   <div className="card-body">
                     <h3>Пацієнт</h3>
                     <p>
-                      <h5>ПІБ:</h5> {visit.lastName} {visit.firstName}{" "}
-                      {visit.fatherName}
+                      <span className="h5">ПІБ: </span> {visit.lastName}{" "}
+                      {visit.firstName} {visit.fatherName}
                     </p>
                     <p>
-                      <h5>Адреса:</h5> м.{visit.cityName}
-                      вул.{visit.street} {visit.house}
-                      кв. {visit.flat}
+                      <span className="h5">Адреса: </span> м.{visit.city}, вул.
+                      {visit.street} {visit.house}, кв. {visit.flat}
                     </p>
                     <p>
-                      <h5>Телефон:</h5> {visit.phoneNumber}
+                      <span className="h5">Телефон: </span> {visit.phoneNumber}
                     </p>
                   </div>
                 </div>
@@ -111,17 +118,17 @@ class Visits extends React.Component {
                   <div className="card-body">
                     <h3>Прийом</h3>
                     <p>
-                      <h5>Заклад:</h5>
+                      <span className="h5">Заклад: </span>
                       {visit.clinicName}
                     </p>
                     <p>
-                      <h5>Кабінет:</h5>
+                      <span className="h5">Кабінет: </span>
                       {visit.room}
                     </p>
                     <div className="pt-0">
                       <Link
                         to={`/visits/${visit.id}/edit`}
-                        className="btn btn-info"
+                        className="btn btn-info mr-2"
                         role="button"
                       >
                         Редагувати

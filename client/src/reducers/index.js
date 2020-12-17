@@ -9,6 +9,7 @@ import jobReducer from "./jobReducer";
 import departmentReducer from "./departmentReducer";
 import visitReducer from "./visitReducer";
 import roomReducer from "./roomReducer";
+import patientReducer from "./patientReducer";
 
 export default combineReducers({
   clinic: clinicReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
   department: departmentReducer,
   visit: visitReducer,
   room: roomReducer,
+  patient: patientReducer,
 });

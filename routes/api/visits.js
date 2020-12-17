@@ -15,10 +15,10 @@ router.get("/", (req, res) => {
         FROM presences p
         INNER JOIN patients pa ON p.patient_id = pa.id
         INNER JOIN cities c ON pa.city_id = c.id
-        INNER JOIN rooms r ON p.room_id = r.id
+        INNER JOIN employees e ON e.id = p.doctor_id
+        INNER JOIN rooms r ON e.room_id = r.id
         INNER JOIN departments d ON r.department_id = d.id
         INNER JOIN clinics cl ON d.clinic_id = cl.id
-        INNER JOIN employees e ON e.id = p.doctor_id
         INNER JOIN users u ON e.id = u.employee_id
         WHERE u.id = ${id}
         ORDER BY p.updated_at DESC;`,
@@ -37,10 +37,10 @@ router.get("/", (req, res) => {
         FROM presences p
         INNER JOIN patients pa ON p.patient_id = pa.id
         INNER JOIN cities c ON pa.city_id = c.id
-        INNER JOIN rooms r ON p.room_id = r.id
+        INNER JOIN employees e ON e.id = p.doctor_id
+        INNER JOIN rooms r ON e.room_id = r.id
         INNER JOIN departments d ON r.department_id = d.id
         INNER JOIN clinics cl ON d.clinic_id = cl.id
-        INNER JOIN employees e ON e.id = p.doctor_id
         INNER JOIN users u ON e.id = u.employee_id
         WHERE u.id = ${id}
         ORDER BY p.updated_at DESC;`,

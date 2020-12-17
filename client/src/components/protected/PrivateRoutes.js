@@ -2,8 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import Visits from "./Visits";
-import VisitsCreateForm from "./VisitsCreateForm";
+import Visits from "./Visit/Visits";
+import VisitsCreateForm from "./Visit/VisitsCreateForm";
+import Patients from "./Patient/Patients";
+import Patient from "./Patient/Patient";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -21,6 +23,18 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated}
           path="/visits/create"
           component={VisitsCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/patients"
+          component={Patients}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path={`/patients/:id/show`}
+          component={Patient}
           redirectTo="/login"
         />
       </React.Fragment>

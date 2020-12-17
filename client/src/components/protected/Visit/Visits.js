@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getVisits } from "../../actions/visit/visitActions";
+import { getVisits } from "../../../actions/visit/visitActions";
 import moment from "moment";
 
 class Visits extends React.Component {

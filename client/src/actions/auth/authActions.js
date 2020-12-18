@@ -45,6 +45,7 @@ export const loginUser = (data) => (dispatch) => {
         type: LOGIN_SUCCESS,
         payload: res.data,
       });
+      dispatch(loadUser());
     })
     .catch((err) => {
       dispatch(
@@ -88,12 +89,13 @@ export const register = (data) => (dispatch) => {
 
   axios
     .post("/api/users", body, config)
-    .then((res) =>
+    .then((res) => {
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,
-      })
-    )
+      });
+      dispatch(loadUser());
+    })
     .catch((err) => {
       dispatch(
         returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")

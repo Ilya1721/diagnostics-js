@@ -41,6 +41,7 @@ export const getPatient = (id) => (dispatch) => {
   axios
     .get(`/api/patients/${id}`)
     .then((res) => {
+      console.log(res.data);
       dispatch({
         type: GET_PATIENT,
         payload: res.data,

@@ -28,7 +28,7 @@ class Patients extends React.Component {
           <div className="input-group">
             <select name="category" className="form-control w-25">
               <option value="patients.last_name">Прізвище</option>
-              <option value="patients.first_name">Ім`я</option>
+              <option value="patients.first_name">Ім'я</option>
               <option value="patients.father_name">По-батькові</option>
               <option value="presences.id">Номер картки</option>
             </select>

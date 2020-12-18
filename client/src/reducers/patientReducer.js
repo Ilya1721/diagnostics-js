@@ -9,7 +9,6 @@ import {
 
 const initialState = {
   patients: [],
-  patient: {},
   loading: false,
   createData: [],
 };
@@ -25,7 +24,7 @@ export default function (state = initialState, action) {
     case GET_PATIENT:
       return {
         ...state,
-        patient: action.payload,
+        patients: [action.payload],
         loading: false,
       };
     case PATIENTS_LOADING:

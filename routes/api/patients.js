@@ -5,31 +5,22 @@ const conn = require("../../config/db");
 // @route GET /api/patients
 router.get("/", (req, res) => {
   const { id, find } = req.query;
-  if (find === undefined) {
-    conn.query(
-      `SELECT p.last_name AS lastName,
-      p.first_name AS firstName, p.father_name AS fatherName,
-      p.id FROM patients p INNER JOIN users u
-      ON p.doctor_id = u.employee_id WHERE u.id = ${id}
-      ORDER BY p.updated_at`,
-      (err, results, fields) => {
-        if (err) res.status(400).json(err);
-        res.json(results);
-      }
-    );
-  } else {
-    conn.query(
-      `SELECT p.last_name AS lastName,
-      p.first_name AS firstName, p.father_name AS fatherName,
-      p.id FROM patients p INNER JOIN users u
-      ON p.doctor_id = u.employee_id WHERE u.id = ${id}
-      ORDER BY p.updated_at`,
-      (err, results, fields) => {
-        if (err) res.status(400).json(err);
-        res.json(results);
-      }
-    );
+  let findStr = "";
+  if (find !== undefined) {
+    findStr = `AND ${find} = dede;`;
   }
+
+  conn.query(
+    "SELECT p.last_name AS lastName, " +
+      "p.first_name AS firstName, p.father_name AS fatherName, " +
+      "p.id FROM patients p INNER JOIN users u " +
+      `ON p.doctor_id = u.employee_id WHERE u.id = ${id} ${findStr} ` +
+      "ORDER BY p.updated_at;",
+    (err, results, fields) => {
+      if (err) res.status(400).json(err);
+      res.json(results);
+    }
+  );
 });
 
 // @route GET /api/patients/id
@@ -67,10 +58,11 @@ router.get("/:id", (req, res) => {
     `WHERE p.patient_id = ${id}; `;
 
   const procedures =
-    "SELECT p.id, p.name, p.description, p.unit_of_measure AS unitOfMeasure, " +
+    "SELECT p.id, p.name, pp.amount, p.description, " +
+    "p.unit_of_measure AS unitOfMeasure, " +
     "pp.date_plan AS datePlan, pp.date_fact AS dateFact FROM procedures p " +
     "INNER JOIN presence_procedure pp ON pp.procedure_id = p.id " +
-    "INNER JOIN presences pa ON p.id = pp.presence_id " +
+    "INNER JOIN presences pa ON pa.id = pp.presence_id " +
     `WHERE pa.patient_id = ${id}; `;
 
   const treatments =
@@ -80,12 +72,10 @@ router.get("/:id", (req, res) => {
     "INNER JOIN presences p ON p.id = pt.presence_id " +
     `WHERE p.patient_id = ${id}; `;
 
-  console.log("back end");
   conn.query(
     `${patient} ${symptoms} ${diagnosis} ${medicaments} ${procedures} ${treatments}`,
     (err, results, fields) => {
       if (err) throw err;
-      console.log(results);
       res.json({
         personalData: results[0][0],
         symptoms: results[1],

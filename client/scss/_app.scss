@@ -12,6 +12,13 @@ html {
   min-height: 100vh;
 }
 
+.black-border {
+  td,
+  th {
+    border: 1px solid #000 !important;
+  }
+}
+
 .main {
   padding-bottom: 50px !important;
 }

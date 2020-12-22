@@ -10,6 +10,10 @@ html {
   flex-direction: column;
   min-height: 100vh; }
 
+.black-border td,
+.black-border th {
+  border: 1px solid #000 !important; }
+
 .main {
   padding-bottom: 50px !important; }
 

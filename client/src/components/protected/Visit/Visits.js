@@ -4,6 +4,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getVisits } from "../../../actions/visit/visitActions";
 import moment from "moment";
+import Diagnosis from "../Helpers/Diagnosis";
+import Treatments from "../Helpers/Treatments";
+import Symptoms from "../Helpers/Symptoms";
+import Medicaments from "../Helpers/Medicaments";
+import Procedures from "../Helpers/Procedures";
 
 class Visits extends React.Component {
   componentDidMount() {
@@ -24,7 +29,7 @@ class Visits extends React.Component {
 
     return (
       <div className="container">
-        <h2 className="text-center mt-3">Візити</h2>
+        <h3 className="text-center mt-3">Візити</h3>
         <div className="row w-100">
           <div className="col-4"></div>
           <div className="col-6 my-3">
@@ -38,7 +43,6 @@ class Visits extends React.Component {
                   <option value="patients.last_name">Прізвище</option>
                   <option value="patients.first_name">Ім'я</option>
                   <option value="patients.father_name">По-батькові</option>
-                  <option value="rooms.number">Кабінет</option>
                   <option value="patients.street">Вулиця</option>
                   <option value="presences.id">Номер картки</option>
                 </select>
@@ -71,8 +75,7 @@ class Visits extends React.Component {
               <div className="col px-0">
                 <div className="card border-top-0 border-left-0 border-right-0 rounded-0 container">
                   <div className="card-body">
-                    Початок:{" "}
-                    {moment(visit.arrived_at).format("DD.MM.YYYY H:mm")}
+                    Початок: {moment(visit.startAt).format("DD.MM.YYYY H:mm")}
                   </div>
                 </div>
               </div>
@@ -81,7 +84,7 @@ class Visits extends React.Component {
                   <div className="card-body">
                     Кінець:{" "}
                     {visit.departure_at !== null &&
-                      moment(visit.departure_at).format("DD.MM.YYYY H:mm")}
+                      moment(visit.endAt).format("DD.MM.YYYY H:mm")}
                   </div>
                 </div>
               </div>
@@ -134,6 +137,13 @@ class Visits extends React.Component {
                       </Link>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <div className="card rounded-0 border-left-0 border-bottom-0 border-top-1 border-right-0 container">
+                  <div className="card-body">dede</div>
                 </div>
               </div>
             </div>

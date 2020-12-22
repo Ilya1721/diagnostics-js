@@ -23,30 +23,49 @@ class Patients extends React.Component {
 
     return (
       <div className="container">
-        <h3>Пацієнти</h3>
-        <form onSubmit={this.findPatient} className="form-inline mb-2">
-          <div className="input-group">
-            <select name="category" className="form-control w-25">
-              <option value="patients.last_name">Прізвище</option>
-              <option value="patients.first_name">Ім'я</option>
-              <option value="patients.father_name">По-батькові</option>
-              <option value="presences.id">Номер картки</option>
-            </select>
-            <input
-              id="search"
-              name="search"
-              className="form-control w-50 input-group-append"
-              type="text"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <div className="input-group-append">
-              <button className="btn btn-success" type="submit">
-                Find<span className="glyphicon glyphicon-search"></span>
-              </button>
-            </div>
+        <h3 className="text-center">Пацієнти</h3>
+        <div className="row w-100">
+          <div className="col-4"></div>
+          <div className="col-6 my-3">
+            <form
+              onSubmit={this.findPatient}
+              method="GET"
+              className="form-inline"
+            >
+              <div className="input-group">
+                <select name="category" className="form-control w-25">
+                  <option value="patients.last_name">Прізвище</option>
+                  <option value="patients.first_name">Ім'я</option>
+                  <option value="patients.father_name">По-батькові</option>
+                  <option value="patients.street">Вулиця</option>
+                  <option value="presences.id">Номер картки</option>
+                </select>
+                <input
+                  id="search"
+                  name="search"
+                  className="form-control w-50 input-group-append"
+                  type="text"
+                  placeholder="Search"
+                  aria-label="Search"
+                />
+                <div className="input-group-append">
+                  <button className="btn btn-success" type="submit">
+                    Find<span className="glyphicon glyphicon-search"></span>
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
+          <div className="col-4">
+            <Link
+              className="btn btn-primary text-right mr-2 mb-3"
+              role="button"
+              to="/patient/create"
+            >
+              Зареєструвати пацієнта
+            </Link>
+          </div>
+        </div>
         <table className="table table-light">
           <thead className="thead-dark">
             <tr>

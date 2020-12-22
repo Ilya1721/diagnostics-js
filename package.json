@@ -26,6 +26,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb-client-encryption": "^1.1.0",
     "mongoose": "^5.10.9",
-    "mysql": "^2.18.1"
+    "mysql2": "^2.2.5"
   }
 }

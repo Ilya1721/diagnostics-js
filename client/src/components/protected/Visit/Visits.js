@@ -26,6 +26,7 @@ class Visits extends React.Component {
   render() {
     const { user } = this.props.auth;
     const { visits } = this.props.visit;
+    console.log(visits);
 
     return (
       <div className="container">
@@ -65,17 +66,18 @@ class Visits extends React.Component {
           <div className="col-4"></div>
         </div>
         {visits.map((visit) => (
-          <div key={visit.id} className="card rounded-0 mt-3">
+          <div key={visit.presence.id} className="card rounded-0 mt-3">
             <div className="row">
               <div className="col pr-0">
                 <div className="card border-top-0 border-left-0 rounded-0 container">
-                  <div className="card-body">№{visit.id}</div>
+                  <div className="card-body">№{visit.presence.id}</div>
                 </div>
               </div>
               <div className="col px-0">
                 <div className="card border-top-0 border-left-0 border-right-0 rounded-0 container">
                   <div className="card-body">
-                    Початок: {moment(visit.startAt).format("DD.MM.YYYY H:mm")}
+                    Початок:{" "}
+                    {moment(visit.presence.startAt).format("DD.MM.YYYY H:mm")}
                   </div>
                 </div>
               </div>
@@ -84,7 +86,7 @@ class Visits extends React.Component {
                   <div className="card-body">
                     Кінець:{" "}
                     {visit.departure_at !== null &&
-                      moment(visit.endAt).format("DD.MM.YYYY H:mm")}
+                      moment(visit.presence.endAt).format("DD.MM.YYYY H:mm")}
                   </div>
                 </div>
               </div>
@@ -95,15 +97,18 @@ class Visits extends React.Component {
                   <div className="card-body">
                     <h3>Пацієнт</h3>
                     <p>
-                      <span className="h5">ПІБ: </span> {visit.lastName}{" "}
-                      {visit.firstName} {visit.fatherName}
+                      <span className="h5">ПІБ: </span> {visit.patient.lastName}{" "}
+                      {visit.patient.firstName} {visit.patient.fatherName}
                     </p>
                     <p>
-                      <span className="h5">Адреса: </span> м.{visit.city}, вул.
-                      {visit.street} {visit.house}, кв. {visit.flat}
+                      <span className="h5">Адреса: </span> м.
+                      {visit.patient.city}, вул.
+                      {visit.patient.street} {visit.patient.house}, кв.{" "}
+                      {visit.patient.flat}
                     </p>
                     <p>
-                      <span className="h5">Телефон: </span> {visit.phoneNumber}
+                      <span className="h5">Телефон: </span>{" "}
+                      {visit.patient.phoneNumber}
                     </p>
                   </div>
                 </div>
@@ -114,22 +119,22 @@ class Visits extends React.Component {
                     <h3>Прийом</h3>
                     <p>
                       <span className="h5">Заклад: </span>
-                      {visit.clinicName}
+                      {visit.clinic.name}
                     </p>
                     <p>
                       <span className="h5">Кабінет: </span>
-                      {visit.room}
+                      {visit.room.number}
                     </p>
                     <div className="pt-0">
                       <Link
-                        to={`/visits/${visit.id}/edit`}
+                        to={`/visits/${visit.presence.id}/edit`}
                         className="btn btn-info mr-2"
                         role="button"
                       >
                         Редагувати
                       </Link>
                       <Link
-                        to={`/visits/${visit.id}/show`}
+                        to={`/visits/${visit.presence.id}/show`}
                         className="btn btn-primary"
                         role="button"
                       >

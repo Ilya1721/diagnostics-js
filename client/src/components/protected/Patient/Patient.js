@@ -11,22 +11,30 @@ import Medicaments from "../Helpers/Medicaments";
 import Procedures from "../Helpers/Procedures";
 
 class Patient extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+    };
+  }
+
   componentDidMount() {
     const id = this.props.match.params.id;
     this.props.getPatient(id);
   }
 
-  render() {
-    const {
-      personalData,
-      symptoms,
-      diagnosis,
-      procedures,
-      medicaments,
-      treatments,
-    } = this.props.patient.patients[0];
+  componentDidUpdate(prevProps) {
+    if (prevProps.patient.loading !== this.props.patient.loading) {
+      this.setState({
+        loading: this.props.patient.loading,
+      });
+    }
+  }
 
-    if (personalData === undefined) {
+  render() {
+    const { loading } = this.state;
+
+    if (loading) {
       return (
         <div className="container">
           <div className="row">
@@ -35,20 +43,29 @@ class Patient extends React.Component {
         </div>
       );
     } else {
+      const {
+        patient,
+        symptoms,
+        diagnosis,
+        procedures,
+        medicaments,
+        treatments,
+      } = this.props.patient.patients[0];
+
       return (
         <div className="container">
           <div className="row">
             <div className="col-12">
               <h3 className="text-center mb-3">Картка пацієнта</h3>
               <Link
-                class="btn btn-primary text-right mr-2"
+                className="btn btn-primary text-right mr-2"
                 role="button"
                 to="/visit/create"
               >
                 Зареєструвати візит
               </Link>
               <Link
-                class="btn btn-info text-right"
+                className="btn btn-info text-right"
                 role="button"
                 to="/patient/edit"
               >
@@ -59,11 +76,10 @@ class Patient extends React.Component {
                   <div className="col-12">
                     <div className="card border-top-0 border-left-0 border-right-0 rounded-0 container">
                       <div className="card-body">
-                        №{personalData.id} {personalData.lastName}{" "}
-                        {personalData.firstName} {personalData.fatherName}; м.
-                        {personalData.city} вул.{personalData.street}{" "}
-                        {personalData.house} кв. {personalData.flat}; тел.{" "}
-                        {personalData.phoneNumber}.
+                        №{patient.id} {patient.lastName} {patient.firstName}{" "}
+                        {patient.fatherName}; м.
+                        {patient.city} вул.{patient.street} {patient.house} кв.{" "}
+                        {patient.flat}; тел. {patient.phoneNumber}.
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,4 @@
 export const GET_PATIENTS = "GET_PATIENTS";
-export const GET_PATIENT = "GET_PATIENT";
 export const EDIT_PATIENT = "EDIT_PATIENT";
 export const ADD_PATIENT = "ADD_PATIENT";
 export const DELETE_PATIENT = "DELETE_PATIENT";

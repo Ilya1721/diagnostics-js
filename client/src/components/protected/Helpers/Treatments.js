@@ -19,7 +19,7 @@ class Treatments extends React.Component {
           </thead>
           <tbody>
             {treatments.map((treatment) => (
-              <tr>
+              <tr key={treatment.id}>
                 <td align="center">{treatment.name}</td>
                 <td align="center">{treatment.description}</td>
                 <td align="center">

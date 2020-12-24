@@ -76,14 +76,26 @@ router.get("/:id", (req, res) => {
     `${patient} ${symptoms} ${diagnosis} ${medicaments} ${procedures} ${treatments}`,
     (err, results, fields) => {
       if (err) throw err;
-      res.json({
-        personalData: results[0][0],
-        symptoms: results[1],
-        diagnosis: results[2],
-        medicaments: results[3],
-        procedures: results[4],
-        treatments: results[5],
-      });
+      console.log([
+        {
+          patient: results[0][0],
+          symptoms: results[1],
+          diagnosis: results[2],
+          medicaments: results[3],
+          procedures: results[4],
+          treatments: results[5],
+        },
+      ]);
+      res.json([
+        {
+          patient: results[0][0],
+          symptoms: results[1],
+          diagnosis: results[2],
+          medicaments: results[3],
+          procedures: results[4],
+          treatments: results[5],
+        },
+      ]);
     }
   );
 });

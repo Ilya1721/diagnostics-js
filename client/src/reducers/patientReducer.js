@@ -3,7 +3,6 @@ import {
   ADD_PATIENT,
   DELETE_PATIENT,
   PATIENTS_LOADING,
-  GET_PATIENT,
   EDIT_PATIENT,
 } from "../actions/patient/patientTypes";
 
@@ -19,12 +18,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         patients: action.payload,
-        loading: false,
-      };
-    case GET_PATIENT:
-      return {
-        ...state,
-        patients: [action.payload],
         loading: false,
       };
     case PATIENTS_LOADING:

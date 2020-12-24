@@ -18,7 +18,7 @@ class Procedures extends React.Component {
           </thead>
           <tbody>
             {procedures.map((procedure) => (
-              <tr>
+              <tr key={procedure.id}>
                 <td align="center">{procedure.name}</td>
                 <td align="center">{procedure.amount}</td>
                 <td align="center">

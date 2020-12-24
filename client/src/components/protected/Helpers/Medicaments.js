@@ -18,7 +18,7 @@ class Medicaments extends React.Component {
           </thead>
           <tbody>
             {medicaments.map((medicament) => (
-              <tr>
+              <tr key={medicament.id}>
                 <td align="center">{medicament.name}</td>
                 <td align="center">{medicament.amount}</td>
                 <td align="center">

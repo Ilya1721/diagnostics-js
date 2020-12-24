@@ -17,7 +17,7 @@ class Symptoms extends React.Component {
           </thead>
           <tbody>
             {symptoms.map((symptom) => (
-              <tr>
+              <tr key={symptom.id}>
                 <td align="center">{symptom.name}</td>
                 <td align="center">{symptom.amount}</td>
                 <td align="center">

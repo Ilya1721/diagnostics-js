@@ -4,41 +4,64 @@ import { getClinics } from "../../actions/clinic/clinicActions";
 import PropTypes from "prop-types";
 
 class Clinics extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+    };
+  }
+
   componentDidMount() {
     this.props.getClinics();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.clinic.loading !== this.props.clinic.loading) {
+      this.setState({
+        loading: this.props.clinic.loading,
+      });
+    }
+  }
+
   render() {
-    const { clinics, loading } = this.props.clinic;
-    return (
-      <div className="container mt-3">
-        <h3 className="text-center">Клініки</h3>
-        <div className="col text-center">
-          <form action="/clinics/filter" method="GET" className="form-inline">
-            <div className="input-group">
-              <select name="category" className="form-control w-25">
-                <option value="clinics.name">Назва</option>
-                <option value="cities.name">Місто</option>
-                <option value="clinics.type">Тип</option>
-              </select>
-              <input
-                id="search"
-                name="search"
-                className="form-control w-50 input-group-append"
-                type="text"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <div className="input-group-append">
-                <button className="btn btn-success" type="button">
-                  Find<span className="glyphicon glyphicon-search"></span>
-                </button>
-              </div>
-            </div>
-          </form>
+    if (this.state.loading) {
+      return (
+        <div className="container">
+          <div className="row">
+            <div className="col-12">loading...</div>
+          </div>
         </div>
-        {!loading &&
-          clinics.map((clinic) => (
+      );
+    } else {
+      const { clinics } = this.props.clinic;
+      return (
+        <div className="container mt-3">
+          <h3 className="text-center">Клініки</h3>
+          <div className="col text-center">
+            <form action="/clinics/filter" method="GET" className="form-inline">
+              <div className="input-group">
+                <select name="category" className="form-control w-25">
+                  <option value="clinics.name">Назва</option>
+                  <option value="cities.name">Місто</option>
+                  <option value="clinics.type">Тип</option>
+                </select>
+                <input
+                  id="search"
+                  name="search"
+                  className="form-control w-50 input-group-append"
+                  type="text"
+                  placeholder="Search"
+                  aria-label="Search"
+                />
+                <div className="input-group-append">
+                  <button className="btn btn-success" type="button">
+                    Find<span className="glyphicon glyphicon-search"></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          {clinics.map((clinic) => (
             <div key={clinic.clinic_id} className="card mt-3">
               <div className="row mt-2">
                 <div className="col-2">
@@ -68,8 +91,9 @@ class Clinics extends React.Component {
               </div>
             </div>
           ))}
-      </div>
-    );
+        </div>
+      );
+    }
   }
 }
 

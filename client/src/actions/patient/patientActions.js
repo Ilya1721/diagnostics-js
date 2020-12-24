@@ -3,7 +3,6 @@ import {
   ADD_PATIENT,
   DELETE_PATIENT,
   PATIENTS_LOADING,
-  GET_PATIENT,
   EDIT_PATIENT,
 } from "./patientTypes";
 import { GET_ERRORS } from "../error/errorTypes";
@@ -42,7 +41,7 @@ export const getPatient = (id) => (dispatch) => {
     .get(`/api/patients/${id}`)
     .then((res) => {
       dispatch({
-        type: GET_PATIENT,
+        type: GET_PATIENTS,
         payload: res.data,
       });
     })

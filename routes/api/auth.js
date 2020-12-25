@@ -34,7 +34,7 @@ router.post("/", (req, res) => {
             { expiresIn: 36000 },
             (err, token) => {
               if (err) throw err;
-              res.json({
+              return res.json({
                 token,
                 user: {
                   id: result.id,
@@ -67,8 +67,8 @@ router.get("/user", auth, (req, res) => {
       "INNER JOIN jobs j on e.job_id = j.id " +
       `WHERE u.id = ${req.user.id};`,
     (err, results, fields) => {
-      if (err) res.json(err);
-      res.json(results[0]);
+      if (err) return res.json(err);
+      return res.json(results[0]);
     }
   );
 });
@@ -78,8 +78,8 @@ router.get("/user", auth, (req, res) => {
 // @access public
 router.get("/register", (req, res) => {
   conn.query("SELECT email FROM users", (err, results, fields) => {
-    if (err) res.status(400).json(err);
-    res.json(results);
+    if (err) return res.status(400).json(err);
+    return res.json(results);
   });
 });
 

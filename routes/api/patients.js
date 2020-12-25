@@ -13,8 +13,8 @@ router.get("/", (req, res) => {
   conn.query(
     "SELECT p.last_name AS lastName, " +
       "p.first_name AS firstName, p.father_name AS fatherName, " +
-      "p.id FROM patients p INNER JOIN users u " +
-      `ON p.doctor_id = u.employee_id WHERE u.id = ${id} ${findStr} ` +
+      "p.id FROM patients p " +
+      `WHERE p.doctor_id = ${id} ${findStr} ` +
       "ORDER BY p.updated_at;",
     (err, results, fields) => {
       if (err) res.status(400).json(err);
@@ -76,16 +76,6 @@ router.get("/:id", (req, res) => {
     `${patient} ${symptoms} ${diagnosis} ${medicaments} ${procedures} ${treatments}`,
     (err, results, fields) => {
       if (err) throw err;
-      console.log([
-        {
-          patient: results[0][0],
-          symptoms: results[1],
-          diagnosis: results[2],
-          medicaments: results[3],
-          procedures: results[4],
-          treatments: results[5],
-        },
-      ]);
       res.json([
         {
           patient: results[0][0],
@@ -101,5 +91,27 @@ router.get("/:id", (req, res) => {
 });
 
 // @route POST /api/patients
+router.post("/", (req, res) => {
+  const data = req.body;
+  if (!{ ...data }) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  conn.query(
+    "INSERT INTO patients(city_id, doctor_id, " +
+      "last_name, first_name, father_name, street, " +
+      "house, flat, phone_number) VALUES " +
+      `(${data.city}, ${data.doctor}, "${data.lastName}", ` +
+      `"${data.firstName}", "${data.fatherName}", "${data.street}", ` +
+      `"${data.house}", "${data.flat}", "${data.phoneNumber}");`,
+    (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+      return res.json([
+        {
+          patient: { ...data, id: results.insertId },
+        },
+      ]);
+    }
+  );
+});
 
 module.exports = router;

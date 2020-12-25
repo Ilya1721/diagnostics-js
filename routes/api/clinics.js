@@ -12,8 +12,8 @@ router.get("/", (req, res) => {
       "cl.phone_number AS clinic_phoneNumber " +
       "FROM clinics cl JOIN cities c",
     (err, results, fields) => {
-      if (err) res.status(400).json(err);
-      res.json(results);
+      if (err) return res.status(400).json(err);
+      return res.json(results);
     }
   );
 });

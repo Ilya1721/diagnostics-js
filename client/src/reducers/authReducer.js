@@ -15,7 +15,7 @@ const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: false,
   isWrongCredentials: false,
-  isLoading: false,
+  loading: false,
   user: {},
   registerData: [],
 };
@@ -25,13 +25,13 @@ export default function (state = initialState, action) {
     case USER_LOADING:
       return {
         ...state,
-        isLoading: true,
+        loading: true,
       };
     case USER_LOADED:
       return {
         ...state,
         isAuthenticated: true,
-        isLoading: false,
+        loading: false,
         user: action.payload,
       };
     case USER_UNLOADED:
@@ -48,7 +48,7 @@ export default function (state = initialState, action) {
         ...state,
         ...action.payload,
         isAuthenticated: true,
-        isLoading: false,
+        loading: false,
         isWrongCredentials: false,
       };
     case LOGIN_FAIL:
@@ -58,7 +58,7 @@ export default function (state = initialState, action) {
         token: null,
         user: null,
         isAuthenticated: false,
-        isLoading: false,
+        loading: false,
         isWrongCredentials: true,
       };
     case AUTH_ERROR:
@@ -70,7 +70,7 @@ export default function (state = initialState, action) {
         token: null,
         user: null,
         isAuthenticated: false,
-        isLoading: false,
+        loading: false,
       };
     case REGISTER_FORM:
       return {

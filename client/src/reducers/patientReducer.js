@@ -20,6 +20,12 @@ export default function (state = initialState, action) {
         patients: action.payload,
         loading: false,
       };
+    case ADD_PATIENT:
+      return {
+        ...state,
+        patients: [...state.patients, ...action.payload],
+        loading: false,
+      };
     case PATIENTS_LOADING:
       return {
         ...state,

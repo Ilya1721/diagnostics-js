@@ -237,7 +237,7 @@ class Register extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      const { cities, isLoading } = this.props.city;
+      const { cities, loading } = this.props.city;
       const { countries } = this.props.country;
       const { clinics } = this.props.clinic;
       const { jobs } = this.props.job;

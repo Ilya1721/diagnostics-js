@@ -19,8 +19,8 @@ router.get("/", (req, res) => {
       "e.department_id = d.id INNER JOIN clinics c ON d.clinic_id = c.id " +
       "INNER JOIN jobs j ON e.job_id = j.id",
     (err, results, fields) => {
-      if (err) res.status(400).json(err);
-      res.json(results);
+      if (err) return res.status(400).json(err);
+      return res.json(results);
     }
   );
 });
@@ -51,7 +51,7 @@ router.post("/", (req, res) => {
           `"${data.fatherName}", "${data.street}", "${data.house}", "${data.flat}", ` +
           `"${data.phoneNumber}", "${data.image}");`,
         (err, results, fields) => {
-          if (err) res.status(400).json(err);
+          if (err) return res.status(400).json(err);
           const employee_id = results.insertId;
           bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(data.password, salt, (err, hash) => {
@@ -62,14 +62,14 @@ router.post("/", (req, res) => {
                   `(${employee_id}, "${data.login}", "${data.email}", ` +
                   `"${hash}");`,
                 (err, results, fields) => {
-                  if (err) res.status(400).json(err);
+                  if (err) return res.status(400).json(err);
                   jwt.sign(
                     { id: results.insertId },
                     config.get("jwtSecret"),
                     { expiresIn: 36000 },
                     (err, token) => {
-                      if (err) res.status(400).json(err);
-                      res.json({
+                      if (err) return res.status(400).json(err);
+                      return res.json({
                         token,
                         user: {
                           id: results.insertId,

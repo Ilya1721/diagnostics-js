@@ -14,12 +14,12 @@ router.get("/", (req, res) => {
     "SELECT p.id AS patientId, r.id AS roomId, " +
       "cl.id AS clinicId, pr.id AS presenceId FROM patients p " +
       "INNER JOIN presences pr ON pr.patient_id = p.id " +
-      "INNER JOIN employees e ON e.id = pr.doctor_id " +
+      "INNER JOIN users u ON u.id = pr.doctor_id " +
+      "INNER JOIN employees e ON e.id = u.employee_id " +
       "INNER JOIN rooms r ON e.room_id = r.id " +
       "INNER JOIN departments d ON r.department_id = d.id " +
       "INNER JOIN clinics cl ON d.clinic_id = cl.id " +
-      "INNER JOIN users u ON e.id = u.employee_id " +
-      `WHERE u.id = ${id} ${findStr} ` +
+      `WHERE pr.doctor_id = ${id} ${findStr} ` +
       "ORDER BY pr.updated_at DESC;",
     (err, results, fields) => {
       if (err) throw err;

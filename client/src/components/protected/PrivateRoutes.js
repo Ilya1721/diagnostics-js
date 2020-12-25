@@ -6,6 +6,7 @@ import Visits from "./Visit/Visits";
 import VisitsCreateForm from "./Visit/VisitsCreateForm";
 import Patients from "./Patient/Patients";
 import Patient from "./Patient/Patient";
+import PatientCreateForm from "./Patient/PatientCreateForm";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -35,6 +36,12 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated}
           path={`/patients/:id/show`}
           component={Patient}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/patients/create"
+          component={PatientCreateForm}
           redirectTo="/login"
         />
       </React.Fragment>

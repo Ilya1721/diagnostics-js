@@ -7,7 +7,7 @@ import {
 
 const initialState = {
   cities: [],
-  isLoading: false,
+  loading: false,
 };
 
 export default function (state = initialState, action) {
@@ -16,12 +16,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         cities: action.payload,
-        isLoading: false,
+        loading: false,
       };
     case CITIES_LOADING:
       return {
         ...state,
-        isLoading: true,
+        loading: true,
       };
     default:
       return state;

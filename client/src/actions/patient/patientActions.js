@@ -67,6 +67,7 @@ export const createPatient = (data) => (dispatch) => {
   // Request body
   const body = JSON.stringify(data);
 
+  dispatch(setPatientsLoading());
   axios
     .post("/api/patients", body, config)
     .then((res) => {

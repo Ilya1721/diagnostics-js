@@ -23,6 +23,30 @@ router.get("/", (req, res) => {
   );
 });
 
+// @route PUT /api/patients/id
+router.put("/:id", (req, res) => {
+  const data = req.body;
+  if (!{ ...data }) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  console.log(data);
+  conn.query(
+    `UPDATE patients SET city_id = ${data.city}, doctor_id = ${data.doctor}, ` +
+      `last_name = "${data.lastName}", first_name = "${data.firstName}", ` +
+      `father_name = "${data.fatherName}", street = "${data.street}", ` +
+      `house = "${data.house}", flat = "${data.flat}", ` +
+      `phone_number = "${data.phoneNumber}" WHERE id = ${data.id};`,
+    (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+      return res.json([
+        {
+          patient: { ...data },
+        },
+      ]);
+    }
+  );
+});
+
 // @route GET /api/patients/id
 router.get("/:id", (req, res) => {
   const id = req.params.id;
@@ -30,7 +54,8 @@ router.get("/:id", (req, res) => {
   const patient =
     "SELECT p.first_name AS firstName, p.last_name AS lastName, " +
     "p.father_name AS fatherName, p.phone_number AS phoneNumber, " +
-    "p.street, p.house, p.flat, c.name AS city, p.id " +
+    "p.street, p.house, p.flat, p.doctor_id AS doctor, c.name AS city, " +
+    "p.id, c.id AS cityId " +
     "FROM patients p INNER JOIN cities c ON c.id = p.city_id " +
     `WHERE p.id = ${id}; `;
 

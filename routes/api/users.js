@@ -5,8 +5,6 @@ const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
 
-const User = require("../../models/User");
-
 // @route GET /api/users
 // @desc get all users that are doctors
 // @access public
@@ -87,6 +85,30 @@ router.post("/", (req, res) => {
       );
     }
   });
+});
+
+// @route GET /api/users/id
+router.get("/:id", (req, res) => {
+  const id = req.params.id;
+
+  conn.query(
+    "SELECT e.last_name AS lastName, e.first_name AS firstName, " +
+      "e.father_name AS fatherName, e.street, e.house, " +
+      "e.flat, e.phone_number AS phoneNumber, e.image, " +
+      "c.name AS city, c.id AS cityId, j.name AS job, j.id AS jobId, " +
+      "d.name AS department, d.id AS departemntId, e.about, " +
+      "u.id, r.number AS room, r.id AS roomId FROM employees e " +
+      "INNER JOIN cities c ON e.city_id = c.id " +
+      "INNER JOIN jobs j ON e.job_id = j.id " +
+      "INNER JOIN departments d ON e.department_id = d.id " +
+      "INNER JOIN rooms r ON e.room_id = r.id " +
+      "INNER JOIN users u ON u.employee_id = e.id " +
+      `WHERE u.id = ${id};`,
+    (err, results, fields) => {
+      if (err) return res.status(400).json({ msg: "GET USER ERROR" });
+      return res.json([results[0]]);
+    }
+  );
 });
 
 module.exports = router;

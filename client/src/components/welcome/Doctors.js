@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { getUsers } from "../../actions/user/userActions";
 import PropTypes from "prop-types";
+import Loading from "../modals/Loading";
 
 class Doctors extends React.Component {
   constructor(props) {
@@ -25,13 +26,7 @@ class Doctors extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return (
-        <div className="container">
-          <div className="row">
-            <div className="col-12">loading...</div>
-          </div>
-        </div>
-      );
+      return <Loading />;
     } else {
       const { users } = this.props.user;
       return (

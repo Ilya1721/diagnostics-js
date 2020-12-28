@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { getClinics } from "../../actions/clinic/clinicActions";
 import PropTypes from "prop-types";
+import Loading from "../modals/Loading";
 
 class Clinics extends React.Component {
   constructor(props) {
@@ -25,13 +26,7 @@ class Clinics extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return (
-        <div className="container">
-          <div className="row">
-            <div className="col-12">loading...</div>
-          </div>
-        </div>
-      );
+      return <Loading />;
     } else {
       const { clinics } = this.props.clinic;
       return (

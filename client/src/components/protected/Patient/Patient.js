@@ -9,6 +9,7 @@ import Treatments from "../Helpers/Treatments";
 import Symptoms from "../Helpers/Symptoms";
 import Medicaments from "../Helpers/Medicaments";
 import Procedures from "../Helpers/Procedures";
+import Loading from "../../modals/Loading";
 
 class Patient extends React.Component {
   constructor(props) {
@@ -35,13 +36,7 @@ class Patient extends React.Component {
     const { loading } = this.state;
 
     if (loading) {
-      return (
-        <div className="container">
-          <div className="row">
-            <div className="col-12">loading...</div>
-          </div>
-        </div>
-      );
+      return <Loading />;
     } else {
       const {
         patient,
@@ -67,7 +62,7 @@ class Patient extends React.Component {
               <Link
                 className="btn btn-info text-right"
                 role="button"
-                to="/patient/edit"
+                to={`/patients/${patient.id}/edit`}
               >
                 Редагувати особисті дані
               </Link>

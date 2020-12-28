@@ -9,6 +9,7 @@ import Treatments from "../Helpers/Treatments";
 import Symptoms from "../Helpers/Symptoms";
 import Medicaments from "../Helpers/Medicaments";
 import Procedures from "../Helpers/Procedures";
+import Loading from "../../modals/Loading";
 
 class Visits extends React.Component {
   constructor(props) {
@@ -39,13 +40,7 @@ class Visits extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return (
-        <div className="container">
-          <div className="row">
-            <div className="col-12">loading...</div>
-          </div>
-        </div>
-      );
+      return <Loading />;
     } else {
       const { user } = this.props.auth;
       const { visits } = this.props.visit;

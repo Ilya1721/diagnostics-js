@@ -35,6 +35,36 @@ export const getPatients = (user) => (dispatch) => {
     });
 };
 
+export const editPatient = (data) => (dispatch) => {
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  // Request body
+  const body = JSON.stringify(data);
+
+  dispatch(setPatientsLoading());
+  axios
+    .put(`/api/patients/${data.id}`, body, config)
+    .then((res) => {
+      dispatch({
+        type: GET_PATIENTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(
+          err.response.data,
+          err.response.status,
+          "EDIT_PATIENT ERROR"
+        )
+      );
+    });
+};
+
 export const getPatient = (id) => (dispatch) => {
   dispatch(setPatientsLoading());
   axios

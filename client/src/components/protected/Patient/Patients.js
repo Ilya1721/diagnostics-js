@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getPatients } from "../../../actions/patient/patientActions";
+import Loading from "../../modals/Loading";
 
 class Patients extends React.Component {
   constructor(props) {
@@ -32,13 +33,7 @@ class Patients extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return (
-        <div className="container">
-          <div className="row">
-            <div className="col-12">loading...</div>
-          </div>
-        </div>
-      );
+      return <Loading />;
     } else {
       const { user } = this.props.auth;
       const { patients } = this.props.patient;

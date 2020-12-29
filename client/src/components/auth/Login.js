@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loginUser } from "../../actions/auth/authActions";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 class Login extends React.Component {
   constructor(props) {
@@ -114,33 +114,14 @@ class Login extends React.Component {
                     </div>
                   </div>
 
-                  <div className="form-group row">
-                    <div className="col-md-6 offset-md-4">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="remember"
-                          id="remember"
-                          onChange={this.onBaseInputChange}
-                          value={this.state.rememberMe}
-                        />
-                        <label className="form-check-label" htmlFor="remember">
-                          Remember Me
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="form-group row mb-0">
                     <div className="col-md-8 offset-md-4">
-                      <button type="submit" className="btn btn-primary">
+                      <button type="submit" className="btn btn-primary mr-2">
                         Login
                       </button>
-
-                      <a className="btn btn-link" href="/resetPassword">
-                        Forgot Your Password?
-                      </a>
+                      <Link to="/" className="btn btn-danger" role="button">
+                        Cancel
+                      </Link>
                     </div>
                   </div>
 

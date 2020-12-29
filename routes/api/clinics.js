@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
       "cl.type AS clinic_type, cl.schedule AS clinic_schedule, " +
       "cl.image as clinic_image, c.name AS city_name, c.id AS city_id, " +
       "cl.phone_number AS clinic_phoneNumber " +
-      "FROM clinics cl JOIN cities c",
+      "FROM clinics cl INNER JOIN cities c ON cl.city_id = c.id",
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
       return res.json(results);

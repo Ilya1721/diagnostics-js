@@ -97,15 +97,20 @@ router.get("/:id", (req, res) => {
       "e.flat, e.phone_number AS phoneNumber, e.image, " +
       "c.name AS city, c.id AS cityId, j.name AS job, j.id AS jobId, " +
       "d.name AS department, d.id AS departemntId, e.about, " +
+      "cl.name AS clinic, cl.id AS clinicId, " +
+      "u.login, co.id AS countryId, co.name AS country, " +
       "u.id, r.number AS room, r.id AS roomId FROM employees e " +
       "INNER JOIN cities c ON e.city_id = c.id " +
+      "INNER JOIN countries co ON c.country_id = co.id " +
       "INNER JOIN jobs j ON e.job_id = j.id " +
       "INNER JOIN departments d ON e.department_id = d.id " +
+      "INNER JOIN clinics cl ON d.clinic_id = cl.id " +
       "INNER JOIN rooms r ON e.room_id = r.id " +
       "INNER JOIN users u ON u.employee_id = e.id " +
       `WHERE u.id = ${id};`,
     (err, results, fields) => {
-      if (err) return res.status(400).json({ msg: "GET USER ERROR" });
+      if (err)
+        return res.status(400).json({ msg: "GET USER ERROR", error: err });
       return res.json([results[0]]);
     }
   );

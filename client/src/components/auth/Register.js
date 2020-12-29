@@ -10,7 +10,7 @@ import { getRegisterData } from "../../actions/auth/authActions";
 import AwsClass from "../../aws/awsApi";
 import { getImgBuffer } from "../../aws/imgBuffer";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 class Register extends React.Component {
   constructor(props) {
@@ -735,9 +735,12 @@ class Register extends React.Component {
                   <div className="form-group row mb-0">
                     {this.setOverralErrorMsg(isOverallError, overallErrorMsg)}
                     <div className="col-md-6 offset-md-4">
-                      <button type="submit" className="btn btn-primary">
+                      <button type="submit" className="btn btn-primary mr-2">
                         Register
                       </button>
+                      <Link to="/" className="btn btn-danger" role="button">
+                        Cancel
+                      </Link>
                     </div>
                   </div>
                   {this.redirect()}

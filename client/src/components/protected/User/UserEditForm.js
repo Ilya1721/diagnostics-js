@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { register } from "../../../actions/auth/authActions";
 import { getCities } from "../../../actions/city/cityActions";
 import { getCountries } from "../../../actions/country/countryActions";
 import { getClinics } from "../../../actions/clinic/clinicActions";
 import { getJobs } from "../../../actions/job/jobActions";
 import { getDepartments } from "../../../actions/department/departmentActions";
+import { getRooms } from "../../../actions/room/roomActions";
 import { getRegisterData } from "../../../actions/auth/authActions";
-import { getUser } from "../../../actions/user/userActions";
+import { getUser, editUser } from "../../../actions/user/userActions";
 import AwsClass from "../../../aws/awsApi";
 import { getImgBuffer } from "../../../aws/imgBuffer";
 import PropTypes from "prop-types";
@@ -35,6 +35,8 @@ class UserEditForm extends React.Component {
         phoneNumber: "",
         clinic: "",
         clinicId: null,
+        room: "",
+        roomId: null,
         job: "",
         jobId: null,
         department: "",
@@ -46,10 +48,12 @@ class UserEditForm extends React.Component {
       clinics: [],
       jobs: [],
       departments: [],
+      rooms: [],
       isOverallError: false,
       overallErrorMsg: "Помилка реєстрації, перевірте, будь ласка, усі поля.",
       imageFile: {},
       loading: true,
+      isComplete: false,
     };
   }
 
@@ -107,6 +111,7 @@ class UserEditForm extends React.Component {
     const { cities } = this.props.city;
     const { departments } = this.props.department;
     const { countries } = this.props.country;
+    const { rooms } = this.props.room;
     let countryId;
     try {
       countryId = parseInt(e.target.value);
@@ -120,12 +125,15 @@ class UserEditForm extends React.Component {
     );
     let updatedClinics = [];
     let updatedDepartments = [];
+    let updatedRooms = [];
     let cityId = null;
     let city = "";
     let clinic = "";
     let clinicId = null;
     let department = "";
     let departmentId = null;
+    let room = "";
+    let roomId = null;
     if (updatedCities.length > 0) {
       cityId = updatedCities[0].id;
       city = updatedCities[0].name;
@@ -143,7 +151,13 @@ class UserEditForm extends React.Component {
     if (updatedDepartments.length > 0) {
       department = updatedDepartments[0].name;
       departmentId = updatedDepartments[0].id;
+      updatedRooms = rooms.filter((r) => r.department_id === departmentId);
       updatedDepartments.shift();
+    }
+    if (updatedRooms.length > 0) {
+      room = updatedRooms[0].number;
+      roomId = updatedRooms[0].id;
+      updatedRooms.shift();
     }
     this.setState({
       ...this.state,
@@ -151,6 +165,7 @@ class UserEditForm extends React.Component {
       clinics: updatedClinics,
       departments: updatedDepartments,
       countries: updatedCountries,
+      rooms: updatedRooms,
       user: {
         ...this.state.user,
         countryId,
@@ -161,62 +176,244 @@ class UserEditForm extends React.Component {
         clinicId,
         department,
         departmentId,
+        room,
+        roomId,
       },
     });
   };
 
   onCityChange = (e) => {
-    const { clinics } = this.state;
+    const { clinics } = this.props.clinic;
+    const { departments } = this.props.department;
+    const { cities } = this.props.city;
+    const { rooms } = this.props.room;
+    let cityId;
+    let clinic = "";
+    let clinicId = null;
+    let updatedDepartments = [];
+    let updatedRooms = [];
+    let department = "";
+    let departmentId = null;
+    let room = "";
+    let roomId = null;
+    try {
+      cityId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    const updatedCities = cities.filter((c) => c.id !== cityId);
+    const city = cities.find((c) => c.id === cityId).name;
     const updatedClinics = clinics.filter(
-      (clinic) => clinic.city_id === e.target.value
+      (clinic) => clinic.city_id === cityId
     );
-    console.log(updatedClinics);
+    if (updatedClinics.length > 0) {
+      clinic = updatedClinics[0].clinic_name;
+      clinicId = updatedClinics[0].clinic_id;
+      updatedDepartments = departments.filter((d) => d.clinic_id === clinicId);
+      updatedClinics.shift();
+    }
+    if (updatedDepartments.length > 0) {
+      department = updatedDepartments[0].name;
+      departmentId = updatedDepartments[0].id;
+      updatedRooms = rooms.filter((r) => r.department_id === departmentId);
+      updatedDepartments.shift();
+    }
+    if (updatedRooms.length > 0) {
+      room = updatedRooms[0].number;
+      roomId = updatedRooms[0].id;
+      updatedRooms.shift();
+    }
     this.setState({
       ...this.state,
       clinics: updatedClinics,
+      departments: updatedDepartments,
+      rooms: updatedRooms,
+      cities: updatedCities,
       user: {
         ...this.state.user,
-        clinicId: e.target.value,
+        clinicId,
+        clinic,
+        departmentId,
+        department,
+        roomId,
+        room,
+        cityId,
+        city,
+      },
+    });
+  };
+
+  onClinicChange = (e) => {
+    const { departments } = this.props.department;
+    const { clinics } = this.props.clinic;
+    const { rooms } = this.props.room;
+    let clinicId;
+    let updatedRooms = [];
+    let room = "";
+    let roomId = null;
+    let department = "";
+    let departmentId = null;
+    try {
+      clinicId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    const updatedClinics = clinics.filter((c) => c.clinic_id !== clinicId);
+    const clinic = clinics.find((c) => c.clinic_id === clinicId).clinic_name;
+    const updatedDepartments = departments.filter(
+      (d) => d.clinic_id === clinicId
+    );
+    if (updatedDepartments.length > 0) {
+      department = updatedDepartments[0].name;
+      departmentId = updatedDepartments[0].id;
+      updatedRooms = rooms.filter((r) => r.department_id === departmentId);
+      updatedDepartments.shift();
+    }
+    if (updatedRooms.length > 0) {
+      room = updatedRooms[0].number;
+      roomId = updatedRooms[0].id;
+      updatedRooms.shift();
+    }
+    this.setState({
+      ...this.state,
+      departments: updatedDepartments,
+      rooms: updatedRooms,
+      clinics: updatedClinics,
+      user: {
+        ...this.state.user,
+        room,
+        roomId,
+        department,
+        departmentId,
+        clinic,
+        clinicId,
+      },
+    });
+  };
+
+  onDepartmentChange = (e) => {
+    const { departments } = this.props.department;
+    const { rooms } = this.props.room;
+    let departmentId;
+    let room = "";
+    let roomId = null;
+    try {
+      departmentId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    console.log(departmentId);
+    const updatedDepartments = departments.filter((d) => d.id !== departmentId);
+    const department = departments.find((d) => d.id === departmentId).name;
+    const updatedRooms = rooms.filter((r) => r.department_id === departmentId);
+    if (updatedRooms.length > 0) {
+      room = updatedRooms[0].number;
+      roomId = updatedRooms[0].id;
+      updatedRooms.shift();
+    }
+    this.setState({
+      ...this.state,
+      rooms: updatedRooms,
+      departments: updatedDepartments,
+      user: {
+        ...this.state.user,
+        room,
+        roomId,
+        department,
+        departmentId,
+      },
+    });
+  };
+
+  onJobChange = (e) => {
+    const { jobs } = this.props.job;
+    let jobId;
+    try {
+      jobId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    const updatedJobs = jobs.filter((j) => j.id !== jobId);
+    const job = jobs.find((j) => j.id === jobId).name;
+
+    this.setState({
+      ...this.state,
+      jobs: updatedJobs,
+      user: {
+        ...this.state.user,
+        job,
+        jobId,
+      },
+    });
+  };
+
+  onRoomChange = (e) => {
+    const { rooms } = this.props.room;
+    let roomId;
+    try {
+      roomId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    const updatedRooms = rooms.filter((r) => r.id !== roomId);
+    const room = rooms.find((r) => r.id === roomId).number;
+    this.setState({
+      ...this.state,
+      rooms: updatedRooms,
+      user: {
+        ...this.state.user,
+        roomId,
+        room,
       },
     });
   };
 
   redirect = () => {
-    /*const { isAuthenticated } = this.props.auth;
-    if (isAuthenticated) {
-      return <Redirect to="/" />;
-    }*/
+    const { isComplete } = this.state;
+    if (isComplete) {
+      return <Redirect to="/personalData" />;
+    }
   };
 
   onSubmit = (e) => {
     const { user, imageFile } = this.state;
     const { errors } = this.state;
+    console.log(user);
     e.preventDefault();
     if (this.state.isOverallError) {
       alert("Помилка реєстрації");
-    } else {
+    } else if (imageFile.name !== undefined) {
       const awsObject = AwsClass.build().then((aws) => {
         const reader = new FileReader();
         reader.onloadend = () => {
           const base64 = reader.result;
           const buffer = getImgBuffer(base64);
-          aws.uploadImage(imageFile.name, buffer, user.email).then((res) =>
-            this.setState(
-              {
-                ...this.state,
-                user: {
-                  ...this.state.user,
-                  image: res,
+          aws.deleteImage(user.image).then((res) => {
+            aws.uploadImage(imageFile.name, buffer, user.email).then((res) =>
+              this.setState(
+                {
+                  ...this.state,
+                  isCompleted: true,
+                  user: {
+                    ...this.state.user,
+                    image: res,
+                  },
                 },
-              },
-              () => {
-                this.props.register(this.state.user);
-              }
-            )
-          );
+                () => {
+                  this.props.editUser(this.state.user);
+                }
+              )
+            );
+          });
         };
         reader.readAsDataURL(imageFile);
       });
+    } else {
+      this.setState({
+        ...this.state,
+        isCompleted: true,
+      });
+      this.props.editUser(this.state.user);
     }
   };
 
@@ -227,19 +424,21 @@ class UserEditForm extends React.Component {
     this.props.getJobs();
     this.props.getDepartments();
     this.props.getRegisterData();
+    this.props.getRooms();
     this.props.getUser(this.props.auth.user.id);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.user.loading !== this.props.user.loading) {
-      const { cities, loading } = this.props.city;
+      const { cities } = this.props.city;
       const { countries } = this.props.country;
       const { clinics } = this.props.clinic;
       const { jobs } = this.props.job;
-      const { departments } = this.props.department;
+      const { departments, loading } = this.props.department;
+      const { rooms } = this.props.room;
       const { registerData } = this.props.auth;
       const user = this.props.user.users[0];
-      if (departments.length > 0) {
+      if (!loading) {
         const defaultCities = cities.filter(
           (city) =>
             city.country_id === user.countryId && city.id !== user.cityId
@@ -249,14 +448,13 @@ class UserEditForm extends React.Component {
             clinic.city_id === user.cityId && clinic.clinic_id !== user.clinicId
         );
         const defaultDepartments = departments.filter(
-          (department) =>
-            department.clinic_id === user.clinicId &&
-            department.department_id !== user.departmentId
+          (department) => department.id !== user.departmentId
         );
         const defaultCountries = countries.filter(
           (country) => country.id !== user.countryId
         );
         const defaultJobs = jobs.filter((job) => job.id !== user.jobId);
+        const defaultRooms = rooms.filter((r) => r.id !== user.roomId);
         this.setState({
           ...this.state,
           countries: defaultCountries,
@@ -264,6 +462,7 @@ class UserEditForm extends React.Component {
           clinics: defaultClinics,
           jobs: defaultJobs,
           departments: defaultDepartments,
+          rooms: defaultRooms,
           loading: this.props.user.loading,
           user: {
             ...this.props.user.users[0],
@@ -277,7 +476,14 @@ class UserEditForm extends React.Component {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const { cities, countries, clinics, jobs, departments } = this.state;
+      const {
+        cities,
+        countries,
+        clinics,
+        jobs,
+        departments,
+        rooms,
+      } = this.state;
       const {
         job,
         jobId,
@@ -304,6 +510,7 @@ class UserEditForm extends React.Component {
         clinicId,
       } = this.state.user;
       const { isOverallError, overallErrorMsg } = this.state;
+      console.log(rooms);
       return (
         <div className="container">
           <div className="row justify-content-center">
@@ -590,7 +797,7 @@ class UserEditForm extends React.Component {
                           name="clinicId"
                           required
                           autoFocus
-                          onChange={this.onBaseInputChange}
+                          onChange={this.onClinicChange}
                         >
                           <option value={clinicId}>{clinic}</option>
                           {clinics.map((clinic) => (
@@ -619,7 +826,7 @@ class UserEditForm extends React.Component {
                           name="job"
                           required
                           autoFocus
-                          onChange={this.onBaseInputChange}
+                          onChange={this.onJobChange}
                         >
                           <option value={jobId}>{job}</option>
                           {jobs.map((job) => (
@@ -645,12 +852,38 @@ class UserEditForm extends React.Component {
                           name="department"
                           required
                           autoFocus
-                          onChange={this.onBaseInputChange}
+                          onChange={this.onDepartmentChange}
                         >
                           <option value={departmentId}>{department}</option>
                           {departments.map((department) => (
                             <option key={department.id} value={department.id}>
                               {department.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label
+                        htmlFor="room"
+                        className="col-md-4 col-form-label text-md-right"
+                      >
+                        Кабінет
+                      </label>
+                      <div className="col-md-6">
+                        <select
+                          id="room"
+                          className="form-control"
+                          name="room"
+                          required
+                          autoFocus
+                          onChange={this.onRoomChange}
+                        >
+                          <option value={roomId}>{room}</option>
+                          {rooms.map((room) => (
+                            <option key={room.id} value={room.id}>
+                              {room.number}
                             </option>
                           ))}
                         </select>
@@ -706,7 +939,6 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
-  register: PropTypes.func.isRequired,
   city: PropTypes.object.isRequired,
   getCities: PropTypes.func.isRequired,
   clinic: PropTypes.object.isRequired,
@@ -717,8 +949,11 @@ UserEditForm.propTypes = {
   getJobs: PropTypes.func.isRequired,
   department: PropTypes.object.isRequired,
   getDepartments: PropTypes.func.isRequired,
+  room: PropTypes.object.isRequired,
+  getRooms: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   getRegisterData: PropTypes.func.isRequired,
+  editUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -728,17 +963,19 @@ const mapStateToProps = (state) => ({
   clinic: state.clinic,
   job: state.job,
   department: state.department,
+  room: state.room,
   auth: state.auth,
   user: state.user,
 });
 
 export default connect(mapStateToProps, {
-  register,
   getCities,
   getCountries,
   getClinics,
   getJobs,
   getDepartments,
+  getRooms,
   getRegisterData,
   getUser,
+  editUser,
 })(UserEditForm);

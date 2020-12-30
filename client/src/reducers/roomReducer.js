@@ -7,7 +7,7 @@ import {
 
 const initialState = {
   rooms: [],
-  isLoading: false,
+  loading: false,
 };
 
 export default function (state = initialState, action) {
@@ -16,12 +16,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         rooms: action.payload,
-        isLoading: false,
+        loading: false,
       };
     case ROOMS_LOADING:
       return {
         ...state,
-        isLoading: true,
+        loading: true,
       };
     default:
       return state;

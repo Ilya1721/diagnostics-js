@@ -96,9 +96,9 @@ router.get("/:id", (req, res) => {
       "e.father_name AS fatherName, e.street, e.house, " +
       "e.flat, e.phone_number AS phoneNumber, e.image, " +
       "c.name AS city, c.id AS cityId, j.name AS job, j.id AS jobId, " +
-      "d.name AS department, d.id AS departemntId, e.about, " +
+      "d.name AS department, d.id AS departmentId, e.about, " +
       "cl.name AS clinic, cl.id AS clinicId, " +
-      "u.login, co.id AS countryId, co.name AS country, " +
+      "u.login, u.email, co.id AS countryId, co.name AS country, " +
       "u.id, r.number AS room, r.id AS roomId FROM employees e " +
       "INNER JOIN cities c ON e.city_id = c.id " +
       "INNER JOIN countries co ON c.country_id = co.id " +
@@ -112,6 +112,29 @@ router.get("/:id", (req, res) => {
       if (err)
         return res.status(400).json({ msg: "GET USER ERROR", error: err });
       return res.json([results[0]]);
+    }
+  );
+});
+
+// @route PUT /api/users/id
+router.put("/:id", (req, res) => {
+  const data = req.body;
+  if (!{ ...data }) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  conn.query(
+    `UPDATE users SET login = "${data.login}" ` +
+      `WHERE id = ${data.id}; UPDATE employees SET ` +
+      `last_name = "${data.lastName}", first_name = "${data.firstName}", ` +
+      `father_name = "${data.fatherName}", about = "${data.about}", ` +
+      `street = "${data.street}", house = "${data.house}", ` +
+      `image = "${data.image}", flat = "${data.flat}", ` +
+      `city_id = ${data.cityId}, job_id = ${data.jobId}, ` +
+      `department_id = ${data.departmentId};`,
+    (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+      return res.json([{ ...data }]);
     }
   );
 });

@@ -42,3 +42,27 @@ export const setUsersLoading = () => {
     type: USERS_LOADING,
   };
 };
+
+export const editUser = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+
+  dispatch(setUsersLoading());
+  axios
+    .put(`/api/users/${data.id}`, body, config)
+    .then((res) => {
+      dispatch({
+        type: GET_USERS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "EDIT_USER ERROR")
+      );
+    });
+};

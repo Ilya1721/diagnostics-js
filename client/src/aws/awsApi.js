@@ -8,7 +8,6 @@ class AwsClass {
 
   constructor(data) {
     const { aws_access_key_id, aws_secret_access_key } = data;
-    console.log(aws_access_key_id);
 
     AWS.config.update({
       accessKeyId: aws_access_key_id,
@@ -50,6 +49,26 @@ class AwsClass {
         } else {
           this.filePath = s3Path + bucketPath + filePath;
           resolve(s3Path + bucketPath + filePath);
+        }
+      });
+    });
+  };
+
+  deleteImage = (filePath) => {
+    const index = filePath.indexOf("com/");
+    let substr = filePath.substr(index + 4, filePath.length);
+    substr = substr.replace("%40", "@");
+    console.log(substr);
+    const data = {
+      Bucket: "diagnostics-bucket",
+      Key: substr,
+    };
+    return new Promise((resolve, reject) => {
+      this.s3Bucket.deleteObject(data, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
         }
       });
     });

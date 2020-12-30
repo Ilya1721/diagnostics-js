@@ -29,7 +29,7 @@ router.put("/:id", (req, res) => {
   if (!{ ...data }) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
-  console.log(data);
+
   conn.query(
     `UPDATE patients SET city_id = ${data.city}, doctor_id = ${data.doctor}, ` +
       `last_name = "${data.lastName}", first_name = "${data.firstName}", ` +

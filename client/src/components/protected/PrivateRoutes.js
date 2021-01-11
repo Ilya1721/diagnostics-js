@@ -10,6 +10,8 @@ import PatientCreateForm from "./Patient/PatientCreateForm";
 import PatientEditForm from "./Patient/PatientEditForm";
 import PersonalData from "./User/PersonalData";
 import UserEditForm from "./User/UserEditForm";
+import Statistics from "./Statistics/Statistics";
+import RoomStat from "./Statistics/RoomStat";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -63,6 +65,18 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated}
           path="/users/:id/edit"
           component={UserEditForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/statistics"
+          component={Statistics}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/statistics/rooms"
+          component={RoomStat}
           redirectTo="/login"
         />
       </React.Fragment>

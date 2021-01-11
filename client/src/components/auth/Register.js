@@ -5,6 +5,7 @@ import { getCities } from "../../actions/city/cityActions";
 import { getCountries } from "../../actions/country/countryActions";
 import { getClinics } from "../../actions/clinic/clinicActions";
 import { getJobs } from "../../actions/job/jobActions";
+import { getRooms } from "../../actions/room/roomActions";
 import { getDepartments } from "../../actions/department/departmentActions";
 import { getRegisterData } from "../../actions/auth/authActions";
 import AwsClass from "../../aws/awsApi";
@@ -35,6 +36,7 @@ class Register extends React.Component {
         clinic: "",
         job: "",
         department: "",
+        room: "",
         image: "",
       },
       countries: [],
@@ -43,6 +45,7 @@ class Register extends React.Component {
       jobs: [],
       departments: [],
       emails: [],
+      rooms: [],
       errors: { isEmailError: false, isPasswordConfirmError: false },
       isOverallError: false,
       emailErrorMsg: "Користувач з таким email уже існує",
@@ -155,34 +158,145 @@ class Register extends React.Component {
   onCountryChange = (e) => {
     const { cities } = this.props.city;
     const { clinics } = this.props.clinic;
+    const { departments } = this.props.department;
+    const { rooms } = this.props.room;
+    let countryId;
+    try {
+      countryId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
     const updatedCities = cities.filter(
-      (city) => city.country_id === e.target.value
+      (city) => city.country_id === countryId
     );
-    const updatedClinics = clinics.filter(
-      (clinic) => clinic.city_id === updatedCities[0].id
-    );
+    let updatedClinics = [];
+    let updatedDepartments = [];
+    let updatedRooms = [];
+    if (updatedCities.length > 0) {
+      updatedClinics = clinics.filter(
+        (clinic) => clinic.city_id === updatedCities[0].id
+      );
+    }
+    if (updatedClinics.length > 0) {
+      updatedDepartments = departments.filter(
+        (d) => d.clinic_id === updatedClinics[0].clinic_id
+      );
+    }
+    if (updatedDepartments.length > 0) {
+      updatedRooms = rooms.filter(
+        (r) => r.department_id === updatedDepartments[0].id
+      );
+    }
     this.setState({
       ...this.state,
       cities: updatedCities,
       clinics: updatedClinics,
+      departments: updatedDepartments,
+      rooms: updatedRooms,
       user: {
         ...this.state.user,
-        country: e.target.value,
+        country: countryId,
       },
     });
   };
 
   onCityChange = (e) => {
     const { clinics } = this.props.clinic;
+    const { departments } = this.props.department;
+    const { rooms } = this.props.room;
+    let cityId;
+    try {
+      cityId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
     const updatedClinics = clinics.filter(
-      (clinic) => clinic.city_id === e.target.value
+      (clinic) => clinic.city_id === cityId
     );
+    let updatedDepartments = [];
+    let updatedRooms = [];
+    if (updatedClinics.length > 0) {
+      updatedDepartments = departments.filter(
+        (d) => d.clinic_id === updatedClinics[0].clinic_id
+      );
+    }
+    if (updatedDepartments.length > 0) {
+      updatedRooms = rooms.filter(
+        (r) => r.department_id === updatedDepartments[0].id
+      );
+    }
     this.setState({
       ...this.state,
       clinics: updatedClinics,
+      departments: updatedDepartments,
+      rooms: updatedRooms,
       user: {
         ...this.state.user,
-        clinic: e.target.value,
+        city: cityId,
+      },
+    });
+  };
+
+  onClinicChange = (e) => {
+    const { departments } = this.props.department;
+    const { rooms } = this.props.room;
+    let clinicId;
+    try {
+      clinicId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    const updatedDepartments = departments.filter(
+      (d) => d.clinic_id === clinicId
+    );
+    let updatedRooms = [];
+    if (updatedDepartments.length > 0) {
+      updatedRooms = rooms.filter(
+        (r) => r.department_id === updatedDepartments[0].id
+      );
+    }
+    this.setState({
+      ...this.state,
+      departments: updatedDepartments,
+      rooms: updatedRooms,
+      user: {
+        ...this.state.user,
+        clinic: clinicId,
+      },
+    });
+  };
+
+  onDepartmentChange = (e) => {
+    const { rooms } = this.props.room;
+    let departmentId;
+    try {
+      departmentId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    const updatedRooms = rooms.filter((r) => r.department_id === departmentId);
+    this.setState({
+      ...this.state,
+      rooms: updatedRooms,
+      user: {
+        ...this.state.user,
+        department: departmentId,
+      },
+    });
+  };
+
+  onRoomChange = (e) => {
+    let roomId;
+    try {
+      roomId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    this.setState({
+      ...this.state,
+      user: {
+        ...this.state.user,
+        room: roomId,
       },
     });
   };
@@ -232,6 +346,7 @@ class Register extends React.Component {
     this.props.getClinics();
     this.props.getJobs();
     this.props.getDepartments();
+    this.props.getRooms();
     this.props.getRegisterData();
   }
 
@@ -242,9 +357,10 @@ class Register extends React.Component {
       const { clinics } = this.props.clinic;
       const { jobs } = this.props.job;
       const { departments } = this.props.department;
+      const { rooms } = this.props.room;
       const { registerData } = this.props.auth;
       const emails = registerData.map((obj) => obj.email);
-      if (departments.length > 0) {
+      if (rooms.length > 0) {
         const defaultCities = cities.filter(
           (city) => city.country_id === countries[0].id
         );
@@ -254,6 +370,9 @@ class Register extends React.Component {
         const defaultDepartments = departments.filter(
           (department) => department.clinic_id === defaultClinics[0].clinic_id
         );
+        const defaultRooms = rooms.filter(
+          (r) => r.department_id === defaultDepartments[0].id
+        );
         this.setState({
           ...this.state,
           countries: countries,
@@ -262,6 +381,7 @@ class Register extends React.Component {
           jobs: jobs,
           emails: emails,
           departments: defaultDepartments,
+          rooms: defaultRooms,
           user: {
             ...this.state.user,
             country: countries[0].id,
@@ -269,6 +389,7 @@ class Register extends React.Component {
             clinic: defaultClinics[0].clinic_id,
             job: jobs[0].id,
             department: defaultDepartments[0].id,
+            room: defaultRooms[0].id,
           },
         });
       }
@@ -276,7 +397,7 @@ class Register extends React.Component {
   }
 
   render() {
-    const { cities, countries, clinics, jobs, departments } = this.state;
+    const { cities, countries, clinics, jobs, departments, rooms } = this.state;
     const { isEmailError, isPasswordConfirmError } = this.state.errors;
     const {
       emailErrorMsg,
@@ -646,7 +767,7 @@ class Register extends React.Component {
                         name="clinic"
                         required
                         autoFocus
-                        onChange={this.onBaseInputChange}
+                        onChange={this.onClinicChange}
                         value={this.state.clinic}
                       >
                         {clinics.map((clinic) => (
@@ -701,12 +822,37 @@ class Register extends React.Component {
                         name="department"
                         required
                         autoFocus
-                        onChange={this.onBaseInputChange}
+                        onChange={this.onDepartmentChange}
                         value={this.state.department}
                       >
                         {departments.map((department) => (
                           <option key={department.id} value={department.id}>
                             {department.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-group row">
+                    <label
+                      htmlFor="room"
+                      className="col-md-4 col-form-label text-md-right"
+                    >
+                      Кабінет
+                    </label>
+                    <div className="col-md-6">
+                      <select
+                        id="room"
+                        className="form-control"
+                        name="room"
+                        required
+                        autoFocus
+                        onChange={this.onRoomChange}
+                      >
+                        {rooms.map((room) => (
+                          <option key={room.id} value={room.id}>
+                            {room.number}
                           </option>
                         ))}
                       </select>
@@ -780,6 +926,7 @@ const mapStateToProps = (state) => ({
   job: state.job,
   department: state.department,
   auth: state.auth,
+  room: state.room,
 });
 
 export default connect(mapStateToProps, {
@@ -790,4 +937,5 @@ export default connect(mapStateToProps, {
   getJobs,
   getDepartments,
   getRegisterData,
+  getRooms,
 })(Register);

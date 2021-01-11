@@ -41,12 +41,14 @@ router.post("/", (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     } else {
       conn.query(
-        "INSERT INTO employees(city_id, job_id, department_id, " +
+        "INSERT INTO employees(city_id, job_id, department_id, room_id," +
           "about, last_name, first_name, father_name, street, house, flat, " +
           "phone_number, image) VALUES " +
           `(${data.city}, ${data.job}, ` +
-          `${data.department}, "${data.about}", "${data.lastName}", "${data.firstName}", ` +
-          `"${data.fatherName}", "${data.street}", "${data.house}", "${data.flat}", ` +
+          `${data.department}, ${data.room}, "${data.about}", ` +
+          `"${data.lastName}", "${data.firstName}", ` +
+          `"${data.fatherName}", "${data.street}", ` +
+          `"${data.house}", "${data.flat}", ` +
           `"${data.phoneNumber}", "${data.image}");`,
         (err, results, fields) => {
           if (err) return res.status(400).json(err);

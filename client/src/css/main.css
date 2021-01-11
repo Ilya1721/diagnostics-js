@@ -20,6 +20,9 @@ html {
 .footer {
   margin-top: auto; }
 
+.photo {
+  max-width: 200px; }
+
 .flex-center {
   align-items: center;
   display: flex;

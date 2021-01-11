@@ -29,6 +29,7 @@ const aws = require("./routes/api/aws");
 const visits = require("./routes/api/visits");
 const rooms = require("./routes/api/rooms");
 const patients = require("./routes/api/patients");
+const roomstat = require("./routes/api/roomstat");
 
 //Initialize app
 const app = express();
@@ -46,6 +47,7 @@ app.use("/api/aws", aws);
 app.use("/api/visits", visits);
 app.use("/api/rooms", rooms);
 app.use("/api/patients", patients);
+app.use("/api/roomstat", roomstat);
 
 const PORT = process.env.PORT || 5000;
 

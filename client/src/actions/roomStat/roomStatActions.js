@@ -2,7 +2,7 @@ import { GET_ROOMSTAT, ROOMSTAT_LOADING } from "./roomStatTypes";
 import axios from "axios";
 
 export const getRoomStat = () => (dispatch) => {
-  dispatch(setRoomStatLoading);
+  dispatch(setRoomStatLoading());
   axios.get("/api/roomstat").then((res) => {
     dispatch({
       type: GET_ROOMSTAT,

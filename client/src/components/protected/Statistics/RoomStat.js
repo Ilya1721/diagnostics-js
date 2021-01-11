@@ -17,9 +17,7 @@ class RoomStat extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("component update");
     if (prevProps.roomStat.loading !== this.props.roomStat.loading) {
-      console.log("change loading");
       this.setState({
         loading: this.props.roomStat.loading,
       });
@@ -32,17 +30,19 @@ class RoomStat extends React.Component {
     } else {
       const { roomStat } = this.props.roomStat;
       return (
-        <div class="container">
-          <h2 class="text-center mb-3">Статистика кабінетів</h2>
+        <div className="container">
+          <h2 className="text-center mb-3">Статистика кабінетів</h2>
           <h4>Популярність кабінетів</h4>
-          <table class="table table-light text-center mb-4">
-            <thead class="thead-dark">
-              <th scope="col">Кабінет</th>
-              <th scope="col">Кількість відвідувань</th>
+          <table className="table table-light text-center mb-4">
+            <thead className="thead-dark">
+              <tr>
+                <th scope="col">Кабінет</th>
+                <th scope="col">Кількість відвідувань</th>
+              </tr>
             </thead>
             <tbody>
               {roomStat.map((room) => (
-                <tr>
+                <tr key={room.id}>
                   <td>{room.number}</td>
                   <td>{room.count}</td>
                 </tr>

@@ -11,6 +11,7 @@ import visitReducer from "./visitReducer";
 import roomReducer from "./roomReducer";
 import patientReducer from "./patientReducer";
 import roomStatReducer from "./roomStatReducer";
+import procedureStatReducer from "./procedureStatReducer";
 
 export default combineReducers({
   clinic: clinicReducer,
@@ -25,4 +26,5 @@ export default combineReducers({
   room: roomReducer,
   patient: patientReducer,
   roomStat: roomStatReducer,
+  procedureStat: procedureStatReducer,
 });

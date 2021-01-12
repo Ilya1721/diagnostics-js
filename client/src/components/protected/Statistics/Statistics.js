@@ -22,7 +22,7 @@ class Statistics extends React.Component {
             </tr>
             <tr>
               <td>
-                <Link to="/statistics/diseases" className="btn btn-link">
+                <Link to="/statistics/diagnosis" className="btn btn-link">
                   Діагнози
                 </Link>
               </td>

@@ -13,11 +13,18 @@ router.get("/", (req, res) => {
         "FROM rooms r INNER JOIN employees e ON e.room_id = r.id " +
         `WHERE e.id = ${result.id}; `;
     }
+    const isMult = results.length > 1;
     conn.query(queries, (err, results, fields) => {
       if (err) return res.status(400).json(err);
       let response = [];
-      for (const result of results) {
-        response.push(...result);
+      if (isMult) {
+        for (const result of results) {
+          response.push(...result);
+        }
+      } else {
+        for (const result of results) {
+          response.push(result);
+        }
       }
       return res.json(response);
     });

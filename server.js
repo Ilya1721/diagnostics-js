@@ -31,6 +31,10 @@ const rooms = require("./routes/api/rooms");
 const patients = require("./routes/api/patients");
 const roomstat = require("./routes/api/roomstat");
 const procedurestat = require("./routes/api/procedurestat");
+const treatmentstat = require("./routes/api/treatmentstat");
+const medicamentstat = require("./routes/api/medicamentstat");
+const diagnosstat = require("./routes/api/diagnosstat");
+const symptomstat = require("./routes/api/symptomstat");
 
 //Initialize app
 const app = express();
@@ -50,6 +54,10 @@ app.use("/api/rooms", rooms);
 app.use("/api/patients", patients);
 app.use("/api/roomstat", roomstat);
 app.use("/api/procedurestat", procedurestat);
+app.use("/api/treatmentstat", treatmentstat);
+app.use("/api/medicamentstat", medicamentstat);
+app.use("/api/diagnosstat", diagnosstat);
+app.use("/api/symptomstat", symptomstat);
 
 const PORT = process.env.PORT || 5000;
 

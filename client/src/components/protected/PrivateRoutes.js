@@ -13,6 +13,10 @@ import UserEditForm from "./User/UserEditForm";
 import Statistics from "./Statistics/Statistics";
 import RoomStat from "./Statistics/RoomStat";
 import ProcedureStat from "./Statistics/ProcedureStat";
+import TreatmentStat from "./Statistics/TreatmentStat";
+import MedicamentStat from "./Statistics/MedicamentStat";
+import DiagnosStat from "./Statistics/DiagnosStat";
+import SymptomStat from "./Statistics/SymptomStat";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -84,6 +88,30 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated}
           path="/statistics/procedures"
           component={ProcedureStat}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/statistics/treatments"
+          component={TreatmentStat}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/statistics/medicaments"
+          component={MedicamentStat}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/statistics/diagnosis"
+          component={DiagnosStat}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/statistics/symptoms"
+          component={SymptomStat}
           redirectTo="/login"
         />
       </React.Fragment>

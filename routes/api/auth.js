@@ -55,7 +55,7 @@ router.post("/", (req, res) => {
 // @access private
 router.get("/user", auth, (req, res) => {
   conn.query(
-    "SELECT u.login, u.email, u.id, c.name as city, co.name as country, " +
+    "SELECT u.login, u.email, u.role_id, u.id, c.name as city, co.name as country, " +
       "d.name as department, e.about, e.last_name as lastName, " +
       "e.first_name as firstName, e.father_name as fatherName, " +
       "e.street, e.flat, e.house, e.image as image, " +

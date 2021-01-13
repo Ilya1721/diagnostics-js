@@ -35,12 +35,21 @@ class Navbar extends React.Component {
               Статистика <span className="sr-only">(current)</span>
             </Link>
           </li>
-          <li className="nav-item active">
-            <Link className="nav-link text-secondary" to="/innerData">
-              Внутрішні дані <span className="sr-only">(current)</span>
-            </Link>
-          </li>
+          {this.renderInnerLinks()}
         </React.Fragment>
+      );
+    }
+  };
+
+  renderInnerLinks = () => {
+    const { role_id } = this.props.auth.user;
+    if (role_id === 2) {
+      return (
+        <li className="nav-item active">
+          <Link className="nav-link text-secondary" to="/innerData">
+            Внутрішні дані <span className="sr-only">(current)</span>
+          </Link>
+        </li>
       );
     }
   };

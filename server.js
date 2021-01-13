@@ -35,6 +35,7 @@ const treatmentstat = require("./routes/api/treatmentstat");
 const medicamentstat = require("./routes/api/medicamentstat");
 const diagnosstat = require("./routes/api/diagnosstat");
 const symptomstat = require("./routes/api/symptomstat");
+const visitstat = require("./routes/api/visitstat");
 
 //Initialize app
 const app = express();
@@ -58,6 +59,7 @@ app.use("/api/treatmentstat", treatmentstat);
 app.use("/api/medicamentstat", medicamentstat);
 app.use("/api/diagnosstat", diagnosstat);
 app.use("/api/symptomstat", symptomstat);
+app.use("/api/visitstat", visitstat);
 
 const PORT = process.env.PORT || 5000;
 

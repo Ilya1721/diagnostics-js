@@ -17,11 +17,14 @@ import TreatmentStat from "./Statistics/TreatmentStat";
 import MedicamentStat from "./Statistics/MedicamentStat";
 import DiagnosStat from "./Statistics/DiagnosStat";
 import SymptomStat from "./Statistics/SymptomStat";
+import VisitStat from "./Statistics/VisitStat";
+import Clinics from "./InnerData/Clinics";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
   render() {
     const { isAuthenticated } = this.props.auth;
+    const { role_id } = this.props.auth.user;
     return (
       <React.Fragment>
         <PrivateRoute
@@ -112,6 +115,18 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated}
           path="/statistics/symptoms"
           component={SymptomStat}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/statistics/visits"
+          component={VisitStat}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData"
+          component={Clinics}
           redirectTo="/login"
         />
       </React.Fragment>

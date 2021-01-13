@@ -33,6 +33,13 @@ class Clinics extends React.Component {
       return (
         <div className="container">
           <h2 className="text-center mt-3">Клініки</h2>
+          <Link
+            className="btn btn-primary text-right mr-2 mb-3"
+            role="button"
+            to="/clinics/create"
+          >
+            Додати клініку
+          </Link>
           <table className="table text-center table-light">
             <thead className="thead-dark">
               <tr>

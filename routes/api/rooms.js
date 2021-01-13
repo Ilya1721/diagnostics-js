@@ -10,4 +10,17 @@ router.get("/", (req, res) => {
   });
 });
 
+// @route GET /api/rooms/department_id
+router.get("/ofDepartment/:id", (req, res) => {
+  const id = req.params.id;
+
+  conn.query(
+    `SELECT * FROM rooms WHERE department_id = ${id}`,
+    (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+      return res.json(results);
+    }
+  );
+});
+
 module.exports = router;

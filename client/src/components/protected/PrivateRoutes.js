@@ -19,6 +19,8 @@ import DiagnosStat from "./Statistics/DiagnosStat";
 import SymptomStat from "./Statistics/SymptomStat";
 import VisitStat from "./Statistics/VisitStat";
 import Clinics from "./InnerData/Clinics";
+import Clinic from "./InnerData/Clinic";
+import Department from "./InnerData/Department";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -127,6 +129,18 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData"
           component={Clinics}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/clinics/:id"
+          component={Clinic}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/departments/:id"
+          component={Department}
           redirectTo="/login"
         />
       </React.Fragment>

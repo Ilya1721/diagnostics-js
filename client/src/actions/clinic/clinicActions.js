@@ -16,6 +16,16 @@ export const getClinics = () => (dispatch) => {
   });
 };
 
+export const getClinic = (id) => (dispatch) => {
+  dispatch(setClinicsLoading());
+  axios.get(`/api/clinics/${id}`).then((res) => {
+    dispatch({
+      type: GET_CLINICS,
+      payload: res.data,
+    });
+  });
+};
+
 export const setClinicsLoading = () => {
   return {
     type: CLINICS_LOADING,

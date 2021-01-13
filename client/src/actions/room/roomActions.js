@@ -11,6 +11,16 @@ export const getRooms = () => (dispatch) => {
   });
 };
 
+export const getRoomsById = (id) => (dispatch) => {
+  dispatch(setRoomsLoading());
+  axios.get(`/api/rooms/ofDepartment/${id}`).then((res) => {
+    dispatch({
+      type: GET_ROOMS,
+      payload: res.data,
+    });
+  });
+};
+
 export const setRoomsLoading = () => {
   return {
     type: ROOMS_LOADING,

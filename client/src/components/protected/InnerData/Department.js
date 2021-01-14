@@ -37,14 +37,6 @@ class Department extends React.Component {
       const { rooms } = this.props.room;
       return (
         <div className="container mt-3">
-          <h2 className="text-center">{department.name} відділ</h2>
-          <Link
-            className="btn btn-primary text-right mr-2 mb-3"
-            role="button"
-            to={`/departments/${department.id}/edit`}
-          >
-            Редагувати відділ
-          </Link>
           <h2 className="text-center mt-3">Палати</h2>
           <Link
             className="btn btn-primary text-right mr-2 mb-3"
@@ -57,6 +49,7 @@ class Department extends React.Component {
             <thead className="thead-dark">
               <tr>
                 <th scope="col"></th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -65,6 +58,15 @@ class Department extends React.Component {
                   <td>
                     <Link to={`/rooms/${room.id}`} className="btn btn-link">
                       {room.number}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      className="btn btn-primary text-right mr-2 mb-3"
+                      role="button"
+                      to={`/rooms/${room.id}/edit`}
+                    >
+                      Редагувати
                     </Link>
                   </td>
                 </tr>

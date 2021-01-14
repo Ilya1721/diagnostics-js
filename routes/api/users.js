@@ -136,7 +136,7 @@ router.put("/:id", (req, res) => {
       `department_id = ${data.departmentId};`,
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
-      return res.json([{ ...data }]);
+      return res.json([data]);
     }
   );
 });

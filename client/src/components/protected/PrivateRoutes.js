@@ -21,6 +21,8 @@ import VisitStat from "./Statistics/VisitStat";
 import Clinics from "./InnerData/Clinics";
 import Clinic from "./InnerData/Clinic";
 import Department from "./InnerData/Department";
+import DepartmentCreateForm from "./InnerData/DepartmentCreateForm";
+import DepartmentEditForm from "./InnerData/DepartmentEditForm";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -141,6 +143,18 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated && role_id === 2}
           path="/departments/:id"
           component={Department}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path={`/clinic/:id/departments/create`}
+          component={DepartmentCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path={`/clinic/:id/departments/:id/edit`}
+          component={DepartmentEditForm}
           redirectTo="/login"
         />
       </React.Fragment>

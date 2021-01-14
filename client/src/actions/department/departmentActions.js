@@ -1,7 +1,7 @@
 import {
   GET_DEPARTMENTS,
-  ADD_CITY,
-  DELETE_CITY,
+  ADD_DEPARTMENT,
+  DELETE_DEPARTMENT,
   DEPARTMENTS_LOADING,
 } from "./departmentTypes";
 import axios from "axios";
@@ -29,6 +29,49 @@ export const getDepartmentsById = (id) => (dispatch) => {
 export const getDepartment = (id) => (dispatch) => {
   dispatch(setDepartmentsLoading());
   axios.get(`/api/departments/${id}`).then((res) => {
+    dispatch({
+      type: GET_DEPARTMENTS,
+      payload: res.data,
+    });
+  });
+};
+
+export const addDepartment = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setDepartmentsLoading());
+  axios
+    .post(`/api/departments/ofClinic/${data.clinicId}`, body, config)
+    .then((res) => {
+      dispatch({
+        type: ADD_DEPARTMENT,
+        payload: res.data,
+      });
+    });
+};
+
+export const deleteDepartment = (id) => (dispatch) => {
+  axios.delete(`/api/departments/${id}`).then((res) => {
+    dispatch({
+      type: DELETE_DEPARTMENT,
+      payload: id,
+    });
+  });
+};
+
+export const editDepartment = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setDepartmentsLoading());
+  axios.put(`/api/departments/${data.id}`, body, config).then((res) => {
     dispatch({
       type: GET_DEPARTMENTS,
       payload: res.data,

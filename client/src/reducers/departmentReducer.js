@@ -7,7 +7,7 @@ import {
 
 const initialState = {
   departments: [],
-  isLoading: false,
+  loading: false,
 };
 
 export default function (state = initialState, action) {
@@ -16,12 +16,23 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: action.payload,
-        isLoading: false,
+        loading: false,
       };
     case DEPARTMENTS_LOADING:
       return {
         ...state,
-        isLoading: true,
+        loading: true,
+      };
+    case ADD_DEPARTMENT:
+      return {
+        ...state,
+        departments: [...state.departments, action.payload],
+        loading: false,
+      };
+    case DELETE_DEPARTMENT:
+      return {
+        ...state,
+        departments: state.departments.filter((d) => d.id !== action.payload),
       };
     default:
       return state;

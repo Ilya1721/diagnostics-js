@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getClinic } from "../../../actions/clinic/clinicActions";
 import { getDepartmentsById } from "../../../actions/department/departmentActions";
+import { deleteDepartment } from "../../../actions/department/departmentActions";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 import Loading from "../../modals/Loading";
@@ -21,6 +22,10 @@ class Clinic extends React.Component {
     this.props.getDepartmentsById(id);
   }
 
+  onDelete = (id) => {
+    this.props.deleteDepartment(id);
+  };
+
   componentDidUpdate(prevProps) {
     if (prevProps.clinic.loading !== this.props.clinic.loading) {
       this.setState({
@@ -35,6 +40,7 @@ class Clinic extends React.Component {
     } else {
       const clinic = this.props.clinic.clinics[0];
       const { departments } = this.props.department;
+      console.log(departments);
       return (
         <div className="container mt-3">
           <div className="card mt-3">
@@ -77,13 +83,15 @@ class Clinic extends React.Component {
             <Link
               className="btn btn-primary text-right mr-2 mb-3"
               role="button"
-              to="/departments/create"
+              to={`/clinic/${clinic.clinic_id}/departments/create`}
             >
               Додати відділ
             </Link>
             <table className="table text-center table-light">
               <thead className="thead-dark">
                 <tr>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -97,6 +105,25 @@ class Clinic extends React.Component {
                       >
                         {department.name}
                       </Link>
+                    </td>
+                    <td>
+                      <Link
+                        className="btn btn-primary text-right mr-2 mb-3"
+                        role="button"
+                        to={`/clinic/${clinic.clinic_id}/departments/${department.id}/edit`}
+                      >
+                        Редагувати
+                      </Link>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-danger text-right mr-2 mb-3"
+                        role="button"
+                        type="button"
+                        onClick={() => this.onDelete(department.id)}
+                      >
+                        Видалити
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -114,6 +141,7 @@ Clinic.propTypes = {
   clinic: PropTypes.object.isRequired,
   department: PropTypes.object.isRequired,
   getDepartmentsById: PropTypes.func.isRequired,
+  deleteDepartment: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -122,5 +150,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getClinic, getDepartmentsById })(Clinic)
+  connect(mapStateToProps, { getClinic, getDepartmentsById, deleteDepartment })(
+    Clinic
+  )
 );

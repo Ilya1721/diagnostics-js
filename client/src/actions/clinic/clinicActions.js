@@ -26,6 +26,22 @@ export const getClinic = (id) => (dispatch) => {
   });
 };
 
+export const addClinic = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setClinicsLoading());
+  axios.post("/api/clinics", body, config).then((res) => {
+    dispatch({
+      type: ADD_CLINIC,
+      payload: res.data,
+    });
+  });
+};
+
 export const setClinicsLoading = () => {
   return {
     type: CLINICS_LOADING,

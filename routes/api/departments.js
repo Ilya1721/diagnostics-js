@@ -31,7 +31,7 @@ router.get("/:id", (req, res) => {
     `SELECT * FROM departments WHERE id = ${id}`,
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
-      res.json(results);
+      return res.json(results);
     }
   );
 });
@@ -50,7 +50,7 @@ router.post("/ofClinic/:id", (req, res) => {
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
 
-      return { clinicId, name, id: results.insertId };
+      return res.json({ clinicId, name, id: results.insertId });
     }
   );
 });

@@ -35,7 +35,6 @@ class Clinics extends React.Component {
           <h2 className="text-center mt-3">Клініки</h2>
           <Link
             className="btn btn-primary text-right mr-2 mb-3"
-            role="button"
             to="/clinics/create"
           >
             Додати клініку
@@ -51,7 +50,7 @@ class Clinics extends React.Component {
                 <tr key={clinic.clinic_id}>
                   <td>
                     <Link
-                      to={`/clinics/${clinic.clinic_id}`}
+                      to={`/clinics${clinic.clinic_id}`}
                       className="btn btn-link"
                     >
                       {clinic.clinic_name}

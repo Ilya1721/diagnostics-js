@@ -37,4 +37,26 @@ router.get("/:id", (req, res) => {
   );
 });
 
+// @route POST /api/clinics
+router.post("/", (req, res) => {
+  const data = req.body;
+
+  if (!{ ...req.body }) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  conn.query(
+    "INSERT INTO clinics(city_id, name, street, " +
+      "house, phone_number, type, schedule, image) VALUES( " +
+      `${data.city}, "${data.name}", "${data.street}", ` +
+      `"${data.house}", "${data.phoneNumber}", "${data.type}", ` +
+      `"${data.schedule}", "${data.image}"); `,
+    (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+
+      return res.json({ ...data, id: results.insertId });
+    }
+  );
+});
+
 module.exports = router;

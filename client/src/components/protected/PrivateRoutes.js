@@ -20,9 +20,12 @@ import SymptomStat from "./Statistics/SymptomStat";
 import VisitStat from "./Statistics/VisitStat";
 import Clinics from "./InnerData/Clinics";
 import Clinic from "./InnerData/Clinic";
+import ClinicCreateForm from "./InnerData/ClinicCreateForm";
 import Department from "./InnerData/Department";
 import DepartmentCreateForm from "./InnerData/DepartmentCreateForm";
 import DepartmentEditForm from "./InnerData/DepartmentEditForm";
+import RoomCreateForm from "./InnerData/RoomCreateForm";
+import RoomEditForm from "./InnerData/RoomEditForm";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -135,6 +138,12 @@ class PrivateRoutes extends React.Component {
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
+          path={"/clinics/create"}
+          component={ClinicCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
           path="/clinics/:id"
           component={Clinic}
           redirectTo="/login"
@@ -155,6 +164,18 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated && role_id === 2}
           path={`/clinic/:id/departments/:id/edit`}
           component={DepartmentEditForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path={`/departments/:id/rooms/create`}
+          component={RoomCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path={`/departments/:id/rooms/:id/edit`}
+          component={RoomEditForm}
           redirectTo="/login"
         />
       </React.Fragment>

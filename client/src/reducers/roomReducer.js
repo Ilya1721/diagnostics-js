@@ -23,6 +23,17 @@ export default function (state = initialState, action) {
         ...state,
         loading: true,
       };
+    case ADD_ROOM:
+      return {
+        ...state,
+        rooms: [...state.rooms, action.payload],
+        loading: false,
+      };
+    case DELETE_ROOM:
+      return {
+        ...state,
+        rooms: state.rooms.filter((r) => r.id !== action.payload),
+      };
     default:
       return state;
   }

@@ -40,7 +40,6 @@ class Clinic extends React.Component {
     } else {
       const clinic = this.props.clinic.clinics[0];
       const { departments } = this.props.department;
-      console.log(departments);
       return (
         <div className="container mt-3">
           <div className="card mt-3">

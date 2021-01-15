@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getDepartment } from "../../../actions/department/departmentActions";
-import { getRoomsById } from "../../../actions/room/roomActions";
+import { getRoomsById, deleteRoom } from "../../../actions/room/roomActions";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 import Loading from "../../modals/Loading";
@@ -29,6 +29,10 @@ class Department extends React.Component {
     }
   }
 
+  onDelete = (id) => {
+    this.props.deleteRoom(id);
+  };
+
   render() {
     if (this.state.loading) {
       return <Loading />;
@@ -41,13 +45,14 @@ class Department extends React.Component {
           <Link
             className="btn btn-primary text-right mr-2 mb-3"
             role="button"
-            to="/rooms/create"
+            to={`/departments/${department.id}/rooms/create`}
           >
             Додати палату
           </Link>
           <table className="table text-center table-light">
             <thead className="thead-dark">
               <tr>
+                <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
               </tr>
@@ -64,10 +69,20 @@ class Department extends React.Component {
                     <Link
                       className="btn btn-primary text-right mr-2 mb-3"
                       role="button"
-                      to={`/rooms/${room.id}/edit`}
+                      to={`/departments/${department.id}/rooms/${room.id}/edit`}
                     >
                       Редагувати
                     </Link>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger text-right mr-2 mb-3"
+                      role="button"
+                      type="button"
+                      onClick={() => this.onDelete(room.id)}
+                    >
+                      Видалити
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -84,6 +99,7 @@ Department.propTypes = {
   department: PropTypes.object.isRequired,
   room: PropTypes.object.isRequired,
   getRoomsById: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -92,5 +108,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getDepartment, getRoomsById })(Department)
+  connect(mapStateToProps, { getDepartment, getRoomsById, deleteRoom })(
+    Department
+  )
 );

@@ -23,6 +23,12 @@ export default function (state = initialState, action) {
         ...state,
         loading: true,
       };
+    case ADD_CLINIC:
+      return {
+        ...state,
+        clinics: [...state.clinics, action.payload],
+        loading: false,
+      };
     default:
       return state;
   }

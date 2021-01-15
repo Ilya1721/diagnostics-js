@@ -21,6 +21,59 @@ export const getRoomsById = (id) => (dispatch) => {
   });
 };
 
+export const getRoom = (id) => (dispatch) => {
+  dispatch(setRoomsLoading());
+  axios.get(`/api/rooms/${id}`).then((res) => {
+    dispatch({
+      type: GET_ROOMS,
+      payload: res.data,
+    });
+  });
+};
+
+export const addRoom = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setRoomsLoading());
+  axios
+    .post(`/api/rooms/ofDepartment/${data.departmentId}`, body, config)
+    .then((res) => {
+      dispatch({
+        type: ADD_ROOM,
+        payload: res.data,
+      });
+    });
+};
+
+export const deleteRoom = (id) => (dispatch) => {
+  axios.delete(`/api/rooms/${id}`).then((res) => {
+    dispatch({
+      type: DELETE_ROOM,
+      payload: id,
+    });
+  });
+};
+
+export const editRoom = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setRoomsLoading());
+  axios.put(`/api/rooms/${data.id}`, body, config).then((res) => {
+    dispatch({
+      type: GET_ROOMS,
+      payload: res.data,
+    });
+  });
+};
+
 export const setRoomsLoading = () => {
   return {
     type: ROOMS_LOADING,

@@ -2,7 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getClinics } from "../../../actions/clinic/clinicActions";
+import {
+  getClinics,
+  deleteClinic,
+  editClinic,
+} from "../../../actions/clinic/clinicActions";
+import AwsClass from "../../../aws/awsApi";
+import { getImgBuffer } from "../../../aws/imgBuffer";
 import Loading from "../../modals/Loading";
 
 class Clinics extends React.Component {
@@ -25,6 +31,14 @@ class Clinics extends React.Component {
     }
   }
 
+  onDelete = (id, image) => {
+    const awsObject = AwsClass.build().then((aws) => {
+      aws.deleteImage(image).then((res) => {
+        this.props.deleteClinic(id);
+      });
+    });
+  };
+
   render() {
     if (this.state.loading) {
       return <Loading />;
@@ -43,6 +57,8 @@ class Clinics extends React.Component {
             <thead className="thead-dark">
               <tr>
                 <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -50,11 +66,32 @@ class Clinics extends React.Component {
                 <tr key={clinic.clinic_id}>
                   <td>
                     <Link
-                      to={`/clinics${clinic.clinic_id}`}
+                      to={`/clinics/${clinic.clinic_id}/show`}
                       className="btn btn-link"
                     >
                       {clinic.clinic_name}
                     </Link>
+                  </td>
+                  <td>
+                    <Link
+                      className="btn btn-primary text-right mr-2 mb-3"
+                      role="button"
+                      to={`/clinics/${clinic.clinic_id}/edit`}
+                    >
+                      Редагувати
+                    </Link>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger text-right mr-2 mb-3"
+                      role="button"
+                      type="button"
+                      onClick={() =>
+                        this.onDelete(clinic.clinic_id, clinic.clinic_image)
+                      }
+                    >
+                      Видалити
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -69,10 +106,16 @@ class Clinics extends React.Component {
 Clinics.propTypes = {
   clinic: PropTypes.object.isRequired,
   getClinics: PropTypes.func.isRequired,
+  deleteClinic: PropTypes.func.isRequired,
+  editClinic: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   clinic: state.clinic,
 });
 
-export default connect(mapStateToProps, { getClinics })(Clinics);
+export default connect(mapStateToProps, {
+  getClinics,
+  deleteClinic,
+  editClinic,
+})(Clinics);

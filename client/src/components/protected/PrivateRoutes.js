@@ -21,6 +21,7 @@ import VisitStat from "./Statistics/VisitStat";
 import Clinics from "./InnerData/Clinics";
 import Clinic from "./InnerData/Clinic";
 import ClinicCreateForm from "./InnerData/ClinicCreateForm";
+import ClinicEditForm from "./InnerData/ClinicEditForm";
 import Department from "./InnerData/Department";
 import DepartmentCreateForm from "./InnerData/DepartmentCreateForm";
 import DepartmentEditForm from "./InnerData/DepartmentEditForm";
@@ -144,13 +145,19 @@ class PrivateRoutes extends React.Component {
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
-          path="/clinics/:id"
+          path="/clinics/:id/show"
           component={Clinic}
           redirectTo="/login"
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
-          path="/departments/:id"
+          path="/clinics/:id/edit"
+          component={ClinicEditForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/departments/:id/show"
           component={Department}
           redirectTo="/login"
         />

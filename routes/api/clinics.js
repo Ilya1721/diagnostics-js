@@ -46,15 +46,59 @@ router.post("/", (req, res) => {
   }
 
   conn.query(
-    "INSERT INTO clinics(city_id, name, street, " +
-      "house, phone_number, type, schedule, image) VALUES( " +
+    "INSERT INTO clinics (city_id, name, street, " +
+      "house, phone_number, type, schedule, image) VALUES (" +
       `${data.city}, "${data.name}", "${data.street}", ` +
       `"${data.house}", "${data.phoneNumber}", "${data.type}", ` +
       `"${data.schedule}", "${data.image}"); `,
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
 
-      return res.json({ ...data, id: results.insertId });
+      return res.json({ ...data, clinic_id: results.insertId });
+    }
+  );
+});
+
+// @route DELETE /api/clinics/id
+router.delete("/:id", (req, res) => {
+  const id = req.params.id;
+
+  conn.query(`DELETE FROM clinics WHERE id = ${id}`, (err, results, fields) => {
+    if (err) return res.status(400).json(err);
+
+    return res.json({ success: true });
+  });
+});
+
+// @route put /api/clinics/id
+router.put("/:id", (req, res) => {
+  const {
+    name,
+    id,
+    city,
+    street,
+    house,
+    phoneNumber,
+    type,
+    schedule,
+    image,
+  } = req.body;
+
+  if (!{ ...req.body }) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  conn.query(
+    "UPDATE clinics SET " +
+      `name = "${name}", city_id = ${city}, ` +
+      `street = "${street}", house = "${house}", ` +
+      `phoneNumber = "${phoneNumber}", type = "${type}", ` +
+      `schedule = "${schedule}", image = "${image}" ` +
+      `WHERE id = ${id}; `,
+    (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+
+      return res.json([{ ...req.body, clinic_id: id }]);
     }
   );
 });

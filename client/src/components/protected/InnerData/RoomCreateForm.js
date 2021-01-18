@@ -39,7 +39,9 @@ class RoomCreateForm extends React.Component {
 
   redirect = () => {
     if (this.state.isComplete) {
-      return <Redirect to={`/departments/${this.state.room.departmentId}`} />;
+      return (
+        <Redirect to={`/departments/${this.state.room.departmentId}/show`} />
+      );
     }
   };
 
@@ -83,7 +85,7 @@ class RoomCreateForm extends React.Component {
                         Register
                       </button>
                       <Link
-                        to={`/departments/${departmentId}`}
+                        to={`/departments/${departmentId}/show`}
                         className="btn btn-danger"
                         role="button"
                       >

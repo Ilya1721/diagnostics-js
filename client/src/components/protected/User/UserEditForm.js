@@ -302,7 +302,6 @@ class UserEditForm extends React.Component {
     } catch (err) {
       console.log(err);
     }
-    console.log(departmentId);
     const updatedDepartments = departments.filter((d) => d.id !== departmentId);
     const department = departments.find((d) => d.id === departmentId).name;
     const updatedRooms = rooms.filter((r) => r.department_id === departmentId);
@@ -389,21 +388,23 @@ class UserEditForm extends React.Component {
           const base64 = reader.result;
           const buffer = getImgBuffer(base64);
           aws.deleteImage(user.image).then((res) => {
-            aws.uploadImage(imageFile.name, buffer, user.email).then((res) =>
-              this.setState(
-                {
-                  ...this.state,
-                  isCompleted: true,
-                  user: {
-                    ...this.state.user,
-                    image: res,
+            aws
+              .uploadImage(imageFile.name, buffer, user.email, "doctors")
+              .then((res) =>
+                this.setState(
+                  {
+                    ...this.state,
+                    isCompleted: true,
+                    user: {
+                      ...this.state.user,
+                      image: res,
+                    },
                   },
-                },
-                () => {
-                  this.props.editUser(this.state.user);
-                }
-              )
-            );
+                  () => {
+                    this.props.editUser(this.state.user);
+                  }
+                )
+              );
           });
         };
         reader.readAsDataURL(imageFile);

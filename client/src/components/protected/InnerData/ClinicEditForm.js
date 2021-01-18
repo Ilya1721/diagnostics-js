@@ -4,12 +4,12 @@ import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import Loading from "../../modals/Loading";
-import { addClinic } from "../../../actions/clinic/clinicActions";
+import { editClinic, getClinic } from "../../../actions/clinic/clinicActions";
 import { getCities } from "../../../actions/city/cityActions";
 import AwsClass from "../../../aws/awsApi";
 import { getImgBuffer } from "../../../aws/imgBuffer";
 
-class ClinicCreateForm extends React.Component {
+class ClinicEditForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,26 +29,42 @@ class ClinicCreateForm extends React.Component {
   }
 
   componentDidMount() {
+    const id = this.props.match.params.id;
     this.props.getCities();
+    this.props.getClinic(id);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.city.loading !== this.props.city.loading) {
-      if (this.props.city.cities.length > 0) {
-        this.setState({
-          ...this.state,
-          loading: this.props.city.loading,
-          clinic: {
-            ...this.state.clinic,
-            city: this.props.city.cities[0].id,
-          },
-        });
-      } else {
-        this.setState({
-          ...this.state,
-          loading: this.props.city.loading,
-        });
-      }
+    if (prevProps.clinic.loading !== this.props.clinic.loading) {
+      const {
+        city_id,
+        city_name,
+        clinic_id,
+        clinic_name,
+        clinic_street,
+        clinic_house,
+        clinic_phoneNumber,
+        clinic_type,
+        clinic_schedule,
+        clinic_image,
+      } = this.props.clinic.clinics[0];
+      this.setState({
+        ...this.state,
+        loading: this.props.clinic.loading,
+        cities: this.props.city.cities.filter((c) => c.id !== city_id),
+        clinic: {
+          city: city_id,
+          cityName: city_name,
+          name: clinic_name,
+          street: clinic_street,
+          house: clinic_house,
+          phoneNumber: clinic_phoneNumber,
+          type: clinic_type,
+          schedule: clinic_schedule,
+          image: clinic_image,
+          id: clinic_id,
+        },
+      });
     }
   }
 
@@ -72,6 +88,25 @@ class ClinicCreateForm extends React.Component {
     });
   };
 
+  onCityChange = (e) => {
+    const { cities } = this.props.city;
+    let cityId;
+    try {
+      cityId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    this.setState({
+      ...this.state,
+      cities: cities.filter((c) => c.id !== cityId),
+      clinic: {
+        ...this.state.clinic,
+        city: cityId,
+        cityName: cities.find((c) => c.id === cityId).name,
+      },
+    });
+  };
+
   onSubmit = (e) => {
     e.preventDefault();
     const { image, name } = this.state.clinic;
@@ -90,7 +125,7 @@ class ClinicCreateForm extends React.Component {
               },
             },
             () => {
-              this.props.addClinic(this.state.clinic);
+              this.props.editClinic(this.state.clinic);
               this.setState({
                 ...this.state,
                 isComplete: true,
@@ -113,9 +148,10 @@ class ClinicCreateForm extends React.Component {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const { cities } = this.props.city;
+      const { cities } = this.state;
       const {
         city,
+        cityName,
         name,
         street,
         house,
@@ -147,7 +183,7 @@ class ClinicCreateForm extends React.Component {
                           className="form-control"
                           name="name"
                           value={name}
-                          onChange={this.onBaseInputChange}
+                          onChange={this.onCityChange}
                           required
                           autoComplete="name"
                           autoFocus
@@ -171,6 +207,7 @@ class ClinicCreateForm extends React.Component {
                           autoFocus
                           onChange={this.onBaseInputChange}
                         >
+                          <option value={city}>{cityName}</option>
                           {cities.map((city) => (
                             <option key={city.id} value={city.id}>
                               {city.name}
@@ -341,16 +378,19 @@ class ClinicCreateForm extends React.Component {
   }
 }
 
-ClinicCreateForm.propTypes = {
-  addClinic: PropTypes.func.isRequired,
+ClinicEditForm.propTypes = {
+  editClinic: PropTypes.func.isRequired,
+  getClinic: PropTypes.func.isRequired,
   getCities: PropTypes.func.isRequired,
   city: PropTypes.object.isRequired,
+  clinic: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   city: state.city,
+  clinic: state.clinic,
 });
 
 export default withRouter(
-  connect(mapStateToProps, { addClinic, getCities })(ClinicCreateForm)
+  connect(mapStateToProps, { editClinic, getCities, getClinic })(ClinicEditForm)
 );

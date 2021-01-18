@@ -39,7 +39,9 @@ class DepartmentCreateForm extends React.Component {
 
   redirect = () => {
     if (this.state.isComplete) {
-      return <Redirect to={`/clinics/${this.state.department.clinicId}`} />;
+      return (
+        <Redirect to={`/clinics/${this.state.department.clinicId}/show`} />
+      );
     }
   };
 
@@ -83,7 +85,7 @@ class DepartmentCreateForm extends React.Component {
                         Register
                       </button>
                       <Link
-                        to={`/clinics/${clinicId}`}
+                        to={`/clinics/${clinicId}/show`}
                         className="btn btn-danger"
                         role="button"
                       >

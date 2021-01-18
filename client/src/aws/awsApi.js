@@ -32,9 +32,9 @@ class AwsClass {
     return this.fullFilePath;
   };
 
-  uploadImage = (filePath, buffer, email) => {
+  uploadImage = (filePath, buffer, email, folder) => {
     const s3Path = "https://diagnostics-bucket.s3.eu-central-1.amazonaws.com/";
-    const bucketPath = `doctors/${email}/`;
+    const bucketPath = `${folder}/${email}/`;
     const data = {
       Key: bucketPath + filePath,
       Body: buffer,

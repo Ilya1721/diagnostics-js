@@ -29,6 +29,11 @@ export default function (state = initialState, action) {
         clinics: [...state.clinics, action.payload],
         loading: false,
       };
+    case DELETE_CLINIC:
+      return {
+        ...state,
+        clinics: state.clinics.filter((c) => c.clinic_id !== action.payload),
+      };
     default:
       return state;
   }

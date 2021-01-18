@@ -320,20 +320,22 @@ class Register extends React.Component {
         reader.onloadend = () => {
           const base64 = reader.result;
           const buffer = getImgBuffer(base64);
-          aws.uploadImage(imageFile.name, buffer, user.email).then((res) =>
-            this.setState(
-              {
-                ...this.state,
-                user: {
-                  ...this.state.user,
-                  image: res,
+          aws
+            .uploadImage(imageFile.name, buffer, user.email, "doctors")
+            .then((res) =>
+              this.setState(
+                {
+                  ...this.state,
+                  user: {
+                    ...this.state.user,
+                    image: res,
+                  },
                 },
-              },
-              () => {
-                this.props.register(this.state.user);
-              }
-            )
-          );
+                () => {
+                  this.props.register(this.state.user);
+                }
+              )
+            );
         };
         reader.readAsDataURL(imageFile);
       });

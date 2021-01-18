@@ -43,7 +43,7 @@ class DepartmentEditForm extends React.Component {
       const { name, clinic_id, id } = this.props.department.departments[0];
       this.setState({
         ...this.state,
-        loading: false,
+        loading: this.props.department.loading,
         department: {
           name,
           id,
@@ -64,7 +64,9 @@ class DepartmentEditForm extends React.Component {
 
   redirect = () => {
     if (this.state.isComplete) {
-      return <Redirect to={`/clinics/${this.state.department.clinicId}`} />;
+      return (
+        <Redirect to={`/clinics/${this.state.department.clinicId}/show`} />
+      );
     }
   };
 
@@ -110,7 +112,7 @@ class DepartmentEditForm extends React.Component {
                           Register
                         </button>
                         <Link
-                          to={`/clinics/${clinicId}`}
+                          to={`/clinics/${clinicId}/show`}
                           className="btn btn-danger"
                           role="button"
                         >

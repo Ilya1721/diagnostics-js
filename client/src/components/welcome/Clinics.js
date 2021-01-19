@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getClinics } from "../../actions/clinic/clinicActions";
+import { getClinics, findClinics } from "../../actions/clinic/clinicActions";
 import PropTypes from "prop-types";
 import Loading from "../modals/Loading";
 
@@ -9,6 +9,8 @@ class Clinics extends React.Component {
     super(props);
     this.state = {
       loading: true,
+      search: "",
+      category: "",
     };
   }
 
@@ -20,9 +22,23 @@ class Clinics extends React.Component {
     if (prevProps.clinic.loading !== this.props.clinic.loading) {
       this.setState({
         loading: this.props.clinic.loading,
+        category: "cl.name",
       });
     }
   }
+
+  search = (e) => {
+    e.preventDefault();
+    const { search, category } = this.state;
+    this.props.findClinics({ search, category });
+  };
+
+  onBaseInputChange = (e) => {
+    this.setState({
+      ...this.state,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   render() {
     if (this.state.loading) {
@@ -33,23 +49,29 @@ class Clinics extends React.Component {
         <div className="container mt-3">
           <h3 className="text-center">Клініки</h3>
           <div className="col text-center">
-            <form action="/clinics/filter" method="GET" className="form-inline">
+            <form onSubmit={this.search} className="form-inline">
               <div className="input-group">
-                <select name="category" className="form-control w-25">
-                  <option value="clinics.name">Назва</option>
-                  <option value="cities.name">Місто</option>
-                  <option value="clinics.type">Тип</option>
+                <select
+                  name="category"
+                  onChange={this.onBaseInputChange}
+                  className="form-control w-25"
+                >
+                  <option value="cl.name">Назва</option>
+                  <option value="c.name">Місто</option>
+                  <option value="cl.type">Тип</option>
                 </select>
                 <input
                   id="search"
                   name="search"
                   className="form-control w-50 input-group-append"
+                  value={this.state.search}
+                  onChange={this.onBaseInputChange}
                   type="text"
                   placeholder="Search"
                   aria-label="Search"
                 />
                 <div className="input-group-append">
-                  <button className="btn btn-success" type="button">
+                  <button className="btn btn-success" type="submit">
                     Find<span className="glyphicon glyphicon-search"></span>
                   </button>
                 </div>
@@ -94,6 +116,7 @@ class Clinics extends React.Component {
 
 Clinics.propTypes = {
   getClinics: PropTypes.func.isRequired,
+  findClinics: PropTypes.func.isRequired,
   clinic: PropTypes.object.isRequired,
 };
 
@@ -101,4 +124,4 @@ const mapStateToProps = (state) => ({
   clinic: state.clinic,
 });
 
-export default connect(mapStateToProps, { getClinics })(Clinics);
+export default connect(mapStateToProps, { getClinics, findClinics })(Clinics);

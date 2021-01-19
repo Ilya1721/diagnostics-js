@@ -377,7 +377,6 @@ class UserEditForm extends React.Component {
   onSubmit = (e) => {
     const { user, imageFile } = this.state;
     const { errors } = this.state;
-    console.log(user);
     e.preventDefault();
     if (this.state.isOverallError) {
       alert("Помилка реєстрації");
@@ -394,7 +393,7 @@ class UserEditForm extends React.Component {
                 this.setState(
                   {
                     ...this.state,
-                    isCompleted: true,
+                    isComplete: true,
                     user: {
                       ...this.state.user,
                       image: res,
@@ -412,7 +411,7 @@ class UserEditForm extends React.Component {
     } else {
       this.setState({
         ...this.state,
-        isCompleted: true,
+        isComplete: true,
       });
       this.props.editUser(this.state.user);
     }
@@ -511,7 +510,6 @@ class UserEditForm extends React.Component {
         clinicId,
       } = this.state.user;
       const { isOverallError, overallErrorMsg } = this.state;
-      console.log(rooms);
       return (
         <div className="container">
           <div className="row justify-content-center">

@@ -58,7 +58,6 @@ class AwsClass {
     const index = filePath.indexOf("com/");
     let substr = filePath.substr(index + 4, filePath.length);
     substr = substr.replace("%40", "@");
-    console.log(substr);
     const data = {
       Bucket: "diagnostics-bucket",
       Key: substr,

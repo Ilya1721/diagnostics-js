@@ -15,6 +15,7 @@ class ClinicEditForm extends React.Component {
     this.state = {
       isComplete: false,
       loading: true,
+      newImage: null,
       clinic: {
         city: "",
         name: "",
@@ -51,7 +52,6 @@ class ClinicEditForm extends React.Component {
       this.setState({
         ...this.state,
         loading: this.props.clinic.loading,
-        cities: this.props.city.cities.filter((c) => c.id !== city_id),
         clinic: {
           city: city_id,
           cityName: city_name,
@@ -81,10 +81,7 @@ class ClinicEditForm extends React.Component {
   onImageChange = (e) => {
     this.setState({
       ...this.state,
-      clinic: {
-        ...this.state.clinic,
-        image: e.target.files[0],
-      },
+      newImage: e.target.files[0],
     });
   };
 
@@ -98,7 +95,6 @@ class ClinicEditForm extends React.Component {
     }
     this.setState({
       ...this.state,
-      cities: cities.filter((c) => c.id !== cityId),
       clinic: {
         ...this.state.clinic,
         city: cityId,
@@ -109,33 +105,46 @@ class ClinicEditForm extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    const { image, name } = this.state.clinic;
-    const awsObject = AwsClass.build().then((aws) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result;
-        const buffer = getImgBuffer(base64);
-        aws.uploadImage(image.name, buffer, name, "clinics").then((res) =>
-          this.setState(
-            {
-              ...this.state,
-              clinic: {
-                ...this.state.clinic,
-                image: res,
-              },
-            },
-            () => {
-              this.props.editClinic(this.state.clinic);
-              this.setState({
-                ...this.state,
-                isComplete: true,
-              });
-            }
-          )
-        );
-      };
-      reader.readAsDataURL(image);
-    });
+    const { name, image } = this.state.clinic;
+    const { newImage } = this.state;
+    if (newImage) {
+      const awsObject = AwsClass.build().then((aws) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result;
+          const buffer = getImgBuffer(base64);
+          aws.deleteImage(image).then((res) => {
+            aws
+              .uploadImage(newImage.name, buffer, name, "clinics")
+              .then((res) =>
+                this.setState(
+                  {
+                    ...this.state,
+                    clinic: {
+                      ...this.state.clinic,
+                      image: res,
+                    },
+                  },
+                  () => {
+                    this.props.editClinic(this.state.clinic);
+                    this.setState({
+                      ...this.state,
+                      isComplete: true,
+                    });
+                  }
+                )
+              );
+          });
+        };
+        reader.readAsDataURL(newImage);
+      });
+    } else {
+      this.props.editClinic(this.state.clinic);
+      this.setState({
+        ...this.state,
+        isComplete: true,
+      });
+    }
   };
 
   redirect = () => {
@@ -148,7 +157,6 @@ class ClinicEditForm extends React.Component {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const { cities } = this.state;
       const {
         city,
         cityName,
@@ -160,6 +168,7 @@ class ClinicEditForm extends React.Component {
         schedule,
         image,
       } = this.state.clinic;
+      const cities = this.props.city.cities.filter((c) => c.id !== city);
       return (
         <div className="container">
           <div className="row justify-content-center">
@@ -183,7 +192,7 @@ class ClinicEditForm extends React.Component {
                           className="form-control"
                           name="name"
                           value={name}
-                          onChange={this.onCityChange}
+                          onChange={this.onBaseInputChange}
                           required
                           autoComplete="name"
                           autoFocus
@@ -205,7 +214,7 @@ class ClinicEditForm extends React.Component {
                           name="city"
                           required
                           autoFocus
-                          onChange={this.onBaseInputChange}
+                          onChange={this.onCityChange}
                         >
                           <option value={city}>{cityName}</option>
                           {cities.map((city) => (

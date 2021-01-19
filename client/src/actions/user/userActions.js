@@ -20,6 +20,18 @@ export const getUsers = () => (dispatch) => {
     });
 };
 
+export const findUsers = (data) => (dispatch) => {
+  const query = {
+    params: data,
+  };
+  axios.get("/api/users", query).then((res) => {
+    dispatch({
+      type: GET_USERS,
+      payload: res.data,
+    });
+  });
+};
+
 export const getUser = (id) => (dispatch) => {
   dispatch(setUsersLoading());
   axios

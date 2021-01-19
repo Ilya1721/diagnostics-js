@@ -13,7 +13,6 @@ export const getVisits = (user) => (dispatch) => {
   axios
     .get("/api/visits", {
       params: {
-        find: undefined,
         ...user,
       },
     })
@@ -30,15 +29,28 @@ export const getVisits = (user) => (dispatch) => {
     });
 };
 
+export const findVisits = (data, user) => (dispatch) => {
+  const query = {
+    params: {
+      ...data,
+      ...user,
+    },
+  };
+  axios.get("/api/visits", query).then((res) => {
+    dispatch({
+      type: GET_VISITS,
+      payload: res.data,
+    });
+  });
+};
+
 export const createVisit = (data) => (dispatch) => {
-  // Headers
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  // Request body
   const body = JSON.stringify(data);
 
   axios

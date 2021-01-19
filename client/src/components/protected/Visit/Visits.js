@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getVisits } from "../../../actions/visit/visitActions";
+import { getVisits, findVisits } from "../../../actions/visit/visitActions";
 import moment from "moment";
 import Diagnosis from "../Helpers/Diagnosis";
 import Treatments from "../Helpers/Treatments";
@@ -16,12 +16,13 @@ class Visits extends React.Component {
     super(props);
     this.state = {
       loading: true,
+      search: "",
+      category: "",
     };
   }
 
   componentDidMount() {
     const { user } = this.props.auth;
-
     this.props.getVisits(user);
   }
 
@@ -29,13 +30,23 @@ class Visits extends React.Component {
     if (prevProps.visit.loading !== this.props.visit.loading) {
       this.setState({
         loading: this.props.visit.loading,
+        category: "p.last_name",
       });
     }
   }
 
-  findVisit = (e) => {
-    const { user } = this.props.auth;
+  search = (e) => {
     e.preventDefault();
+    const { search, category } = this.state;
+    const { user } = this.props.auth;
+    this.props.findVisits({ search, category }, user);
+  };
+
+  onBaseInputChange = (e) => {
+    this.setState({
+      ...this.state,
+      [e.target.name]: e.target.value,
+    });
   };
 
   render() {
@@ -51,23 +62,25 @@ class Visits extends React.Component {
           <div className="row w-100">
             <div className="col-4"></div>
             <div className="col-6 my-3">
-              <form
-                onSubmit={this.findVisit}
-                method="GET"
-                className="form-inline"
-              >
+              <form onSubmit={this.search} className="form-inline">
                 <div className="input-group">
-                  <select name="category" className="form-control w-25">
-                    <option value="patients.last_name">Прізвище</option>
-                    <option value="patients.first_name">Ім'я</option>
-                    <option value="patients.father_name">По-батькові</option>
-                    <option value="patients.street">Вулиця</option>
-                    <option value="presences.id">Номер картки</option>
+                  <select
+                    name="category"
+                    onChange={this.onBaseInputChange}
+                    className="form-control w-25"
+                  >
+                    <option value="p.last_name">Прізвище</option>
+                    <option value="p.first_name">Ім'я</option>
+                    <option value="p.father_name">По-батькові</option>
+                    <option value="p.street">Вулиця</option>
+                    <option value="pr.id">Номер картки</option>
                   </select>
                   <input
                     id="search"
                     name="search"
                     className="form-control w-50 input-group-append"
+                    value={this.state.search}
+                    onChange={this.onBaseInputChange}
                     type="text"
                     placeholder="Search"
                     aria-label="Search"
@@ -188,6 +201,7 @@ Visits.propTypes = {
   auth: PropTypes.object.isRequired,
   visit: PropTypes.object.isRequired,
   getVisits: PropTypes.func.isRequired,
+  findVisits: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -195,4 +209,4 @@ const mapStateToProps = (state) => ({
   visit: state.visit,
 });
 
-export default connect(mapStateToProps, { getVisits })(Visits);
+export default connect(mapStateToProps, { getVisits, findVisits })(Visits);

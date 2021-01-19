@@ -16,6 +16,18 @@ export const getClinics = () => (dispatch) => {
   });
 };
 
+export const findClinics = (data) => (dispatch) => {
+  const query = {
+    params: data,
+  };
+  axios.get("/api/clinics", query).then((res) => {
+    dispatch({
+      type: GET_CLINICS,
+      payload: res.data,
+    });
+  });
+};
+
 export const getClinic = (id) => (dispatch) => {
   dispatch(setClinicsLoading());
   axios.get(`/api/clinics/${id}`).then((res) => {

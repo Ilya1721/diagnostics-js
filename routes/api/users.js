@@ -9,18 +9,35 @@ const jwt = require("jsonwebtoken");
 // @desc get all users that are doctors
 // @access public
 router.get("/", (req, res) => {
-  conn.query(
-    "SELECT e.id as employee_id, e.last_name, e.first_name, e.father_name, " +
-      "e.street, e.house, e.flat, e.phone_number, e.image, e.about, " +
-      "d.name AS department_name, c.name AS clinic_name, " +
-      "j.name AS job_name FROM employees e INNER JOIN departments d ON " +
-      "e.department_id = d.id INNER JOIN clinics c ON d.clinic_id = c.id " +
-      "INNER JOIN jobs j ON e.job_id = j.id",
-    (err, results, fields) => {
-      if (err) return res.status(400).json(err);
-      return res.json(results);
-    }
-  );
+  const { search, category } = req.query;
+  if (search) {
+    conn.query(
+      "SELECT e.id as employee_id, e.last_name, e.first_name, e.father_name, " +
+        "e.street, e.house, e.flat, e.phone_number, e.image, e.about, " +
+        "d.name AS department_name, c.name AS clinic_name, " +
+        "j.name AS job_name FROM employees e INNER JOIN departments d ON " +
+        "e.department_id = d.id INNER JOIN clinics c ON d.clinic_id = c.id " +
+        "INNER JOIN jobs j ON e.job_id = j.id " +
+        `WHERE ${category} LIKE "%${search}%"; `,
+      (err, results, fields) => {
+        if (err) return res.status(400).json(err);
+        return res.json(results);
+      }
+    );
+  } else {
+    conn.query(
+      "SELECT e.id as employee_id, e.last_name, e.first_name, e.father_name, " +
+        "e.street, e.house, e.flat, e.phone_number, e.image, e.about, " +
+        "d.name AS department_name, c.name AS clinic_name, " +
+        "j.name AS job_name FROM employees e INNER JOIN departments d ON " +
+        "e.department_id = d.id INNER JOIN clinics c ON d.clinic_id = c.id " +
+        "INNER JOIN jobs j ON e.job_id = j.id",
+      (err, results, fields) => {
+        if (err) return res.status(400).json(err);
+        return res.json(results);
+      }
+    );
+  }
 });
 
 // @route POST /api/users

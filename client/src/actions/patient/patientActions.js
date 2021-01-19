@@ -35,6 +35,21 @@ export const getPatients = (user) => (dispatch) => {
     });
 };
 
+export const findPatients = (data, user) => (dispatch) => {
+  const query = {
+    params: {
+      ...data,
+      ...user,
+    },
+  };
+  axios.get("/api/patients", query).then((res) => {
+    dispatch({
+      type: GET_PATIENTS,
+      payload: res.data,
+    });
+  });
+};
+
 export const editPatient = (data) => (dispatch) => {
   // Headers
   const config = {

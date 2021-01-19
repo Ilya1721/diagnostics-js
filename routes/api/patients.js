@@ -4,10 +4,10 @@ const conn = require("../../config/db");
 
 // @route GET /api/patients
 router.get("/", (req, res) => {
-  const { id, find } = req.query;
+  const { id, search, category } = req.query;
   let findStr = "";
-  if (find !== undefined) {
-    findStr = `AND ${find} = dede;`;
+  if (search) {
+    findStr = `AND ${category} LIKE "%${search}%"`;
   }
 
   conn.query(

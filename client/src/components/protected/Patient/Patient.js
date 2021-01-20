@@ -55,7 +55,7 @@ class Patient extends React.Component {
               <Link
                 className="btn btn-primary text-right mr-2"
                 role="button"
-                to="/visit/create"
+                to={`/patients/${patient.id}/visits/create`}
               >
                 Зареєструвати візит
               </Link>

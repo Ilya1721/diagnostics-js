@@ -43,7 +43,7 @@ class PrivateRoutes extends React.Component {
         />
         <PrivateRoute
           isAuth={isAuthenticated}
-          path="/visits/create"
+          path="/patients/:id/visits/create"
           component={VisitsCreateForm}
           redirectTo="/login"
         />

@@ -4,19 +4,22 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { Link, Redirect } from "react-router-dom";
 import { withRouter } from "react-router";
+import { createVisit } from "../../../actions/visit/visitActions";
 
 class VisitsCreateForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      arrivedAt: moment(),
-      departureAt: moment(),
-      symptoms: [{ id: 1, name: "" }],
-      diagnosis: [{ id: 1, name: "" }],
-      medicaments: [{ id: 1, name: "" }],
-      procedures: [{ id: 1, name: "" }],
-      treatments: [{ id: 1, name: "" }],
+      visit: {
+        arrivedAt: moment(),
+        departureAt: moment(),
+        symptoms: [{ id: 1, name: "", description: "" }],
+        diagnosis: [{ id: 1, name: "", description: "" }],
+        medicaments: [{ id: 1, name: "", description: "" }],
+        procedures: [{ id: 1, name: "", description: "" }],
+        treatments: [{ id: 1, name: "", description: "" }],
+      },
       isDateErr: false,
       isOverallError: false,
       isComplete: false,
@@ -31,7 +34,13 @@ class VisitsCreateForm extends React.Component {
     if (isOverallError) {
       alert(overallErrorMsg);
     } else {
-      console.log("create");
+      const patientId = this.props.match.params.id;
+      const userId = this.props.auth.user.id;
+      this.props.createVisit({
+        ...this.state.visit,
+        patientId,
+        userId,
+      });
     }
   };
 
@@ -95,120 +104,240 @@ class VisitsCreateForm extends React.Component {
   onBaseInputChange = (e) => {
     this.setState({
       ...this.state,
-      [e.target.name]: e.target.value,
+      visit: {
+        ...this.state.visit,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
+  onSymptomDescChange = (id, desc) => {
+    let symptoms = this.state.visit.symptoms.slice();
+    const index = symptoms.findIndex((s) => s.id === id);
+    symptoms[index].description = desc;
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        symptoms,
+      },
     });
   };
 
   onSymptomChange = (id, name) => {
-    let symptoms = this.state.symptoms.slice();
+    let symptoms = this.state.visit.symptoms.slice();
     const index = symptoms.findIndex((s) => s.id === id);
     symptoms[index].name = name;
     this.setState({
       ...this.state,
-      symptoms,
+      visit: {
+        ...this.state.visit,
+        symptoms,
+      },
+    });
+  };
+
+  onDiagnosDescChange = (id, desc) => {
+    let diagnosis = this.state.visit.diagnosis.slice();
+    const index = diagnosis.findIndex((s) => s.id === id);
+    diagnosis[index].description = desc;
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        diagnosis,
+      },
     });
   };
 
   onDiagnosChange = (id, name) => {
-    let diagnosis = this.state.diagnosis.slice();
+    let diagnosis = this.state.visit.diagnosis.slice();
     const index = diagnosis.findIndex((s) => s.id === id);
     diagnosis[index].name = name;
     this.setState({
       ...this.state,
-      diagnosis,
+      visit: {
+        ...this.state.visit,
+        diagnosis,
+      },
+    });
+  };
+
+  onMedicamentDescChange = (id, desc) => {
+    let medicaments = this.state.visit.medicaments.slice();
+    const index = medicaments.findIndex((s) => s.id === id);
+    medicaments[index].description = desc;
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        medicaments,
+      },
     });
   };
 
   onMedicamentChange = (id, name) => {
-    let medicaments = this.state.medicaments.slice();
+    let medicaments = this.state.visit.medicaments.slice();
     const index = medicaments.findIndex((s) => s.id === id);
     medicaments[index].name = name;
     this.setState({
       ...this.state,
-      medicaments,
+      visit: {
+        ...this.state.visit,
+        medicaments,
+      },
+    });
+  };
+
+  onProcedureDescChange = (id, desc) => {
+    let procedures = this.state.visit.procedures.slice();
+    const index = procedures.findIndex((s) => s.id === id);
+    procedures[index].description = desc;
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        procedures,
+      },
     });
   };
 
   onProcedureChange = (id, name) => {
-    let procedures = this.state.procedures.slice();
+    let procedures = this.state.visit.procedures.slice();
     const index = procedures.findIndex((s) => s.id === id);
     procedures[index].name = name;
     this.setState({
       ...this.state,
-      procedures,
+      visit: {
+        ...this.state.visit,
+        procedures,
+      },
+    });
+  };
+
+  onTreatmentDescChange = (id, desc) => {
+    let treatments = this.state.visit.treatments.slice();
+    const index = treatments.findIndex((s) => s.id === id);
+    treatments[index].description = desc;
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        treatments,
+      },
     });
   };
 
   onTreatmentChange = (id, name) => {
-    let treatments = this.state.treatments.slice();
+    let treatments = this.state.visit.treatments.slice();
     const index = treatments.findIndex((s) => s.id === id);
     treatments[index].name = name;
     this.setState({
       ...this.state,
-      treatments,
+      visit: {
+        ...this.state.visit,
+        treatments,
+      },
     });
   };
 
   moreSymptom = () => {
-    const { symptoms } = this.state;
+    const { symptoms } = this.state.visit;
     this.setState({
       ...this.state,
-      symptoms: [
-        ...symptoms,
-        { id: symptoms[symptoms.length - 1].id + 1, name: "" },
-      ],
+      visit: {
+        ...this.state.visit,
+        symptoms: [
+          ...symptoms,
+          {
+            id: symptoms[symptoms.length - 1].id + 1,
+            name: "",
+            description: "",
+          },
+        ],
+      },
     });
   };
+
   moreDiagnos = () => {
-    const { diagnosis } = this.state;
+    const { diagnosis } = this.state.visit;
     this.setState({
       ...this.state,
-      diagnosis: [
-        ...diagnosis,
-        { id: diagnosis[diagnosis.length - 1].id + 1, name: "" },
-      ],
+      visit: {
+        ...this.state.visit,
+        diagnosis: [
+          ...diagnosis,
+          {
+            id: diagnosis[diagnosis.length - 1].id + 1,
+            name: "",
+            description: "",
+          },
+        ],
+      },
     });
   };
   moreMedicament = () => {
-    const { medicaments } = this.state;
+    const { medicaments } = this.state.visit;
     this.setState({
       ...this.state,
-      medicaments: [
-        ...medicaments,
-        { id: medicaments[medicaments.length - 1].id + 1, name: "" },
-      ],
+      visit: {
+        ...this.state.visit,
+        medicaments: [
+          ...medicaments,
+          {
+            id: medicaments[medicaments.length - 1].id + 1,
+            name: "",
+            description: "",
+          },
+        ],
+      },
     });
   };
+
   moreProcedure = () => {
-    const { procedures } = this.state;
+    const { procedures } = this.state.visit;
     this.setState({
       ...this.state,
-      procedures: [
-        ...procedures,
-        { id: procedures[procedures.length - 1].id + 1, name: "" },
-      ],
+      visit: {
+        ...this.state.visit,
+        procedures: [
+          ...procedures,
+          {
+            id: procedures[procedures.length - 1].id + 1,
+            name: "",
+            description: "",
+          },
+        ],
+      },
     });
   };
+
   moreTreatment = () => {
-    const { treatments } = this.state;
+    const { treatments } = this.state.visit;
     this.setState({
       ...this.state,
-      treatments: [
-        ...treatments,
-        { id: treatments[treatments.length - 1].id + 1, name: "" },
-      ],
+      visit: {
+        ...this.state.visit,
+        treatments: [
+          ...treatments,
+          {
+            id: treatments[treatments.length - 1].id + 1,
+            name: "",
+            description: "",
+          },
+        ],
+      },
     });
   };
 
   render() {
     const {
-      arrivedAt,
-      departureAt,
       isDateErr,
       dateErrMsg,
       isOverallError,
       overallErrorMsg,
     } = this.state;
+    const { arrivedAt, departureAt } = this.state.visit;
     const patientId = this.props.match.params.id;
     return (
       <div className="container">
@@ -266,27 +395,54 @@ class VisitsCreateForm extends React.Component {
                       Симптоми
                     </label>
                   </div>
-                  {this.state.symptoms.map((symptom) => (
-                    <div key={symptom.id} className="form-group row">
-                      <label
-                        htmlFor="symptom"
-                        className="col-md-4 col-form-label text-md-right"
-                      >
-                        Симптом:
-                      </label>
-                      <div className="col-md-6">
-                        <input
-                          id="symptom"
-                          type="text"
-                          className="form-control"
-                          name="symptom"
-                          value={symptom.name}
-                          onChange={this.onSymptomChange}
-                          required
-                          autoComplete="symptom"
-                        />
+                  {this.state.visit.symptoms.map((symptom) => (
+                    <React.Fragment key={symptom.id}>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="symptom"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Симптом:
+                        </label>
+                        <div className="col-md-6">
+                          <input
+                            id="symptom"
+                            type="text"
+                            className="form-control"
+                            name="symptom"
+                            value={symptom.name}
+                            onChange={(e) =>
+                              this.onSymptomChange(symptom.id, e.target.value)
+                            }
+                            required
+                            autoComplete="symptom"
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="symptomDescription"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Опис:
+                        </label>
+                        <div className="col-md-6">
+                          <textarea
+                            className="form-control"
+                            name="symptomDescription"
+                            value={symptom.description}
+                            id="symptomDescription"
+                            rows="5"
+                            onChange={(e) =>
+                              this.onSymptomDescChange(
+                                symptom.id,
+                                e.target.value
+                              )
+                            }
+                          ></textarea>
+                        </div>
+                      </div>
+                    </React.Fragment>
                   ))}
 
                   <div className="form-group row">
@@ -296,7 +452,7 @@ class VisitsCreateForm extends React.Component {
                     ></label>
                     <div className="col-md-6">
                       <button
-                        className="form-control btn btn-primary"
+                        className="btn btn-primary"
                         onClick={this.moreSymptom}
                         id="moreSymptom"
                         type="button"
@@ -314,27 +470,54 @@ class VisitsCreateForm extends React.Component {
                       Діагнози
                     </label>
                   </div>
-                  {this.state.diagnosis.map((diagnos) => (
-                    <div key={diagnos.id} className="form-group row">
-                      <label
-                        htmlFor="diagnos"
-                        className="col-md-4 col-form-label text-md-right"
-                      >
-                        Діагноз:
-                      </label>
-                      <div className="col-md-6">
-                        <input
-                          id="diagnos"
-                          type="text"
-                          className="form-control"
-                          name="diagnos"
-                          value={diagnos.name}
-                          onChange={this.onDiagnosChange}
-                          required
-                          autoComplete="diagnos"
-                        />
+                  {this.state.visit.diagnosis.map((diagnos) => (
+                    <React.Fragment key={diagnos.id}>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="diagnos"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Діагноз:
+                        </label>
+                        <div className="col-md-6">
+                          <input
+                            id="diagnos"
+                            type="text"
+                            className="form-control"
+                            name="diagnos"
+                            value={diagnos.name}
+                            onChange={(e) =>
+                              this.onDiagnosChange(diagnos.id, e.target.value)
+                            }
+                            required
+                            autoComplete="diagnos"
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="diagnosDescription"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Опис:
+                        </label>
+                        <div className="col-md-6">
+                          <textarea
+                            className="form-control"
+                            name="diagnosDescription"
+                            value={diagnos.description}
+                            id="diagnosDescription"
+                            rows="5"
+                            onChange={(e) =>
+                              this.onDiagnosDescChange(
+                                diagnos.id,
+                                e.target.value
+                              )
+                            }
+                          ></textarea>
+                        </div>
+                      </div>
+                    </React.Fragment>
                   ))}
 
                   <div className="form-group row">
@@ -344,7 +527,7 @@ class VisitsCreateForm extends React.Component {
                     ></label>
                     <div className="col-md-6">
                       <button
-                        className="form-control btn btn-primary"
+                        className="btn btn-primary"
                         onClick={this.moreDiagnos}
                         id="moreDiagnos"
                         type="button"
@@ -362,27 +545,57 @@ class VisitsCreateForm extends React.Component {
                       Медикаменти
                     </label>
                   </div>
-                  {this.state.medicaments.map((medicament) => (
-                    <div key={medicament.id} className="form-group row">
-                      <label
-                        htmlFor="medicament"
-                        className="col-md-4 col-form-label text-md-right"
-                      >
-                        Медиакамент:
-                      </label>
-                      <div className="col-md-6">
-                        <input
-                          id="medicament"
-                          type="text"
-                          className="form-control"
-                          name="medicament"
-                          value={medicament.name}
-                          onChange={this.onMedicamentChange}
-                          required
-                          autoComplete="medicament"
-                        />
+                  {this.state.visit.medicaments.map((medicament) => (
+                    <React.Fragment key={medicament.id}>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="medicament"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Медиакамент:
+                        </label>
+                        <div className="col-md-6">
+                          <input
+                            id="medicament"
+                            type="text"
+                            className="form-control"
+                            name="medicament"
+                            value={medicament.name}
+                            onChange={(e) =>
+                              this.onMedicamentChange(
+                                medicament.id,
+                                e.target.value
+                              )
+                            }
+                            required
+                            autoComplete="medicament"
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="medicamentDescription"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Опис:
+                        </label>
+                        <div className="col-md-6">
+                          <textarea
+                            className="form-control"
+                            name="medicamentDescription"
+                            value={medicament.description}
+                            id="medicamentDescription"
+                            rows="5"
+                            onChange={(e) =>
+                              this.onMedicamentDescChange(
+                                medicament.id,
+                                e.target.value
+                              )
+                            }
+                          ></textarea>
+                        </div>
+                      </div>
+                    </React.Fragment>
                   ))}
 
                   <div className="form-group row">
@@ -392,7 +605,7 @@ class VisitsCreateForm extends React.Component {
                     ></label>
                     <div className="col-md-6">
                       <button
-                        className="form-control btn btn-primary"
+                        className="btn btn-primary"
                         onClick={this.moreMedicament}
                         id="moreMedicament"
                         type="button"
@@ -410,27 +623,57 @@ class VisitsCreateForm extends React.Component {
                       Процедури
                     </label>
                   </div>
-                  {this.state.procedures.map((procedure) => (
-                    <div key={procedure.id} className="form-group row">
-                      <label
-                        htmlFor="procedure"
-                        className="col-md-4 col-form-label text-md-right"
-                      >
-                        Процедура:
-                      </label>
-                      <div className="col-md-6">
-                        <input
-                          id="procedure"
-                          type="text"
-                          className="form-control"
-                          name="procedure"
-                          value={procedure.name}
-                          onChange={this.onProcedureChange}
-                          required
-                          autoComplete="procedure"
-                        />
+                  {this.state.visit.procedures.map((procedure) => (
+                    <React.Fragment key={procedure.id}>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="procedure"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Процедура:
+                        </label>
+                        <div className="col-md-6">
+                          <input
+                            id="procedure"
+                            type="text"
+                            className="form-control"
+                            name="procedure"
+                            value={procedure.name}
+                            onChange={(e) =>
+                              this.onProcedureChange(
+                                procedure.id,
+                                e.target.value
+                              )
+                            }
+                            required
+                            autoComplete="procedure"
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="procedureDescription"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Опис:
+                        </label>
+                        <div className="col-md-6">
+                          <textarea
+                            className="form-control"
+                            name="procedureDescription"
+                            value={procedure.description}
+                            id="procedureDescription"
+                            rows="5"
+                            onChange={(e) =>
+                              this.onProcedureDescChange(
+                                procedure.id,
+                                e.target.value
+                              )
+                            }
+                          ></textarea>
+                        </div>
+                      </div>
+                    </React.Fragment>
                   ))}
 
                   <div className="form-group row">
@@ -440,7 +683,7 @@ class VisitsCreateForm extends React.Component {
                     ></label>
                     <div className="col-md-6">
                       <button
-                        className="form-control btn btn-primary"
+                        className="btn btn-primary"
                         onClick={this.moreProcedure}
                         id="moreProcedure"
                         type="button"
@@ -458,27 +701,57 @@ class VisitsCreateForm extends React.Component {
                       Схеми лікувань
                     </label>
                   </div>
-                  {this.state.treatments.map((treatment) => (
-                    <div key={treatment.id} className="form-group row">
-                      <label
-                        htmlFor="treatment"
-                        className="col-md-4 col-form-label text-md-right"
-                      >
-                        Схема лікування:
-                      </label>
-                      <div className="col-md-6">
-                        <input
-                          id="treatment"
-                          type="text"
-                          className="form-control"
-                          name="treatment"
-                          value={treatment.name}
-                          onChange={this.onTreatmentChange}
-                          required
-                          autoComplete="treatment"
-                        />
+                  {this.state.visit.treatments.map((treatment) => (
+                    <React.Fragment key={treatment.id}>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="treatment"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Схема лікування:
+                        </label>
+                        <div className="col-md-6">
+                          <input
+                            id="treatment"
+                            type="text"
+                            className="form-control"
+                            name="treatment"
+                            value={treatment.name}
+                            onChange={(e) =>
+                              this.onTreatmentChange(
+                                treatment.id,
+                                e.target.value
+                              )
+                            }
+                            required
+                            autoComplete="treatment"
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="treatmentDescription"
+                          className="col-md-4 col-form-label text-md-right"
+                        >
+                          Опис:
+                        </label>
+                        <div className="col-md-6">
+                          <textarea
+                            className="form-control"
+                            name="treatmentDescription"
+                            value={treatment.description}
+                            id="treatmentDescription"
+                            rows="5"
+                            onChange={(e) =>
+                              this.onTreatmentDescChange(
+                                treatment.id,
+                                e.target.value
+                              )
+                            }
+                          ></textarea>
+                        </div>
+                      </div>
+                    </React.Fragment>
                   ))}
 
                   <div className="form-group row">
@@ -488,7 +761,7 @@ class VisitsCreateForm extends React.Component {
                     ></label>
                     <div className="col-md-6">
                       <button
-                        className="form-control btn btn-primary"
+                        className="btn btn-primary"
                         onClick={this.moreTreatment}
                         id="moreTreatment"
                         type="button"
@@ -526,10 +799,13 @@ class VisitsCreateForm extends React.Component {
 
 VisitsCreateForm.propTypes = {
   auth: PropTypes.object.isRequired,
+  createVisit: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default withRouter(connect(mapStateToProps, {})(VisitsCreateForm));
+export default withRouter(
+  connect(mapStateToProps, { createVisit })(VisitsCreateForm)
+);

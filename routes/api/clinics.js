@@ -5,7 +5,6 @@ const conn = require("../../config/db");
 // @route GET /api/clinics
 router.get("/", (req, res) => {
   const { search, category } = req.query;
-  console.log(search);
   if (search) {
     conn.query(
       "SELECT cl.id AS clinic_id, cl.name AS clinic_name, " +

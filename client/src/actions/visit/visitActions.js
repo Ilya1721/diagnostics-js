@@ -53,19 +53,12 @@ export const createVisit = (data) => (dispatch) => {
 
   const body = JSON.stringify(data);
 
-  axios
-    .post("/api/visits", body, config)
-    .then((res) => {
-      dispatch({
-        type: ADD_VISIT,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch(
-        returnErrors(err.response.data, err.response.status, "ADD_VISIT_FAIL")
-      );
+  axios.post("/api/visits", body, config).then((res) => {
+    dispatch({
+      type: ADD_VISIT,
+      payload: res.data,
     });
+  });
 };
 
 export const setVisitsLoading = () => {

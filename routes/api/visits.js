@@ -47,8 +47,8 @@ router.get("/", (req, res) => {
 
           const symptoms =
             "SELECT s.id, s.name, s.description, ps.amount, " +
-            "ps.date_plan as datePlan, ps.date_fact AS dateFact, " +
-            "s.unit_of_measure AS unitOfMeasure FROM symptoms s " +
+            "ps.date_plan as datePlan, ps.date_fact AS dateFact " +
+            "FROM symptoms s " +
             "INNER JOIN presence_symptom ps ON ps.symptom_id = s.id " +
             "INNER JOIN presences p ON p.id = ps.presence_id " +
             `WHERE p.id = ${result.presenceId};`;
@@ -70,7 +70,6 @@ router.get("/", (req, res) => {
 
           const procedures =
             "SELECT p.id, p.name, pp.amount, p.description, " +
-            "p.unit_of_measure AS unitOfMeasure, " +
             "pp.date_plan AS datePlan, pp.date_fact AS dateFact FROM procedures p " +
             "INNER JOIN presence_procedure pp ON pp.procedure_id = p.id " +
             "INNER JOIN presences pa ON pa.id = pp.presence_id " +
@@ -109,5 +108,92 @@ router.get("/", (req, res) => {
 });
 
 // @route POST /api/visits
+router.post("/", (req, res) => {
+  const data = req.body;
+  if (!{ ...data }) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  const presenceQuery =
+    "INSERT INTO presences (patient_id, " +
+    "doctor_id, start_at, end_at) VALUES (" +
+    `${data.patientId}, ${data.userId}, ` +
+    `${data.arrivedAt}, ${data.departureAt}); `;
+  conn.query(presenceQuery, (err, results, fields) => {
+    if (err) return res.status(400).json(err);
+
+    const getSymptoms = new Promise(async (resolve, reject) => {
+      let updatedSymptoms = [];
+      for (const symptom of data.symptoms) {
+        const results = await conn
+          .promise()
+          .query(
+            "SELECT id, name FROM symptoms WHERE " +
+              `name = "${symptom.name}"; `
+          );
+        if (results.length > 0) {
+          updatedSymptoms.push(results[0]);
+        } else {
+          updatedSymptoms.push(symptom);
+        }
+      }
+      let updatedDiagnosis = [];
+      for (const diagnos of data.diagnosis) {
+        const results = await conn
+          .promise()
+          .query(
+            "SELECT id, name FROM diseases WHERE " +
+              `name = "${diagnos.name}"; `
+          );
+        if (results.length > 0) {
+          updatedDiagnosis.push(results[0]);
+        } else {
+          updatedDiagnosis.push(diagnos);
+        }
+      }
+      let updatedMedicaments = [];
+      for (const medicament of data.medicaments) {
+        const results = await conn
+          .promise()
+          .query(
+            "SELECT id, name FROM medicaments WHERE " +
+              `name = "${medicament.name}"`
+          );
+        if (results.length > 0) {
+          updatedMedicaments.push(results[0]);
+        } else {
+          updatedMedicaments.push(medicament);
+        }
+      }
+      let updatedProcedures = [];
+      for (const procedure of data.procedures) {
+        const results = await conn
+          .promise()
+          .query(
+            "SELECT id, name FROM procedures WHERE " +
+              `name = "${procedure.name}"`
+          );
+        if (results.length > 0) {
+          updatedProcedures.push(results[0]);
+        } else {
+          updatedProcedures.push(procedure);
+        }
+      }
+      let updatedTreatments = [];
+      for (const treatment of data.treatments) {
+        const results = await conn
+          .promise()
+          .query(
+            "SELECT id, name FROM treatments WHERE " +
+              `name = "${treatment.name}"`
+          );
+        if (results.length > 0) {
+          updatedTreatments.push(results[0]);
+        } else {
+          updatedTreatments.push(treatment);
+        }
+      }
+    });
+  });
+});
 
 module.exports = router;

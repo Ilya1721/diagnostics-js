@@ -46,7 +46,7 @@ router.get("/", (req, res) => {
             `WHERE r.id = ${result.roomId};`;
 
           const symptoms =
-            "SELECT s.id, s.name, s.description, ps.amount, " +
+            "SELECT s.id, s.name, ps.description, " +
             "ps.date_plan as datePlan, ps.date_fact AS dateFact " +
             "FROM symptoms s " +
             "INNER JOIN presence_symptom ps ON ps.symptom_id = s.id " +
@@ -54,29 +54,29 @@ router.get("/", (req, res) => {
             `WHERE p.id = ${result.presenceId};`;
 
           const diagnosis =
-            "SELECT d.id, d.name, d.description, pd.date_plan AS datePlan, " +
+            "SELECT d.id, d.name, pd.description, pd.date_plan AS datePlan, " +
             "pd.date_fact AS dateFact FROM diseases d " +
             "INNER JOIN presence_disease pd ON pd.disease_id = d.id " +
             "INNER JOIN presences p ON p.id = pd.presence_id " +
             `WHERE p.id = ${result.presenceId}; `;
 
           const medicaments =
-            "SELECT m.id, m.name, pm.amount, pm.date_plan AS datePlan, " +
-            "pm.date_fact as dateFact, " +
-            "m.unit_of_measure AS unitOfMeasure FROM medicaments m " +
+            "SELECT m.id, m.name, pm.description, pm.date_plan AS datePlan, " +
+            "pm.date_fact as dateFact " +
+            "FROM medicaments m " +
             "INNER JOIN presence_medicament pm ON pm.medicament_id = m.id " +
             "INNER JOIN presences p ON p.id = pm.presence_id " +
             `WHERE p.id = ${result.presenceId}; `;
 
           const procedures =
-            "SELECT p.id, p.name, pp.amount, p.description, " +
+            "SELECT p.id, p.name, pp.description, " +
             "pp.date_plan AS datePlan, pp.date_fact AS dateFact FROM procedures p " +
             "INNER JOIN presence_procedure pp ON pp.procedure_id = p.id " +
             "INNER JOIN presences pa ON pa.id = pp.presence_id " +
             `WHERE pa.id = ${result.presenceId}; `;
 
           const treatments =
-            "SELECT t.id, t.name, t.description, " +
+            "SELECT t.id, t.name, pt.description, " +
             "pt.date_plan AS datePlan, pt.date_fact AS dateFact FROM treatments t " +
             "INNER JOIN presence_treatment pt ON pt.treatment_id = t.id " +
             "INNER JOIN presences p ON p.id = pt.presence_id " +
@@ -118,12 +118,12 @@ router.post("/", (req, res) => {
     "doctor_id, start_at, end_at) VALUES (" +
     `${data.patientId}, ${data.userId}, ` +
     `${data.arrivedAt}, ${data.departureAt}); `;
-  conn.query(presenceQuery, (err, results, fields) => {
+  conn.query(presenceQuery, (err, presenceResults, fields) => {
     if (err) return res.status(400).json(err);
 
     const getSymptoms = new Promise(async (resolve, reject) => {
-      let updatedSymptoms = [];
       for (const symptom of data.symptoms) {
+        let symptomToInsert;
         const results = await conn
           .promise()
           .query(
@@ -131,13 +131,24 @@ router.post("/", (req, res) => {
               `name = "${symptom.name}"; `
           );
         if (results.length > 0) {
-          updatedSymptoms.push(results[0]);
+          symptomToInsert = { ...symptom, id: results[0].id };
         } else {
-          updatedSymptoms.push(symptom);
+          const newSymptom = await conn
+            .promise()
+            .query(`INSERT INTO symptoms(name) VALUES ("${symptom.name}")`);
+          symptomToInsert = { ...symptom, id: newSymptom.insertId };
         }
+        const presenceSymptom = await conn
+          .promise()
+          .query(
+            "INSERT INTO presence_symptom (presence_id, " +
+              "symptom_id, description, date_plan, date_fact) " +
+              `VALUES (${presenceResults.insertId}, ${symptomToInsert.id}, ` +
+              `"${symptomToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
+          );
       }
-      let updatedDiagnosis = [];
       for (const diagnos of data.diagnosis) {
+        let diagnosToInsert;
         const results = await conn
           .promise()
           .query(
@@ -145,13 +156,24 @@ router.post("/", (req, res) => {
               `name = "${diagnos.name}"; `
           );
         if (results.length > 0) {
-          updatedDiagnosis.push(results[0]);
+          diagnosToInsert = { ...diagnos, id: results[0].id };
         } else {
-          updatedDiagnosis.push(diagnos);
+          const newDiagnos = await conn
+            .promise()
+            .query(`INSERT INTO diseases(name) VALUES ("${disease.name}")`);
+          diagnosToInsert = { ...diagnos, id: newDiagnos.insertId };
         }
+        const presenceDisease = await conn
+          .promise()
+          .query(
+            "INSERT INTO presence_disease (presence_id, " +
+              "disease_id, description, date_plan, date_fact) " +
+              `VALUES (${presenceResults.insertId}, ${diagnosToInsert.id}, ` +
+              `"${diagnosToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
+          );
       }
-      let updatedMedicaments = [];
       for (const medicament of data.medicaments) {
+        let medicamentToInsert;
         const results = await conn
           .promise()
           .query(
@@ -159,13 +181,26 @@ router.post("/", (req, res) => {
               `name = "${medicament.name}"`
           );
         if (results.length > 0) {
-          updatedMedicaments.push(results[0]);
+          medicamentToInsert = { ...medicament, id: results[0].id };
         } else {
-          updatedMedicaments.push(medicament);
+          const newMedicament = await conn
+            .promise()
+            .query(
+              `INSERT INTO medicaments(name) VALUES ("${medicament.name}")`
+            );
+          medicamentToInsert = { ...medicament, id: newMedicament.insertId };
         }
+        const presenceMedicament = await conn
+          .promise()
+          .query(
+            "INSERT INTO presence_medicament (presence_id, " +
+              "medicament_id, description, date_plan, date_fact) " +
+              `VALUES (${presenceResults.insertId}, ${medicamentToInsert.id}, ` +
+              `"${medicamentToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
+          );
       }
-      let updatedProcedures = [];
       for (const procedure of data.procedures) {
+        let procedureToInsert;
         const results = await conn
           .promise()
           .query(
@@ -173,13 +208,24 @@ router.post("/", (req, res) => {
               `name = "${procedure.name}"`
           );
         if (results.length > 0) {
-          updatedProcedures.push(results[0]);
+          procedureToInsert = { ...procedure, id: results[0].id };
         } else {
-          updatedProcedures.push(procedure);
+          const newProcedure = await conn
+            .promise()
+            .query(`INSERT INTO procedures(name) VALUES ("${procedure.name}")`);
+          procedureToInsert = { ...procedure, id: newProcedure.insertId };
         }
+        const presenceProcedure = await conn
+          .promise()
+          .query(
+            "INSERT INTO presence_procedure (presence_id, " +
+              "procedure_id, description, date_plan, date_fact) " +
+              `VALUES (${presenceResults.insertId}, ${procedureToInsert.id}, ` +
+              `"${procedureToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
+          );
       }
-      let updatedTreatments = [];
       for (const treatment of data.treatments) {
+        let treatmentToInsert;
         const results = await conn
           .promise()
           .query(
@@ -187,10 +233,21 @@ router.post("/", (req, res) => {
               `name = "${treatment.name}"`
           );
         if (results.length > 0) {
-          updatedTreatments.push(results[0]);
+          treatmentToInsert = { ...treatment, id: results[0].id };
         } else {
-          updatedTreatments.push(treatment);
+          const newTreatment = await conn
+            .promise()
+            .query(`INSERT INTO treatments(name) VALUES ("${treatment.name}")`);
+          treatmentToInsert = { ...treatment, id: newProcedure.insertId };
         }
+        const presenceTreatment = await conn
+          .promise()
+          .query(
+            "INSERT INTO presence_treatment (presence_id, " +
+              "treatment_id, description, date_plan, date_fact) " +
+              `VALUES (${presenceResults.insertId}, ${treatmentToInsert.id}, ` +
+              `"${treatmentToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
+          );
       }
     });
   });

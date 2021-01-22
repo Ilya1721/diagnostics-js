@@ -60,7 +60,7 @@ router.get("/:id", (req, res) => {
     `WHERE p.id = ${id}; `;
 
   const symptoms =
-    "SELECT s.id, s.name, s.description, ps.amount, " +
+    "SELECT s.id, s.name, ps.description, " +
     "ps.date_plan as datePlan, ps.date_fact AS dateFact " +
     "FROM symptoms s " +
     "INNER JOIN presence_symptom ps ON ps.symptom_id = s.id " +
@@ -68,29 +68,29 @@ router.get("/:id", (req, res) => {
     `WHERE p.patient_id = ${id};`;
 
   const diagnosis =
-    "SELECT d.id, d.name, d.description, pd.date_plan AS datePlan, " +
+    "SELECT d.id, d.name, pd.description, pd.date_plan AS datePlan, " +
     "pd.date_fact AS dateFact FROM diseases d " +
     "INNER JOIN presence_disease pd ON pd.disease_id = d.id " +
     "INNER JOIN presences p ON p.id = pd.presence_id " +
     `WHERE p.patient_id = ${id}; `;
 
   const medicaments =
-    "SELECT m.id, m.name, pm.amount, pm.date_plan AS datePlan, " +
-    "pm.date_fact as dateFact, " +
-    "m.unit_of_measure AS unitOfMeasure FROM medicaments m " +
+    "SELECT m.id, m.name, pm.description, pm.date_plan AS datePlan, " +
+    "pm.date_fact as dateFact " +
+    "FROM medicaments m " +
     "INNER JOIN presence_medicament pm ON pm.medicament_id = m.id " +
     "INNER JOIN presences p ON p.id = pm.presence_id " +
     `WHERE p.patient_id = ${id}; `;
 
   const procedures =
-    "SELECT p.id, p.name, pp.amount, p.description, " +
+    "SELECT p.id, p.name, pp.description, " +
     "pp.date_plan AS datePlan, pp.date_fact AS dateFact FROM procedures p " +
     "INNER JOIN presence_procedure pp ON pp.procedure_id = p.id " +
     "INNER JOIN presences pa ON pa.id = pp.presence_id " +
     `WHERE pa.patient_id = ${id}; `;
 
   const treatments =
-    "SELECT t.id, t.name, t.description, " +
+    "SELECT t.id, t.name, pt.description, " +
     "pt.date_plan AS datePlan, pt.date_fact AS dateFact FROM treatments t " +
     "INNER JOIN presence_treatment pt ON pt.treatment_id = t.id " +
     "INNER JOIN presences p ON p.id = pt.presence_id " +

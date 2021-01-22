@@ -20,7 +20,7 @@ class Medicaments extends React.Component {
             {medicaments.map((medicament) => (
               <tr key={medicament.id}>
                 <td align="center">{medicament.name}</td>
-                <td align="center">{medicament.amount}</td>
+                <td align="center">{medicament.description}</td>
                 <td align="center">
                   {moment(medicament.dateFact).format("DD.MM.YYYY")}
                 </td>

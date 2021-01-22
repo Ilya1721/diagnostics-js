@@ -39,7 +39,7 @@ class SymptomStat extends React.Component {
           <table className="table table-light text-center mb-4">
             <thead className="thead-dark">
               <tr>
-                <th scope="col">Процедура</th>
+                <th scope="col">Симптом</th>
                 <th scope="col">Кількість призначень</th>
               </tr>
             </thead>

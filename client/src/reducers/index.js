@@ -33,6 +33,7 @@ export default combineReducers({
   roomStat: roomStatReducer,
   procedureStat: procedureStatReducer,
   treatmentStat: treatmentStatReducer,
+  medicamentStat: medicamentStatReducer,
   diagnosStat: diagnosStatReducer,
   symptomStat: symptomStatReducer,
   visitStat: visitStatReducer,

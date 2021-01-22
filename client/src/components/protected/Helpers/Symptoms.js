@@ -19,7 +19,7 @@ class Symptoms extends React.Component {
             {symptoms.map((symptom) => (
               <tr key={symptom.id}>
                 <td align="center">{symptom.name}</td>
-                <td align="center">{symptom.amount}</td>
+                <td align="center">{symptom.description}</td>
                 <td align="center">
                   {moment(symptom.dateFact).format("DD.MM.YYYY")}
                 </td>

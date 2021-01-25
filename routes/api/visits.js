@@ -113,143 +113,165 @@ router.post("/", (req, res) => {
   if (!{ ...data }) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
+  const newArriveAt = data.arrivedAt.replace("T", " ");
+  const newDepartureAt = data.departureAt.replace("T", " ");
+  console.log(newArriveAt);
+  console.log(newDepartureAt);
+  console.log(data);
   const presenceQuery =
     "INSERT INTO presences (patient_id, " +
     "doctor_id, start_at, end_at) VALUES (" +
     `${data.patientId}, ${data.userId}, ` +
-    `${data.arrivedAt}, ${data.departureAt}); `;
+    `"${newArriveAt}", "${newDepartureAt}"); `;
   conn.query(presenceQuery, (err, presenceResults, fields) => {
     if (err) return res.status(400).json(err);
+    console.log(presenceResults.insertId);
+    console.log(presenceResults);
 
-    const getSymptoms = new Promise(async (resolve, reject) => {
-      for (const symptom of data.symptoms) {
-        let symptomToInsert;
-        const results = await conn
-          .promise()
-          .query(
-            "SELECT id, name FROM symptoms WHERE " +
-              `name = "${symptom.name}"; `
-          );
-        if (results.length > 0) {
-          symptomToInsert = { ...symptom, id: results[0].id };
-        } else {
-          const newSymptom = await conn
-            .promise()
-            .query(`INSERT INTO symptoms(name) VALUES ("${symptom.name}")`);
-          symptomToInsert = { ...symptom, id: newSymptom.insertId };
-        }
-        const presenceSymptom = await conn
-          .promise()
-          .query(
-            "INSERT INTO presence_symptom (presence_id, " +
-              "symptom_id, description, date_plan, date_fact) " +
-              `VALUES (${presenceResults.insertId}, ${symptomToInsert.id}, ` +
-              `"${symptomToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
-          );
-      }
-      for (const diagnos of data.diagnosis) {
-        let diagnosToInsert;
-        const results = await conn
-          .promise()
-          .query(
-            "SELECT id, name FROM diseases WHERE " +
-              `name = "${diagnos.name}"; `
-          );
-        if (results.length > 0) {
-          diagnosToInsert = { ...diagnos, id: results[0].id };
-        } else {
-          const newDiagnos = await conn
-            .promise()
-            .query(`INSERT INTO diseases(name) VALUES ("${disease.name}")`);
-          diagnosToInsert = { ...diagnos, id: newDiagnos.insertId };
-        }
-        const presenceDisease = await conn
-          .promise()
-          .query(
-            "INSERT INTO presence_disease (presence_id, " +
-              "disease_id, description, date_plan, date_fact) " +
-              `VALUES (${presenceResults.insertId}, ${diagnosToInsert.id}, ` +
-              `"${diagnosToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
-          );
-      }
-      for (const medicament of data.medicaments) {
-        let medicamentToInsert;
-        const results = await conn
-          .promise()
-          .query(
-            "SELECT id, name FROM medicaments WHERE " +
-              `name = "${medicament.name}"`
-          );
-        if (results.length > 0) {
-          medicamentToInsert = { ...medicament, id: results[0].id };
-        } else {
-          const newMedicament = await conn
+    const writeToPivotTables = new Promise(async (resolve, reject) => {
+      try {
+        for (const symptom of data.symptoms) {
+          let symptomToInsert;
+          const results = await conn
             .promise()
             .query(
-              `INSERT INTO medicaments(name) VALUES ("${medicament.name}")`
+              "SELECT id, name FROM symptoms WHERE " +
+                `name = "${symptom.name}"; `
             );
-          medicamentToInsert = { ...medicament, id: newMedicament.insertId };
-        }
-        const presenceMedicament = await conn
-          .promise()
-          .query(
-            "INSERT INTO presence_medicament (presence_id, " +
-              "medicament_id, description, date_plan, date_fact) " +
-              `VALUES (${presenceResults.insertId}, ${medicamentToInsert.id}, ` +
-              `"${medicamentToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
-          );
-      }
-      for (const procedure of data.procedures) {
-        let procedureToInsert;
-        const results = await conn
-          .promise()
-          .query(
-            "SELECT id, name FROM procedures WHERE " +
-              `name = "${procedure.name}"`
-          );
-        if (results.length > 0) {
-          procedureToInsert = { ...procedure, id: results[0].id };
-        } else {
-          const newProcedure = await conn
+          if (results.length > 0) {
+            symptomToInsert = { ...symptom, id: results[0].id };
+          } else {
+            const newSymptom = await conn
+              .promise()
+              .query(`INSERT INTO symptoms (name) VALUES ("${symptom.name}")`);
+            symptomToInsert = { ...symptom, id: newSymptom.insertId };
+          }
+          const presenceSymptom = await conn
             .promise()
-            .query(`INSERT INTO procedures(name) VALUES ("${procedure.name}")`);
-          procedureToInsert = { ...procedure, id: newProcedure.insertId };
+            .query(
+              "INSERT INTO presence_symptom (presence_id, " +
+                "symptom_id, description, date_plan, date_fact) " +
+                `VALUES (${presenceResults.insertId}, ${symptomToInsert.id}, ` +
+                `"${symptomToInsert.description}", "${newArriveAt}", "${newDepartureAt}"); `
+            );
         }
-        const presenceProcedure = await conn
-          .promise()
-          .query(
-            "INSERT INTO presence_procedure (presence_id, " +
-              "procedure_id, description, date_plan, date_fact) " +
-              `VALUES (${presenceResults.insertId}, ${procedureToInsert.id}, ` +
-              `"${procedureToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
-          );
-      }
-      for (const treatment of data.treatments) {
-        let treatmentToInsert;
-        const results = await conn
-          .promise()
-          .query(
-            "SELECT id, name FROM treatments WHERE " +
-              `name = "${treatment.name}"`
-          );
-        if (results.length > 0) {
-          treatmentToInsert = { ...treatment, id: results[0].id };
-        } else {
-          const newTreatment = await conn
+        for (const diagnos of data.diagnosis) {
+          let diagnosToInsert;
+          const results = await conn
             .promise()
-            .query(`INSERT INTO treatments(name) VALUES ("${treatment.name}")`);
-          treatmentToInsert = { ...treatment, id: newProcedure.insertId };
+            .query(
+              "SELECT id, name FROM diseases WHERE " +
+                `name = "${diagnos.name}"; `
+            );
+          if (results.length > 0) {
+            diagnosToInsert = { ...diagnos, id: results[0].id };
+          } else {
+            const newDiagnos = await conn
+              .promise()
+              .query(`INSERT INTO diseases(name) VALUES ("${disease.name}")`);
+            diagnosToInsert = { ...diagnos, id: newDiagnos.insertId };
+          }
+          const presenceDisease = await conn
+            .promise()
+            .query(
+              "INSERT INTO presence_disease (presence_id, " +
+                "disease_id, description, date_plan, date_fact) " +
+                `VALUES (${presenceResults.insertId}, ${diagnosToInsert.id}, ` +
+                `"${diagnosToInsert.description}", "${newArriveAt}", "${newDepartureAt}"); `
+            );
         }
-        const presenceTreatment = await conn
-          .promise()
-          .query(
-            "INSERT INTO presence_treatment (presence_id, " +
-              "treatment_id, description, date_plan, date_fact) " +
-              `VALUES (${presenceResults.insertId}, ${treatmentToInsert.id}, ` +
-              `"${treatmentToInsert.description}", ${data.arriveAt}, ${data.departureAt}); `
-          );
+        for (const medicament of data.medicaments) {
+          let medicamentToInsert;
+          const results = await conn
+            .promise()
+            .query(
+              "SELECT id, name FROM medicaments WHERE " +
+                `name = "${medicament.name}"`
+            );
+          if (results.length > 0) {
+            medicamentToInsert = { ...medicament, id: results[0].id };
+          } else {
+            const newMedicament = await conn
+              .promise()
+              .query(
+                `INSERT INTO medicaments(name) VALUES ("${medicament.name}")`
+              );
+            medicamentToInsert = { ...medicament, id: newMedicament.insertId };
+          }
+          const presenceMedicament = await conn
+            .promise()
+            .query(
+              "INSERT INTO presence_medicament (presence_id, " +
+                "medicament_id, description, date_plan, date_fact) " +
+                `VALUES (${presenceResults.insertId}, ${medicamentToInsert.id}, ` +
+                `"${medicamentToInsert.description}", "${newArriveAt}", "${newDepartureAt}"); `
+            );
+        }
+        for (const procedure of data.procedures) {
+          let procedureToInsert;
+          const results = await conn
+            .promise()
+            .query(
+              "SELECT id, name FROM procedures WHERE " +
+                `name = "${procedure.name}"`
+            );
+          if (results.length > 0) {
+            procedureToInsert = { ...procedure, id: results[0].id };
+          } else {
+            const newProcedure = await conn
+              .promise()
+              .query(
+                `INSERT INTO procedures(name) VALUES ("${procedure.name}")`
+              );
+            procedureToInsert = { ...procedure, id: newProcedure.insertId };
+          }
+          const presenceProcedure = await conn
+            .promise()
+            .query(
+              "INSERT INTO presence_procedure (presence_id, " +
+                "procedure_id, description, date_plan, date_fact) " +
+                `VALUES (${presenceResults.insertId}, ${procedureToInsert.id}, ` +
+                `"${procedureToInsert.description}", "${newArriveAt}", "${newDepartureAt}"); `
+            );
+        }
+        for (const treatment of data.treatments) {
+          let treatmentToInsert;
+          const results = await conn
+            .promise()
+            .query(
+              "SELECT id, name FROM treatments WHERE " +
+                `name = "${treatment.name}"`
+            );
+          if (results.length > 0) {
+            treatmentToInsert = { ...treatment, id: results[0].id };
+          } else {
+            const newTreatment = await conn
+              .promise()
+              .query(
+                `INSERT INTO treatments(name) VALUES ("${treatment.name}")`
+              );
+            treatmentToInsert = { ...treatment, id: newProcedure.insertId };
+          }
+          const presenceTreatment = await conn
+            .promise()
+            .query(
+              "INSERT INTO presence_treatment (presence_id, " +
+                "treatment_id, description, date_plan, date_fact) " +
+                `VALUES (${presenceResults.insertId}, ${treatmentToInsert.id}, ` +
+                `"${treatmentToInsert.description}", "${newArriveAt}", "${newDepartureAt}"); `
+            );
+        }
+      } catch (err) {
+        reject(err);
       }
-    });
+      resolve(presenceResults);
+    })
+      .then((visits) => {
+        return res.json(visits);
+      })
+      .catch((err) => {
+        return res.status(400).json(err);
+      });
   });
 });
 

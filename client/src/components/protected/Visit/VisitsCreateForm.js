@@ -34,12 +34,22 @@ class VisitsCreateForm extends React.Component {
     if (isOverallError) {
       alert(overallErrorMsg);
     } else {
-      const patientId = this.props.match.params.id;
+      let patientId;
+      try {
+        patientId = parseInt(this.props.match.params.id);
+      } catch (err) {
+        console.log(err);
+      }
       const userId = this.props.auth.user.id;
+      console.log(this.state.visit);
       this.props.createVisit({
         ...this.state.visit,
         patientId,
         userId,
+      });
+      this.setState({
+        ...this.state,
+        isComplete: true,
       });
     }
   };
@@ -58,6 +68,10 @@ class VisitsCreateForm extends React.Component {
         ...this.state,
         isDateErr: false,
         isOverallError: false,
+        visit: {
+          ...this.state.visit,
+          departureAt,
+        },
       });
     }
   };
@@ -84,8 +98,7 @@ class VisitsCreateForm extends React.Component {
 
   redirect = () => {
     if (this.state.isComplete) {
-      const patientId = this.props.match.params.id;
-      return <Redirect to={`/patients/${patientId}/show`} />;
+      return <Redirect to="/visits" />;
     }
   };
 
@@ -381,6 +394,7 @@ class VisitsCreateForm extends React.Component {
                         id="departureAt"
                         name="departureAt"
                         type="datetime-local"
+                        value={departureAt}
                         onChange={this.onDepartureAtChange}
                         className="form-control"
                       />
@@ -415,7 +429,6 @@ class VisitsCreateForm extends React.Component {
                               this.onSymptomChange(symptom.id, e.target.value)
                             }
                             required
-                            autoComplete="symptom"
                           />
                         </div>
                       </div>
@@ -490,7 +503,6 @@ class VisitsCreateForm extends React.Component {
                               this.onDiagnosChange(diagnos.id, e.target.value)
                             }
                             required
-                            autoComplete="diagnos"
                           />
                         </div>
                       </div>
@@ -568,7 +580,6 @@ class VisitsCreateForm extends React.Component {
                               )
                             }
                             required
-                            autoComplete="medicament"
                           />
                         </div>
                       </div>
@@ -646,7 +657,6 @@ class VisitsCreateForm extends React.Component {
                               )
                             }
                             required
-                            autoComplete="procedure"
                           />
                         </div>
                       </div>
@@ -724,7 +734,6 @@ class VisitsCreateForm extends React.Component {
                               )
                             }
                             required
-                            autoComplete="treatment"
                           />
                         </div>
                       </div>

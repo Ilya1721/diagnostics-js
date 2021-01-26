@@ -158,13 +158,6 @@ class Visits extends React.Component {
                       </p>
                       <div className="pt-0">
                         <Link
-                          to={`/visits/${visit.presence.id}/edit`}
-                          className="btn btn-info mr-2"
-                          role="button"
-                        >
-                          Редагувати
-                        </Link>
-                        <Link
                           to={`/patients/${visit.patient.id}/show`}
                           className="btn btn-primary"
                           role="button"

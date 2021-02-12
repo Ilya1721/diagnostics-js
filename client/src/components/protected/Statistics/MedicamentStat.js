@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getMedicamentStat } from "../../../actions/medicamentStat/medicamentStatActions";
 import Loading from "../../modals/Loading";
+import Histogram from "react-chart-histogram";
 
 class MedicamentStat extends React.Component {
   constructor(props) {
@@ -27,33 +28,38 @@ class MedicamentStat extends React.Component {
     }
   }
 
+  buildGraph = () => {
+    const { medicamentStat } = this.props.medicamentStat;
+    if (medicamentStat.length > 0) {
+      const options = { fillColor: "#0000FF", strokeColor: "#0000FF" };
+      let labels = [];
+      let data = [];
+      const medicamentis = medicamentStat.filter((d) => d.name !== null);
+      for (const medicament of medicamentis) {
+        labels.push(medicament.name);
+        data.push(medicament.count);
+      }
+      return (
+        <Histogram
+          xLabels={labels}
+          yValues={data}
+          width="500"
+          height="300"
+          options={options}
+        />
+      );
+    }
+  };
+
   render() {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const medicamentStat = this.props.medicamentStat.medicamentStat.filter(
-        (p) => p.count !== 0
-      );
       return (
-        <div className="container">
-          <h2 className="text-center mb-3">Статистика медикаментів</h2>
+        <div className="container text-center">
+          <h2 className="mb-3">Статистика медикаментів</h2>
           <h4>Популярність медикаментів</h4>
-          <table className="table table-light text-center mb-4">
-            <thead className="thead-dark">
-              <tr>
-                <th scope="col">Медикамент</th>
-                <th scope="col">Кількість призначень</th>
-              </tr>
-            </thead>
-            <tbody>
-              {medicamentStat.map((medicament) => (
-                <tr key={medicament.id}>
-                  <td>{medicament.name}</td>
-                  <td>{medicament.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="graph">{this.buildGraph()}</div>
         </div>
       );
     }

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getSymptomStat } from "../../../actions/symptomStat/symptomStatActions";
 import Loading from "../../modals/Loading";
+import Histogram from "react-chart-histogram";
 
 class SymptomStat extends React.Component {
   constructor(props) {
@@ -25,6 +26,29 @@ class SymptomStat extends React.Component {
     }
   }
 
+  buildGraph = () => {
+    const { symptomStat } = this.props.symptomStat;
+    if (symptomStat.length > 0) {
+      const options = { fillColor: "#0000FF", strokeColor: "#0000FF" };
+      let labels = [];
+      let data = [];
+      const symptoms = symptomStat.filter((d) => d.name !== null);
+      for (const symptom of symptoms) {
+        labels.push(symptom.name);
+        data.push(symptom.count);
+      }
+      return (
+        <Histogram
+          xLabels={labels}
+          yValues={data}
+          width="500"
+          height="300"
+          options={options}
+        />
+      );
+    }
+  };
+
   render() {
     if (this.state.loading) {
       return <Loading />;
@@ -33,25 +57,10 @@ class SymptomStat extends React.Component {
         (p) => p.count !== 0
       );
       return (
-        <div className="container">
-          <h2 className="text-center mb-3">Статистика симптомів</h2>
+        <div className="container text-center">
+          <h2 className="mb-3">Статистика симптомів</h2>
           <h4>Популярність симптомів</h4>
-          <table className="table table-light text-center mb-4">
-            <thead className="thead-dark">
-              <tr>
-                <th scope="col">Симптом</th>
-                <th scope="col">Кількість призначень</th>
-              </tr>
-            </thead>
-            <tbody>
-              {symptomStat.map((symptom) => (
-                <tr key={symptom.id}>
-                  <td>{symptom.name}</td>
-                  <td>{symptom.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="graph">{this.buildGraph()}</div>
         </div>
       );
     }

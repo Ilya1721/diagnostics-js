@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getProcedureStat } from "../../../actions/procedureStat/procedureStatActions";
 import Loading from "../../modals/Loading";
+import Histogram from "react-chart-histogram";
 
 class ProcedureStat extends React.Component {
   constructor(props) {
@@ -25,6 +26,29 @@ class ProcedureStat extends React.Component {
     }
   }
 
+  buildGraph = () => {
+    const { procedureStat } = this.props.procedureStat;
+    if (procedureStat.length > 0) {
+      const options = { fillColor: "#0000FF", strokeColor: "#0000FF" };
+      let labels = [];
+      let data = [];
+      const procedureis = procedureStat.filter((d) => d.name !== null);
+      for (const procedure of procedureis) {
+        labels.push(procedure.name);
+        data.push(procedure.count);
+      }
+      return (
+        <Histogram
+          xLabels={labels}
+          yValues={data}
+          width="500"
+          height="300"
+          options={options}
+        />
+      );
+    }
+  };
+
   render() {
     if (this.state.loading) {
       return <Loading />;
@@ -33,25 +57,10 @@ class ProcedureStat extends React.Component {
         (p) => p.count !== 0
       );
       return (
-        <div className="container">
-          <h2 className="text-center mb-3">Статистика процедур</h2>
+        <div className="container text-center">
+          <h2 className="mb-3">Статистика процедур</h2>
           <h4>Популярність процедур</h4>
-          <table className="table table-light text-center mb-4">
-            <thead className="thead-dark">
-              <tr>
-                <th scope="col">Процедура</th>
-                <th scope="col">Кількість призначень</th>
-              </tr>
-            </thead>
-            <tbody>
-              {procedureStat.map((procedure) => (
-                <tr key={procedure.id}>
-                  <td>{procedure.name}</td>
-                  <td>{procedure.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="graph">{this.buildGraph()}</div>
         </div>
       );
     }

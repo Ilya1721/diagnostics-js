@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getProcedureStat } from "../../../actions/procedureStat/procedureStatActions";
 import Loading from "../../modals/Loading";
-import Histogram from "react-chart-histogram";
+import Graphic from "./Graphic";
 
 class ProcedureStat extends React.Component {
   constructor(props) {
@@ -26,41 +26,16 @@ class ProcedureStat extends React.Component {
     }
   }
 
-  buildGraph = () => {
-    const { procedureStat } = this.props.procedureStat;
-    if (procedureStat.length > 0) {
-      const options = { fillColor: "#0000FF", strokeColor: "#0000FF" };
-      let labels = [];
-      let data = [];
-      const procedureis = procedureStat.filter((d) => d.name !== null);
-      for (const procedure of procedureis) {
-        labels.push(procedure.name);
-        data.push(procedure.count);
-      }
-      return (
-        <Histogram
-          xLabels={labels}
-          yValues={data}
-          width="500"
-          height="300"
-          options={options}
-        />
-      );
-    }
-  };
-
   render() {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const procedureStat = this.props.procedureStat.procedureStat.filter(
-        (p) => p.count !== 0
-      );
+      const { procedureStat } = this.props.procedureStat;
       return (
         <div className="container text-center">
           <h2 className="mb-3">Статистика процедур</h2>
           <h4>Популярність процедур</h4>
-          <div className="graph">{this.buildGraph()}</div>
+          <Graphic data={procedureStat} />
         </div>
       );
     }

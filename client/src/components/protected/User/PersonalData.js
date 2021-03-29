@@ -57,7 +57,7 @@ class PersonalData extends React.Component {
           <div className="row mt-2 ml-2">
             <div className="col text-center">
               <span className="font-weight-bold pr-1">Фото:</span>{" "}
-              <img src={image} />
+              <img src={image} className="default-image" />
               <p className="pt-1">
                 <span className="font-weight-bold">ПІБ:</span> {lastName}{" "}
                 {firstName} {fatherName}

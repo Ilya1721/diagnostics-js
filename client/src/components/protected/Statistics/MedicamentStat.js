@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getMedicamentStat } from "../../../actions/medicamentStat/medicamentStatActions";
 import Loading from "../../modals/Loading";
-import Histogram from "react-chart-histogram";
+import Graphic from "./Graphic";
 
 class MedicamentStat extends React.Component {
   constructor(props) {
@@ -28,38 +28,16 @@ class MedicamentStat extends React.Component {
     }
   }
 
-  buildGraph = () => {
-    const { medicamentStat } = this.props.medicamentStat;
-    if (medicamentStat.length > 0) {
-      const options = { fillColor: "#0000FF", strokeColor: "#0000FF" };
-      let labels = [];
-      let data = [];
-      const medicamentis = medicamentStat.filter((d) => d.name !== null);
-      for (const medicament of medicamentis) {
-        labels.push(medicament.name);
-        data.push(medicament.count);
-      }
-      return (
-        <Histogram
-          xLabels={labels}
-          yValues={data}
-          width="500"
-          height="300"
-          options={options}
-        />
-      );
-    }
-  };
-
   render() {
     if (this.state.loading) {
       return <Loading />;
     } else {
+      const { medicamentStat } = this.props.medicamentStat;
       return (
         <div className="container text-center">
           <h2 className="mb-3">Статистика медикаментів</h2>
           <h4>Популярність медикаментів</h4>
-          <div className="graph">{this.buildGraph()}</div>
+          <Graphic data={medicamentStat} />
         </div>
       );
     }

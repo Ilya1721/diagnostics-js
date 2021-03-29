@@ -55,13 +55,6 @@ class Statistics extends React.Component {
                 </Link>
               </td>
             </tr>
-            <tr>
-              <td>
-                <Link to="/statistics/rooms" className="btn btn-link">
-                  Палати
-                </Link>
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>

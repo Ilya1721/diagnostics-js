@@ -84,7 +84,7 @@ class Doctors extends React.Component {
             <div key={user.employee_id} className="card mt-3">
               <div className="row font-weight-bold">
                 <div className="col-2 text-left">
-                  <img alt="" src={user.image} />
+                  <img alt="" src={user.image} className="default-image" />
                 </div>
                 <div className="col-8 text-left">
                   <div className="card-body text-left">

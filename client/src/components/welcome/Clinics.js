@@ -85,7 +85,7 @@ class Clinics extends React.Component {
                   <img
                     src={clinic.clinic_image}
                     alt=""
-                    style={{ width: "125px", height: "150px" }}
+                    className="default-image"
                   />
                 </div>
                 <div className="col-6">

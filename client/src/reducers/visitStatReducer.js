@@ -4,7 +4,7 @@ import {
 } from "../actions/visitStat/visitStatTypes";
 
 const initialState = {
-  visitStat: [],
+  visitStat: {},
   loading: false,
 };
 

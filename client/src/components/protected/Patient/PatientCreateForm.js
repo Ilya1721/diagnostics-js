@@ -281,14 +281,14 @@ class PatientCreateForm extends React.Component {
                   <div className="form-group row mb-0">
                     <div className="col-md-6 offset-md-4">
                       <button type="submit" className="btn btn-primary mr-2">
-                        Register
+                        Зареєструвати
                       </button>
                       <Link
                         to="/patients"
                         className="btn btn-danger"
                         role="button"
                       >
-                        Cancel
+                        Відмінити
                       </Link>
                     </div>
                   </div>

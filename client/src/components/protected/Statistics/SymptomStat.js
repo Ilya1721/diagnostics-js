@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getSymptomStat } from "../../../actions/symptomStat/symptomStatActions";
 import Loading from "../../modals/Loading";
-import Histogram from "react-chart-histogram";
+import Graphic from "./Graphic";
 
 class SymptomStat extends React.Component {
   constructor(props) {
@@ -26,41 +26,16 @@ class SymptomStat extends React.Component {
     }
   }
 
-  buildGraph = () => {
-    const { symptomStat } = this.props.symptomStat;
-    if (symptomStat.length > 0) {
-      const options = { fillColor: "#0000FF", strokeColor: "#0000FF" };
-      let labels = [];
-      let data = [];
-      const symptoms = symptomStat.filter((d) => d.name !== null);
-      for (const symptom of symptoms) {
-        labels.push(symptom.name);
-        data.push(symptom.count);
-      }
-      return (
-        <Histogram
-          xLabels={labels}
-          yValues={data}
-          width="500"
-          height="300"
-          options={options}
-        />
-      );
-    }
-  };
-
   render() {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const symptomStat = this.props.symptomStat.symptomStat.filter(
-        (p) => p.count !== 0
-      );
+      const { symptomStat } = this.props.symptomStat;
       return (
         <div className="container text-center">
           <h2 className="mb-3">Статистика симптомів</h2>
           <h4>Популярність симптомів</h4>
-          <div className="graph">{this.buildGraph()}</div>
+          <Graphic data={symptomStat} />
         </div>
       );
     }

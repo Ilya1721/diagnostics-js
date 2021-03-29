@@ -9,12 +9,14 @@ class Welcome extends React.Component {
         </h1>
         <div className="row mt-5">
           <div className="col">
-            <h3>Безліч лікарів</h3>
-            <p className="mt-4">Доступ до інформації про лікарів</p>
+            <h3>Допомога в діагностуванні</h3>
+            <p className="mt-4">
+              Отримуйте допомогу в діагностуванні від спеціальної системи
+            </p>
           </div>
           <div className="col">
             <h3>Можливість обліку візитів</h3>
-            <p className="mt-4">Допоможуть вам реєструвати візити пацієнтів</p>
+            <p className="mt-4">Реєструйте візити пацієнтів</p>
           </div>
           <div className="col">
             <h3>Доступ до бази даних хвороб</h3>

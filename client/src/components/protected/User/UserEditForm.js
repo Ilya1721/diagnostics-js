@@ -515,7 +515,7 @@ class UserEditForm extends React.Component {
           <div className="row justify-content-center">
             <div className="col-md-8">
               <div className="card">
-                <div className="card-header">Register</div>
+                <div className="card-header">Редагувати особисті дані</div>
 
                 <div className="card-body">
                   <form
@@ -912,14 +912,14 @@ class UserEditForm extends React.Component {
                       {this.setOverralErrorMsg(isOverallError, overallErrorMsg)}
                       <div className="col-md-6 offset-md-4">
                         <button type="submit" className="btn btn-primary mr-2">
-                          Register
+                          Підвердити
                         </button>
                         <Link
                           to="/personalData"
                           className="btn btn-danger"
                           role="button"
                         >
-                          Cancel
+                          Відмінити
                         </Link>
                       </div>
                     </div>

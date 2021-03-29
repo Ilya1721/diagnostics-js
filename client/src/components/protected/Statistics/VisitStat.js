@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getVisitStat } from "../../../actions/visitStat/visitStatActions";
 import Loading from "../../modals/Loading";
+import Graphic from "./Graphic";
 
 class VisitStat extends React.Component {
   constructor(props) {
@@ -29,49 +30,16 @@ class VisitStat extends React.Component {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const days = this.props.visitStat.visitStat.days.filter(
-        (d) => d.count !== 0
-      );
-      const months = this.props.visitStat.visitStat.months.filter(
-        (m) => m.count !== 0
-      );
+      const { hours, days, months } = this.props.visitStat.visitStat;
       return (
-        <div className="container">
+        <div className="container text-center">
           <h2 className="text-center mb-3">Статистика візитів</h2>
-          <h4>Популярність днів</h4>
-          <table className="table table-light text-center mb-4">
-            <thead className="thead-dark">
-              <tr>
-                <th scope="col">День</th>
-                <th scope="col">Кількість візитів</th>
-              </tr>
-            </thead>
-            <tbody>
-              {days.map((day) => (
-                <tr key={day.id}>
-                  <td>{day.name}</td>
-                  <td>{day.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <h4>Популярність місяців</h4>
-          <table className="table table-light text-center mb-4">
-            <thead className="thead-dark">
-              <tr>
-                <th scope="col">Місяць</th>
-                <th scope="col">Кількість візитів</th>
-              </tr>
-            </thead>
-            <tbody>
-              {months.map((month) => (
-                <tr key={month.id}>
-                  <td>{month.name}</td>
-                  <td>{month.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h4>Навантаження по годинам</h4>
+          <Graphic data={hours} />
+          <h4>Навантаження по дням</h4>
+          <Graphic data={days} />
+          <h4>Навантаження по місяцям</h4>
+          <Graphic data={months} />
         </div>
       );
     }

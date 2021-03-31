@@ -126,7 +126,6 @@ router.post("/", (req, res) => {
     const writeToPivotTables = new Promise(async (resolve, reject) => {
       try {
         for (const symptom of data.symptoms) {
-          console.log("write symptoms");
           let symptomToInsert;
           const results = await conn
             .promise()
@@ -135,17 +134,13 @@ router.post("/", (req, res) => {
                 `name = "${symptom.name}"; `
             );
           if (results[0].length > 0) {
-            console.log("not insert new symptom");
-            console.log(results[0]);
             symptomToInsert = { ...symptom, id: results[0][0].id };
           } else {
-            console.log("insert new symptom");
             const newSymptom = await conn
               .promise()
               .query(`INSERT INTO symptoms (name) VALUES ("${symptom.name}")`);
             symptomToInsert = { ...symptom, id: newSymptom[0].insertId };
           }
-          console.log("insert presence symptom");
           const presenceSymptom = await conn
             .promise()
             .query(
@@ -154,11 +149,8 @@ router.post("/", (req, res) => {
                 `VALUES (${presenceResults.insertId}, ${symptomToInsert.id}, ` +
                 `"${symptomToInsert.description}", "${newArriveAt}", "${newDepartureAt}"); `
             );
-          console.log("finish write symptoms");
         }
-        console.log(data.diagnosis);
         for (const diagnos of data.diagnosis) {
-          console.log("write diagnosis");
           let diagnosToInsert;
           const results = await conn
             .promise()
@@ -167,16 +159,12 @@ router.post("/", (req, res) => {
                 `name = "${diagnos.name}"; `
             );
           if (results[0].length > 0) {
-            console.log("not insert new disease");
             diagnosToInsert = { ...diagnos, id: results[0][0].id };
-            console.log("diagnos to insert", diagnosToInsert);
           } else {
-            console.log("insert new disease");
             const newDiagnos = await conn
               .promise()
               .query(`INSERT INTO diseases (name) VALUES ("${diagnos.name}")`);
             diagnosToInsert = { ...diagnos, id: newDiagnos[0].insertId };
-            console.log("diagnos to insert", diagnosToInsert);
           }
           const presenceDisease = await conn
             .promise()
@@ -188,7 +176,6 @@ router.post("/", (req, res) => {
             );
         }
         for (const medicament of data.medicaments) {
-          console.log("write medicament");
           let medicamentToInsert;
           const results = await conn
             .promise()
@@ -197,10 +184,8 @@ router.post("/", (req, res) => {
                 `name = "${medicament.name}"`
             );
           if (results[0].length > 0) {
-            console.log("not insert new medicament");
             medicamentToInsert = { ...medicament, id: results[0][0].id };
           } else {
-            console.log("insert new medicament");
             const newMedicament = await conn
               .promise()
               .query(
@@ -210,7 +195,6 @@ router.post("/", (req, res) => {
               ...medicament,
               id: newMedicament[0].insertId,
             };
-            console.log("new medicament");
           }
           const presenceMedicament = await conn
             .promise()
@@ -222,7 +206,6 @@ router.post("/", (req, res) => {
             );
         }
         for (const procedure of data.procedures) {
-          console.log("write procedures");
           let procedureToInsert;
           const results = await conn
             .promise()
@@ -231,17 +214,14 @@ router.post("/", (req, res) => {
                 `name = "${procedure.name}"`
             );
           if (results[0].length > 0) {
-            console.log("not insert new procedure");
             procedureToInsert = { ...procedure, id: results[0][0].id };
           } else {
-            console.log("insert new procedure");
             const newProcedure = await conn
               .promise()
               .query(
                 `INSERT INTO procedures(name) VALUES ("${procedure.name}")`
               );
             procedureToInsert = { ...procedure, id: newProcedure[0].insertId };
-            console.log(procedureToInsert);
           }
           const presenceProcedure = await conn
             .promise()
@@ -253,7 +233,6 @@ router.post("/", (req, res) => {
             );
         }
         for (const treatment of data.treatments) {
-          console.log("write treatment");
           let treatmentToInsert;
           const results = await conn
             .promise()
@@ -262,17 +241,14 @@ router.post("/", (req, res) => {
                 `name = "${treatment.name}"`
             );
           if (results[0].length > 0) {
-            console.log("not insert new treatment");
             treatmentToInsert = { ...treatment, id: results[0][0].id };
           } else {
-            console.log("insert new treatment");
             const newTreatment = await conn
               .promise()
               .query(
                 `INSERT INTO treatments(name) VALUES ("${treatment.name}")`
               );
             treatmentToInsert = { ...treatment, id: newTreatment[0].insertId };
-            console.log(treatmentToInsert);
           }
           const presenceTreatment = await conn
             .promise()

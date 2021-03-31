@@ -35,6 +35,11 @@ class Navbar extends React.Component {
               Статистика <span className="sr-only">(current)</span>
             </Link>
           </li>
+          <li className="nav-item active">
+            <Link className="nav-link text-secondary" to="/diagnostics">
+              Діагностика <span className="sr-only">(current)</span>
+            </Link>
+          </li>
           {this.renderInnerLinks()}
         </React.Fragment>
       );

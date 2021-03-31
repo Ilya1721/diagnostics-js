@@ -26,6 +26,7 @@ import DepartmentCreateForm from "./InnerData/DepartmentCreateForm";
 import DepartmentEditForm from "./InnerData/DepartmentEditForm";
 import RoomCreateForm from "./InnerData/RoomCreateForm";
 import RoomEditForm from "./InnerData/RoomEditForm";
+import DiagnosticsForm from "./Diagnostics/DiagnosticsForm";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -122,6 +123,12 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated}
           path="/statistics/visits"
           component={VisitStat}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated}
+          path="/diagnostics"
+          component={DiagnosticsForm}
           redirectTo="/login"
         />
         <PrivateRoute

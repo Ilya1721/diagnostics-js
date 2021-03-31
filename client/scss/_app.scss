@@ -12,6 +12,31 @@ html {
   min-height: 100vh;
 }
 
+.close {
+  position: absolute;
+  right: 32px;
+  top: 32px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+
+.btn-close {
+  color: lighten(red, 10);
+  border: 0;
+  background: white;
+  width: 10px;
+
+  img {
+    width: 20px;
+    height: auto;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
 .big-label {
   font-size: 1.2em;
 }

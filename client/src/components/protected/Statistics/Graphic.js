@@ -1,5 +1,5 @@
 import React from "react";
-import Histogram from "react-chart-histogram";
+import { CanvasJSChart } from "canvasjs-react-charts";
 
 class Graphic extends React.Component {
   constructor(props) {
@@ -20,23 +20,20 @@ class Graphic extends React.Component {
   render() {
     const { data } = this.props;
     if (data.length > 0) {
-      const options = { fillColor: "#0000FF", strokeColor: "#0000FF" };
-      let labels = [];
-      let values = [];
+      let chartData = [];
       for (const item of data) {
-        labels.push(item.name);
-        values.push(item.count);
+        chartData.push({ label: `${item.name}`, y: item.count });
       }
-      console.log(labels, values);
-      return (
-        <Histogram
-          xLabels={labels}
-          yValues={data}
-          width="500"
-          height="300"
-          options={options}
-        />
-      );
+      const options = {
+        data: [
+          {
+            type: "column",
+            dataPoints: chartData,
+          },
+        ],
+      };
+      console.log(chartData);
+      return <CanvasJSChart options={options} />;
     }
   }
 }

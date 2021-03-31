@@ -5,6 +5,7 @@ import moment from "moment";
 import { Link, Redirect } from "react-router-dom";
 import { withRouter } from "react-router";
 import { createVisit } from "../../../actions/visit/visitActions";
+import CloseButton from "../../modals/CloseButton";
 
 class VisitsCreateForm extends React.Component {
   constructor(props) {
@@ -41,7 +42,6 @@ class VisitsCreateForm extends React.Component {
         console.log(err);
       }
       const userId = this.props.auth.user.id;
-      console.log(this.state.visit);
       this.props.createVisit({
         ...this.state.visit,
         patientId,
@@ -124,7 +124,7 @@ class VisitsCreateForm extends React.Component {
     });
   };
 
-  onSymptomDescChange = (id, desc) => {
+  /*onSymptomDescChange = (id, desc) => {
     let symptoms = this.state.visit.symptoms.slice();
     const index = symptoms.findIndex((s) => s.id === id);
     symptoms[index].description = desc;
@@ -228,19 +228,6 @@ class VisitsCreateForm extends React.Component {
     });
   };
 
-  onTreatmentDescChange = (id, desc) => {
-    let treatments = this.state.visit.treatments.slice();
-    const index = treatments.findIndex((s) => s.id === id);
-    treatments[index].description = desc;
-    this.setState({
-      ...this.state,
-      visit: {
-        ...this.state.visit,
-        treatments,
-      },
-    });
-  };
-
   onTreatmentChange = (id, name) => {
     let treatments = this.state.visit.treatments.slice();
     const index = treatments.findIndex((s) => s.id === id);
@@ -254,7 +241,69 @@ class VisitsCreateForm extends React.Component {
     });
   };
 
-  moreSymptom = () => {
+  onTreatmentDescChange = (id, desc) => {
+    let treatments = this.state.visit.treatments.slice();
+    const index = treatments.findIndex((s) => s.id === id);
+    treatments[index].description = desc;
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        treatments,
+      },
+    });
+  };*/
+
+  onVisitInputChange = (obj) => {
+    const property = Object.keys(obj)[0];
+    const field = Object.keys(obj)[1];
+    let data = Object.values(obj)[0];
+    const index = data.findIndex((item) => item.id === obj.id);
+    data[index][field] = obj[field];
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        [property]: data,
+      },
+    });
+  };
+
+  moreVisitInput = (obj) => {
+    const property = Object.keys(obj)[0];
+    const data = Object.values(obj)[0];
+    this.setState({
+      ...this.state,
+      visit: {
+        ...this.state.visit,
+        [property]: [
+          ...data,
+          {
+            id: data[data.length - 1].id + 1,
+            name: "",
+            description: "",
+          },
+        ],
+      },
+    });
+  };
+
+  deleteVisitInput = (obj) => {
+    const property = Object.keys(obj)[0];
+    let data = Object.values(obj)[0];
+    if (data.length > 1) {
+      data = data.filter((item) => item.id !== obj.id);
+      this.setState({
+        ...this.state,
+        visit: {
+          ...this.state.visit,
+          [property]: data,
+        },
+      });
+    }
+  };
+
+  /*moreSymptom = () => {
     const { symptoms } = this.state.visit;
     this.setState({
       ...this.state,
@@ -341,7 +390,7 @@ class VisitsCreateForm extends React.Component {
         ],
       },
     });
-  };
+  };*/
 
   render() {
     const {
@@ -350,7 +399,15 @@ class VisitsCreateForm extends React.Component {
       isOverallError,
       overallErrorMsg,
     } = this.state;
-    const { arrivedAt, departureAt } = this.state.visit;
+    const {
+      arrivedAt,
+      departureAt,
+      symptoms,
+      diagnosis,
+      treatments,
+      medicaments,
+      procedures,
+    } = this.state.visit;
     const patientId = this.props.match.params.id;
     return (
       <div className="container">
@@ -359,7 +416,7 @@ class VisitsCreateForm extends React.Component {
             <div className="card">
               <div className="card-header">Зареєструвати новий візит</div>
               <div className="card-body">
-                <form onSubmit={this.onSubmit} action="/presence">
+                <form onSubmit={this.onSubmit}>
                   <div className="form-group row">
                     <label
                       htmlFor="arrivedAt"
@@ -409,7 +466,7 @@ class VisitsCreateForm extends React.Component {
                       Симптоми
                     </label>
                   </div>
-                  {this.state.visit.symptoms.map((symptom) => (
+                  {symptoms.map((symptom) => (
                     <React.Fragment key={symptom.id}>
                       <div className="form-group row">
                         <label
@@ -426,11 +483,19 @@ class VisitsCreateForm extends React.Component {
                             name="symptom"
                             value={symptom.name}
                             onChange={(e) =>
-                              this.onSymptomChange(symptom.id, e.target.value)
+                              this.onVisitInputChange({
+                                symptoms,
+                                name: e.target.value,
+                                id: symptom.id,
+                              })
                             }
                             required
                           />
                         </div>
+                        <CloseButton
+                          func={this.deleteVisitInput}
+                          args={[{ symptoms, id: symptom.id }]}
+                        />
                       </div>
                       <div className="form-group row">
                         <label
@@ -447,10 +512,11 @@ class VisitsCreateForm extends React.Component {
                             id="symptomDescription"
                             rows="5"
                             onChange={(e) =>
-                              this.onSymptomDescChange(
-                                symptom.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                symptoms,
+                                description: e.target.value,
+                                id: symptom.id,
+                              })
                             }
                           ></textarea>
                         </div>
@@ -466,7 +532,7 @@ class VisitsCreateForm extends React.Component {
                     <div className="col-md-6">
                       <button
                         className="btn btn-primary"
-                        onClick={this.moreSymptom}
+                        onClick={(e) => this.moreVisitInput({ symptoms })}
                         id="moreSymptom"
                         type="button"
                       >
@@ -483,7 +549,7 @@ class VisitsCreateForm extends React.Component {
                       Діагнози
                     </label>
                   </div>
-                  {this.state.visit.diagnosis.map((diagnos) => (
+                  {diagnosis.map((diagnos) => (
                     <React.Fragment key={diagnos.id}>
                       <div className="form-group row">
                         <label
@@ -500,11 +566,19 @@ class VisitsCreateForm extends React.Component {
                             name="diagnos"
                             value={diagnos.name}
                             onChange={(e) =>
-                              this.onDiagnosChange(diagnos.id, e.target.value)
+                              this.onVisitInputChange({
+                                diagnosis,
+                                name: e.target.value,
+                                id: diagnos.id,
+                              })
                             }
                             required
                           />
                         </div>
+                        <CloseButton
+                          func={this.deleteVisitInput}
+                          args={[{ diagnosis, id: diagnos.id }]}
+                        />
                       </div>
                       <div className="form-group row">
                         <label
@@ -521,10 +595,11 @@ class VisitsCreateForm extends React.Component {
                             id="diagnosDescription"
                             rows="5"
                             onChange={(e) =>
-                              this.onDiagnosDescChange(
-                                diagnos.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                diagnosis,
+                                description: e.target.value,
+                                id: diagnos.id,
+                              })
                             }
                           ></textarea>
                         </div>
@@ -540,7 +615,7 @@ class VisitsCreateForm extends React.Component {
                     <div className="col-md-6">
                       <button
                         className="btn btn-primary"
-                        onClick={this.moreDiagnos}
+                        onClick={(e) => this.moreVisitInput({ diagnosis })}
                         id="moreDiagnos"
                         type="button"
                       >
@@ -557,14 +632,14 @@ class VisitsCreateForm extends React.Component {
                       Медикаменти
                     </label>
                   </div>
-                  {this.state.visit.medicaments.map((medicament) => (
+                  {medicaments.map((medicament) => (
                     <React.Fragment key={medicament.id}>
                       <div className="form-group row">
                         <label
                           htmlFor="medicament"
                           className="col-md-4 col-form-label text-md-right"
                         >
-                          Медиакамент:
+                          Медикамент:
                         </label>
                         <div className="col-md-6">
                           <input
@@ -574,14 +649,19 @@ class VisitsCreateForm extends React.Component {
                             name="medicament"
                             value={medicament.name}
                             onChange={(e) =>
-                              this.onMedicamentChange(
-                                medicament.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                medicaments,
+                                name: e.target.value,
+                                id: medicament.id,
+                              })
                             }
                             required
                           />
                         </div>
+                        <CloseButton
+                          func={this.deleteVisitInput}
+                          args={[{ medicaments, id: medicament.id }]}
+                        />
                       </div>
                       <div className="form-group row">
                         <label
@@ -598,10 +678,11 @@ class VisitsCreateForm extends React.Component {
                             id="medicamentDescription"
                             rows="5"
                             onChange={(e) =>
-                              this.onMedicamentDescChange(
-                                medicament.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                medicaments,
+                                description: e.target.value,
+                                id: medicament.id,
+                              })
                             }
                           ></textarea>
                         </div>
@@ -617,7 +698,7 @@ class VisitsCreateForm extends React.Component {
                     <div className="col-md-6">
                       <button
                         className="btn btn-primary"
-                        onClick={this.moreMedicament}
+                        onClick={(e) => this.moreVisitInput({ medicaments })}
                         id="moreMedicament"
                         type="button"
                       >
@@ -651,14 +732,19 @@ class VisitsCreateForm extends React.Component {
                             name="procedure"
                             value={procedure.name}
                             onChange={(e) =>
-                              this.onProcedureChange(
-                                procedure.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                procedures,
+                                name: e.target.value,
+                                id: procedure.id,
+                              })
                             }
                             required
                           />
                         </div>
+                        <CloseButton
+                          func={this.deleteVisitInput}
+                          args={[{ procedures, id: procedure.id }]}
+                        />
                       </div>
                       <div className="form-group row">
                         <label
@@ -675,10 +761,11 @@ class VisitsCreateForm extends React.Component {
                             id="procedureDescription"
                             rows="5"
                             onChange={(e) =>
-                              this.onProcedureDescChange(
-                                procedure.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                procedures,
+                                description: e.target.value,
+                                id: procedure.id,
+                              })
                             }
                           ></textarea>
                         </div>
@@ -694,7 +781,7 @@ class VisitsCreateForm extends React.Component {
                     <div className="col-md-6">
                       <button
                         className="btn btn-primary"
-                        onClick={this.moreProcedure}
+                        onClick={(e) => this.moreVisitInput({ procedures })}
                         id="moreProcedure"
                         type="button"
                       >
@@ -728,14 +815,19 @@ class VisitsCreateForm extends React.Component {
                             name="treatment"
                             value={treatment.name}
                             onChange={(e) =>
-                              this.onTreatmentChange(
-                                treatment.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                treatments,
+                                name: e.target.value,
+                                id: treatment.id,
+                              })
                             }
                             required
                           />
                         </div>
+                        <CloseButton
+                          func={this.deleteVisitInput}
+                          args={[{ treatments, id: treatment.id }]}
+                        />
                       </div>
                       <div className="form-group row">
                         <label
@@ -752,10 +844,11 @@ class VisitsCreateForm extends React.Component {
                             id="treatmentDescription"
                             rows="5"
                             onChange={(e) =>
-                              this.onTreatmentDescChange(
-                                treatment.id,
-                                e.target.value
-                              )
+                              this.onVisitInputChange({
+                                treatments,
+                                description: e.target.value,
+                                id: treatment.id,
+                              })
                             }
                           ></textarea>
                         </div>
@@ -771,7 +864,7 @@ class VisitsCreateForm extends React.Component {
                     <div className="col-md-6">
                       <button
                         className="btn btn-primary"
-                        onClick={this.moreTreatment}
+                        onClick={(e) => this.moreVisitInput({ treatments })}
                         id="moreTreatment"
                         type="button"
                       >

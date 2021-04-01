@@ -4,11 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { getPatient } from "../../../actions/patient/patientActions";
-import Diagnosis from "../Helpers/Diagnosis";
-import Treatments from "../Helpers/Treatments";
-import Symptoms from "../Helpers/Symptoms";
-import Medicaments from "../Helpers/Medicaments";
-import Procedures from "../Helpers/Procedures";
+import TableView from "../Helpers/TableView";
 import Loading from "../../modals/Loading";
 
 class Patient extends React.Component {
@@ -83,11 +79,11 @@ class Patient extends React.Component {
                   <div className="col-12">
                     <div className="card border-top-0 border-right-0 border-left-0 rounded-0 container">
                       <div className="card-body">
-                        <Diagnosis diagnosis={diagnosis} />
-                        <Treatments treatments={treatments} />
-                        <Symptoms symptoms={symptoms} />
-                        <Medicaments medicaments={medicaments} />
-                        <Procedures procedures={procedures} />
+                        <TableView data={diagnosis} name="Діагнози" />
+                        <TableView data={treatments} name="Лікування" />
+                        <TableView data={symptoms} name="Симптоми" />
+                        <TableView data={medicaments} name="Медикаменти" />
+                        <TableView data={procedures} name="Процедури" />
                       </div>
                     </div>
                   </div>

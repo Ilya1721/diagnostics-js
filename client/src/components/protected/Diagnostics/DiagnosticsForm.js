@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
-import Loading from "../../modals/Loading";
+import Spinner from "../../modals/Spinner";
 import CloseButton from "../../modals/CloseButton";
-import { getDiagnostics } from "../../../actions/diagnostic/diagnosticActions";
+import { generateDiagnostics } from "../../../actions/diagnostic/diagnosticActions";
 
 class Diagnostics extends React.Component {
   constructor(props) {
@@ -76,7 +76,7 @@ class Diagnostics extends React.Component {
   onSubmit = (e) => {
     e.preventDefault();
     const { symptoms } = this.state;
-    this.props.getDiagnostics(symptoms);
+    this.props.generateDiagnostics(symptoms);
     this.setState({
       ...this.state,
       loading: true,
@@ -84,7 +84,7 @@ class Diagnostics extends React.Component {
   };
 
   render() {
-    const { symptoms, diagnosis } = this.state;
+    const { symptoms, diagnosis, unknownSymptoms, loading } = this.state;
 
     return (
       <div className="container">
@@ -139,10 +139,7 @@ class Diagnostics extends React.Component {
                     </div>
                   </div>
                   <div className="form-group row">
-                    <label
-                      htmlFor="diagnosDescription"
-                      className="col-md-4 col-form-label text-md-right"
-                    >
+                    <label className="col-md-4 col-form-label text-md-right">
                       Результат:
                     </label>
                     <div className="col-md-6">
@@ -154,13 +151,36 @@ class Diagnostics extends React.Component {
                         </thead>
                         <tbody>
                           {diagnosis.map((diagnos) => (
-                            <tr key={diagnos.id}>
+                            <tr key={diagnos.name}>
                               <td align="center">{diagnos.name}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
+                    <Spinner loading={loading} />
+                  </div>
+                  <div className="form-group row">
+                    <label className="col-md-4 col-form-label text-md-right">
+                      Невідомі системі симптоми:
+                    </label>
+                    <div className="col-md-6">
+                      <table className="table black-border text-center">
+                        <thead>
+                          <tr>
+                            <th scope="col">Симптом</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {unknownSymptoms.map((unknownSymptom) => (
+                            <tr key={unknownSymptom.name}>
+                              <td align="center">{unknownSymptom.name}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <Spinner loading={loading} />
                   </div>
                   <div className="form-group row mb-0">
                     <div className="col-md-6 offset-md-4">
@@ -189,7 +209,7 @@ class Diagnostics extends React.Component {
 
 Diagnostics.propTypes = {
   diagnostic: PropTypes.object.isRequired,
-  getDiagnostics: PropTypes.func.isRequired,
+  generateDiagnostics: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -197,5 +217,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getDiagnostics })(Diagnostics)
+  connect(mapStateToProps, { generateDiagnostics })(Diagnostics)
 );

@@ -3,18 +3,22 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
-import Loading from "../../modals/Loading";
-import { addClinic } from "../../../actions/clinic/clinicActions";
-import { getCities } from "../../../actions/city/cityActions";
-import AwsClass from "../../../aws/awsApi";
-import { getImgBuffer } from "../../../aws/imgBuffer";
+import Loading from "../../../modals/Loading";
+import {
+  editClinic,
+  getClinic,
+} from "../../../../actions/clinic/clinicActions";
+import { getCities } from "../../../../actions/city/cityActions";
+import AwsClass from "../../../../aws/awsApi";
+import { getImgBuffer } from "../../../../aws/imgBuffer";
 
-class ClinicCreateForm extends React.Component {
+class ClinicEditForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isComplete: false,
       loading: true,
+      newImage: null,
       clinic: {
         city: "",
         name: "",
@@ -29,26 +33,41 @@ class ClinicCreateForm extends React.Component {
   }
 
   componentDidMount() {
+    const id = this.props.match.params.id;
     this.props.getCities();
+    this.props.getClinic(id);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.city.loading !== this.props.city.loading) {
-      if (this.props.city.cities.length > 0) {
-        this.setState({
-          ...this.state,
-          loading: this.props.city.loading,
-          clinic: {
-            ...this.state.clinic,
-            city: this.props.city.cities[0].id,
-          },
-        });
-      } else {
-        this.setState({
-          ...this.state,
-          loading: this.props.city.loading,
-        });
-      }
+    if (prevProps.clinic.loading !== this.props.clinic.loading) {
+      const {
+        city_id,
+        city_name,
+        clinic_id,
+        clinic_name,
+        clinic_street,
+        clinic_house,
+        clinic_phoneNumber,
+        clinic_type,
+        clinic_schedule,
+        clinic_image,
+      } = this.props.clinic.clinics[0];
+      this.setState({
+        ...this.state,
+        loading: this.props.clinic.loading,
+        clinic: {
+          city: city_id,
+          cityName: city_name,
+          name: clinic_name,
+          street: clinic_street,
+          house: clinic_house,
+          phoneNumber: clinic_phoneNumber,
+          type: clinic_type,
+          schedule: clinic_schedule,
+          image: clinic_image,
+          id: clinic_id,
+        },
+      });
     }
   }
 
@@ -65,47 +84,75 @@ class ClinicCreateForm extends React.Component {
   onImageChange = (e) => {
     this.setState({
       ...this.state,
+      newImage: e.target.files[0],
+    });
+  };
+
+  onCityChange = (e) => {
+    const { cities } = this.props.city;
+    let cityId;
+    try {
+      cityId = parseInt(e.target.value);
+    } catch (err) {
+      console.log(err);
+    }
+    this.setState({
+      ...this.state,
       clinic: {
         ...this.state.clinic,
-        image: e.target.files[0],
+        city: cityId,
+        cityName: cities.find((c) => c.id === cityId).name,
       },
     });
   };
 
   onSubmit = (e) => {
     e.preventDefault();
-    const { image, name } = this.state.clinic;
-    const awsObject = AwsClass.build().then((aws) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result;
-        const buffer = getImgBuffer(base64);
-        aws.uploadImage(image.name, buffer, name, "clinics").then((res) =>
-          this.setState(
-            {
-              ...this.state,
-              clinic: {
-                ...this.state.clinic,
-                image: res,
-              },
-            },
-            () => {
-              this.props.addClinic(this.state.clinic);
-              this.setState({
-                ...this.state,
-                isComplete: true,
-              });
-            }
-          )
-        );
-      };
-      reader.readAsDataURL(image);
-    });
+    const { name, image } = this.state.clinic;
+    const { newImage } = this.state;
+    if (newImage) {
+      const awsObject = AwsClass.build().then((aws) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result;
+          const buffer = getImgBuffer(base64);
+          aws.deleteImage(image).then((res) => {
+            aws
+              .uploadImage(newImage.name, buffer, name, "clinics")
+              .then((res) =>
+                this.setState(
+                  {
+                    ...this.state,
+                    clinic: {
+                      ...this.state.clinic,
+                      image: res,
+                    },
+                  },
+                  () => {
+                    this.props.editClinic(this.state.clinic);
+                    this.setState({
+                      ...this.state,
+                      isComplete: true,
+                    });
+                  }
+                )
+              );
+          });
+        };
+        reader.readAsDataURL(newImage);
+      });
+    } else {
+      this.props.editClinic(this.state.clinic);
+      this.setState({
+        ...this.state,
+        isComplete: true,
+      });
+    }
   };
 
   redirect = () => {
     if (this.state.isComplete) {
-      return <Redirect to="/innerData" />;
+      return <Redirect to="/innerData/clinics" />;
     }
   };
 
@@ -113,9 +160,9 @@ class ClinicCreateForm extends React.Component {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const { cities } = this.props.city;
       const {
         city,
+        cityName,
         name,
         street,
         house,
@@ -124,6 +171,7 @@ class ClinicCreateForm extends React.Component {
         schedule,
         image,
       } = this.state.clinic;
+      const cities = this.props.city.cities.filter((c) => c.id !== city);
       return (
         <div className="container">
           <div className="row justify-content-center">
@@ -169,8 +217,9 @@ class ClinicCreateForm extends React.Component {
                           name="city"
                           required
                           autoFocus
-                          onChange={this.onBaseInputChange}
+                          onChange={this.onCityChange}
                         >
+                          <option value={city}>{cityName}</option>
                           {cities.map((city) => (
                             <option key={city.id} value={city.id}>
                               {city.name}
@@ -318,14 +367,14 @@ class ClinicCreateForm extends React.Component {
                     <div className="form-group row mb-0">
                       <div className="col-md-6 offset-md-4">
                         <button type="submit" className="btn btn-primary mr-2">
-                          Register
+                          Підтвердити
                         </button>
                         <Link
-                          to="/innerData"
+                          to="/innerData/clinics"
                           className="btn btn-danger"
                           role="button"
                         >
-                          Cancel
+                          Відмінити
                         </Link>
                       </div>
                     </div>
@@ -341,16 +390,19 @@ class ClinicCreateForm extends React.Component {
   }
 }
 
-ClinicCreateForm.propTypes = {
-  addClinic: PropTypes.func.isRequired,
+ClinicEditForm.propTypes = {
+  editClinic: PropTypes.func.isRequired,
+  getClinic: PropTypes.func.isRequired,
   getCities: PropTypes.func.isRequired,
   city: PropTypes.object.isRequired,
+  clinic: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   city: state.city,
+  clinic: state.clinic,
 });
 
 export default withRouter(
-  connect(mapStateToProps, { addClinic, getCities })(ClinicCreateForm)
+  connect(mapStateToProps, { editClinic, getCities, getClinic })(ClinicEditForm)
 );

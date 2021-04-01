@@ -6,10 +6,10 @@ import {
   getClinics,
   deleteClinic,
   editClinic,
-} from "../../../actions/clinic/clinicActions";
-import AwsClass from "../../../aws/awsApi";
-import { getImgBuffer } from "../../../aws/imgBuffer";
-import Loading from "../../modals/Loading";
+} from "../../../../actions/clinic/clinicActions";
+import AwsClass from "../../../../aws/awsApi";
+import { getImgBuffer } from "../../../../aws/imgBuffer";
+import Loading from "../../../modals/Loading";
 
 class Clinics extends React.Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class Clinics extends React.Component {
           <h2 className="text-center mt-3">Клініки</h2>
           <Link
             className="btn btn-primary text-right mr-2 mb-3"
-            to="/clinics/create"
+            to="/innerData/clinics/create"
           >
             Додати клініку
           </Link>
@@ -66,7 +66,7 @@ class Clinics extends React.Component {
                 <tr key={clinic.clinic_id}>
                   <td>
                     <Link
-                      to={`/clinics/${clinic.clinic_id}/show`}
+                      to={`/innerData/clinics/${clinic.clinic_id}/show`}
                       className="btn btn-link"
                     >
                       {clinic.clinic_name}
@@ -76,7 +76,7 @@ class Clinics extends React.Component {
                     <Link
                       className="btn btn-primary text-right mr-2 mb-3"
                       role="button"
-                      to={`/clinics/${clinic.clinic_id}/edit`}
+                      to={`/innerData/clinics/${clinic.clinic_id}/edit`}
                     >
                       Редагувати
                     </Link>

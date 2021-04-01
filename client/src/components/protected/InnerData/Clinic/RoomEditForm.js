@@ -3,21 +3,19 @@ import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import {
-  editDepartment,
-  getDepartment,
-} from "../../../actions/department/departmentActions";
-import Loading from "../../modals/Loading";
+import { editRoom, getRoom } from "../../../../actions/room/roomActions";
+import Loading from "../../../modals/Loading";
 
-class DepartmentEditForm extends React.Component {
+class RoomEditForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isComplete: false,
       loading: true,
-      department: {
+      room: {
         id: "",
-        name: "",
+        number: "",
+        departmentId: "",
         clinicId: "",
       },
     };
@@ -26,8 +24,8 @@ class DepartmentEditForm extends React.Component {
   onBaseInputChange = (e) => {
     this.setState({
       ...this.state,
-      department: {
-        ...this.state.department,
+      room: {
+        ...this.state.room,
         [e.target.name]: e.target.value,
       },
     });
@@ -35,18 +33,20 @@ class DepartmentEditForm extends React.Component {
 
   componentDidMount() {
     const id = this.props.match.params.id;
-    this.props.getDepartment(id);
+    this.props.getRoom(id);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.department.loading !== this.props.department.loading) {
-      const { name, clinic_id, id } = this.props.department.departments[0];
+    if (prevProps.room.loading !== this.props.room.loading) {
+      const { clinic_id } = this.props.match.params;
+      const { number, department_id, id } = this.props.room.rooms[0];
       this.setState({
         ...this.state,
-        loading: this.props.department.loading,
-        department: {
-          name,
+        loading: false,
+        room: {
+          number,
           id,
+          departmentId: department_id,
           clinicId: clinic_id,
         },
       });
@@ -55,7 +55,7 @@ class DepartmentEditForm extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.editDepartment(this.state.department);
+    this.props.editRoom(this.state.room);
     this.setState({
       ...this.state,
       isComplete: true,
@@ -64,8 +64,11 @@ class DepartmentEditForm extends React.Component {
 
   redirect = () => {
     if (this.state.isComplete) {
+      const { clinicId, departmentId } = this.state.room;
       return (
-        <Redirect to={`/clinics/${this.state.department.clinicId}/show`} />
+        <Redirect
+          to={`/innerData/clinics/${clinicId}/departments/${departmentId}/show`}
+        />
       );
     }
   };
@@ -74,7 +77,7 @@ class DepartmentEditForm extends React.Component {
     if (this.state.loading) {
       return <Loading />;
     } else {
-      const { clinicId, name } = this.state.department;
+      const { clinicId, departmentId, number } = this.state.room;
       return (
         <div className="container">
           <div className="row justify-content-center">
@@ -85,7 +88,7 @@ class DepartmentEditForm extends React.Component {
                   <form onSubmit={this.onSubmit}>
                     <div className="form-group row">
                       <label
-                        htmlFor="name"
+                        htmlFor="number"
                         className="col-md-4 col-form-label text-md-right"
                       >
                         Назва
@@ -93,14 +96,14 @@ class DepartmentEditForm extends React.Component {
 
                       <div className="col-md-6">
                         <input
-                          id="name"
+                          id="number"
                           type="text"
                           className="form-control"
-                          name="name"
-                          value={name}
+                          name="number"
+                          value={number}
                           onChange={this.onBaseInputChange}
                           required
-                          autoComplete="name"
+                          autoComplete="number"
                           autoFocus
                         />
                       </div>
@@ -109,14 +112,14 @@ class DepartmentEditForm extends React.Component {
                     <div className="form-group row mb-0">
                       <div className="col-md-6 offset-md-4">
                         <button type="submit" className="btn btn-primary mr-2">
-                          Register
+                          Підтвердити
                         </button>
                         <Link
-                          to={`/clinics/${clinicId}/show`}
+                          to={`/innerData/clinics/${clinicId}/departments/${departmentId}/show`}
                           className="btn btn-danger"
                           role="button"
                         >
-                          Cancel
+                          Відмінити
                         </Link>
                       </div>
                     </div>
@@ -132,18 +135,16 @@ class DepartmentEditForm extends React.Component {
   }
 }
 
-DepartmentEditForm.propTypes = {
-  getDepartment: PropTypes.func.isRequired,
-  editDepartment: PropTypes.func.isRequired,
-  department: PropTypes.object.isRequired,
+RoomEditForm.propTypes = {
+  getRoom: PropTypes.func.isRequired,
+  editRoom: PropTypes.func.isRequired,
+  room: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  department: state.department,
+  room: state.room,
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getDepartment, editDepartment })(
-    DepartmentEditForm
-  )
+  connect(mapStateToProps, { getRoom, editRoom })(RoomEditForm)
 );

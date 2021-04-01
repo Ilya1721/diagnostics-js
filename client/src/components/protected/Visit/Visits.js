@@ -4,11 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getVisits, findVisits } from "../../../actions/visit/visitActions";
 import moment from "moment";
-import Diagnosis from "../Helpers/Diagnosis";
-import Treatments from "../Helpers/Treatments";
-import Symptoms from "../Helpers/Symptoms";
-import Medicaments from "../Helpers/Medicaments";
-import Procedures from "../Helpers/Procedures";
+import TableView from "../Helpers/TableView";
 import Loading from "../../modals/Loading";
 
 class Visits extends React.Component {
@@ -173,11 +169,11 @@ class Visits extends React.Component {
                 <div className="col">
                   <div className="card rounded-0 border-left-0 border-bottom-0 border-top-1 border-right-0 container">
                     <div className="card-body">
-                      <Diagnosis diagnosis={visit.diagnosis} />
-                      <Treatments treatments={visit.treatments} />
-                      <Symptoms symptoms={visit.symptoms} />
-                      <Medicaments medicaments={visit.medicaments} />
-                      <Procedures procedures={visit.procedures} />
+                      <TableView data={visit.diagnosis} name="Діагнози" />
+                      <TableView data={visit.treatments} name="Лікування" />
+                      <TableView data={visit.symptoms} name="Симптоми" />
+                      <TableView data={visit.medicaments} name="Медикаменти" />
+                      <TableView data={visit.procedures} name="Процедури" />
                     </div>
                   </div>
                 </div>

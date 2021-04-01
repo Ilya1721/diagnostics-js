@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getClinic } from "../../../actions/clinic/clinicActions";
-import { getDepartmentsById } from "../../../actions/department/departmentActions";
-import { deleteDepartment } from "../../../actions/department/departmentActions";
+import { getClinic } from "../../../../actions/clinic/clinicActions";
+import { getDepartmentsById } from "../../../../actions/department/departmentActions";
+import { deleteDepartment } from "../../../../actions/department/departmentActions";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
-import Loading from "../../modals/Loading";
+import Loading from "../../../modals/Loading";
 
 class Clinic extends React.Component {
   constructor(props) {
@@ -47,8 +47,8 @@ class Clinic extends React.Component {
               <div className="col-2">
                 <img
                   src={clinic.clinic_image}
+                  className="default-image"
                   alt=""
-                  style={{ width: "125px", height: "150px" }}
                 />
               </div>
               <div className="col-6">
@@ -75,7 +75,7 @@ class Clinic extends React.Component {
             <Link
               className="btn btn-primary text-right mr-2 mb-3"
               role="button"
-              to={`/clinic/${clinic.clinic_id}/departments/create`}
+              to={`/innerData/clinics/${clinic.clinic_id}/departments/create`}
             >
               Додати відділ
             </Link>
@@ -92,7 +92,7 @@ class Clinic extends React.Component {
                   <tr key={department.id}>
                     <td>
                       <Link
-                        to={`/departments/${department.id}/show`}
+                        to={`/innerData/clinics/${clinic.clinic_id}/departments/${department.id}/show`}
                         className="btn btn-link"
                       >
                         {department.name}
@@ -102,7 +102,7 @@ class Clinic extends React.Component {
                       <Link
                         className="btn btn-primary text-right mr-2 mb-3"
                         role="button"
-                        to={`/clinic/${clinic.clinic_id}/departments/${department.id}/edit`}
+                        to={`/innerData/clinics/${clinic.clinic_id}/departments/${department.id}/edit`}
                       >
                         Редагувати
                       </Link>

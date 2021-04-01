@@ -9,9 +9,6 @@ class HomeLayout extends React.Component {
     return (
       <div className="row mx-4">
         <div className="col-2 text-left">
-          <div className="my-3 ml-5">
-            <img className="photo" src={user.image} />
-          </div>
           <hr />
           <h5 className="mt-3" style={{ fontSize: "1.1rem" }}>
             Ви увійшли як {user.job}

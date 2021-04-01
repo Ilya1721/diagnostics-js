@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getDepartment } from "../../../actions/department/departmentActions";
-import { getRoomsById, deleteRoom } from "../../../actions/room/roomActions";
+import { getDepartment } from "../../../../actions/department/departmentActions";
+import { getRoomsById, deleteRoom } from "../../../../actions/room/roomActions";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
-import Loading from "../../modals/Loading";
+import Loading from "../../../modals/Loading";
 
 class Department extends React.Component {
   constructor(props) {
@@ -45,7 +45,7 @@ class Department extends React.Component {
           <Link
             className="btn btn-primary text-right mr-2 mb-3"
             role="button"
-            to={`/departments/${department.id}/rooms/create`}
+            to={`/innerData/clinics/${department.clinic_id}/departments/${department.id}/rooms/create`}
           >
             Додати палату
           </Link>
@@ -60,16 +60,12 @@ class Department extends React.Component {
             <tbody>
               {rooms.map((room) => (
                 <tr key={room.id}>
-                  <td>
-                    <Link to={`/rooms/${room.id}`} className="btn btn-link">
-                      {room.number}
-                    </Link>
-                  </td>
+                  <td>{room.number}</td>
                   <td>
                     <Link
                       className="btn btn-primary text-right mr-2 mb-3"
                       role="button"
-                      to={`/departments/${department.id}/rooms/${room.id}/edit`}
+                      to={`/innerData/clinics/${department.clinic_id}/departments/${department.id}/rooms/${room.id}/edit`}
                     >
                       Редагувати
                     </Link>

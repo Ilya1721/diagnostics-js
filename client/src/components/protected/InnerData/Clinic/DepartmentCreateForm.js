@@ -3,17 +3,17 @@ import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { addRoom } from "../../../actions/room/roomActions";
-import Loading from "../../modals/Loading";
+import { addDepartment } from "../../../../actions/department/departmentActions";
+import Loading from "../../../modals/Loading";
 
-class RoomCreateForm extends React.Component {
+class DepartmentCreateForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isComplete: false,
-      room: {
-        number: "",
-        departmentId: this.props.match.params.id,
+      department: {
+        name: "",
+        clinicId: this.props.match.params.id,
       },
     };
   }
@@ -21,8 +21,8 @@ class RoomCreateForm extends React.Component {
   onBaseInputChange = (e) => {
     this.setState({
       ...this.state,
-      room: {
-        ...this.state.room,
+      department: {
+        ...this.state.department,
         [e.target.name]: e.target.value,
       },
     });
@@ -30,7 +30,7 @@ class RoomCreateForm extends React.Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.addRoom(this.state.room);
+    this.props.addDepartment(this.state.department);
     this.setState({
       ...this.state,
       isComplete: true,
@@ -40,25 +40,27 @@ class RoomCreateForm extends React.Component {
   redirect = () => {
     if (this.state.isComplete) {
       return (
-        <Redirect to={`/departments/${this.state.room.departmentId}/show`} />
+        <Redirect
+          to={`/innerData/clinics/${this.state.department.clinicId}/show`}
+        />
       );
     }
   };
 
   render() {
-    const { departmentId, number } = this.state.room;
+    const { clinicId, name } = this.state.department;
 
     return (
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-8">
             <div className="card">
-              <div className="card-header">Додати палату</div>
+              <div className="card-header">Додати відділ</div>
               <div className="card-body">
                 <form onSubmit={this.onSubmit}>
                   <div className="form-group row">
                     <label
-                      htmlFor="number"
+                      htmlFor="name"
                       className="col-md-4 col-form-label text-md-right"
                     >
                       Назва
@@ -66,14 +68,14 @@ class RoomCreateForm extends React.Component {
 
                     <div className="col-md-6">
                       <input
-                        id="number"
+                        id="name"
                         type="text"
                         className="form-control"
-                        name="number"
-                        value={number}
+                        name="name"
+                        value={name}
                         onChange={this.onBaseInputChange}
                         required
-                        autoComplete="number"
+                        autoComplete="name"
                         autoFocus
                       />
                     </div>
@@ -82,14 +84,14 @@ class RoomCreateForm extends React.Component {
                   <div className="form-group row mb-0">
                     <div className="col-md-6 offset-md-4">
                       <button type="submit" className="btn btn-primary mr-2">
-                        Register
+                        Підтвердити
                       </button>
                       <Link
-                        to={`/departments/${departmentId}/show`}
+                        to={`/innerData/clinics/${clinicId}/show`}
                         className="btn btn-danger"
                         role="button"
                       >
-                        Cancel
+                        Відмінити
                       </Link>
                     </div>
                   </div>
@@ -104,12 +106,12 @@ class RoomCreateForm extends React.Component {
   }
 }
 
-RoomCreateForm.propTypes = {
-  addRoom: PropTypes.func.isRequired,
+DepartmentCreateForm.propTypes = {
+  addDepartment: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({});
 
 export default withRouter(
-  connect(mapStateToProps, { addRoom })(RoomCreateForm)
+  connect(mapStateToProps, { addDepartment })(DepartmentCreateForm)
 );

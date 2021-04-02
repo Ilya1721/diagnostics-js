@@ -35,7 +35,6 @@ class Diagnostics extends React.Component {
       return <Loading />;
     } else {
       const { innerData } = this.props.diagnostic;
-      console.log(innerData);
 
       return (
         <div className="container mt-3">

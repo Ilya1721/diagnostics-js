@@ -283,7 +283,7 @@ class VisitsCreateForm extends React.Component {
                           htmlFor="symptomDescription"
                           className="col-md-4 col-form-label text-md-right"
                         >
-                          Опис:
+                          Доповнення:
                         </label>
                         <div className="col-md-6">
                           <textarea
@@ -366,7 +366,7 @@ class VisitsCreateForm extends React.Component {
                           htmlFor="diagnosDescription"
                           className="col-md-4 col-form-label text-md-right"
                         >
-                          Опис:
+                          Доповнення:
                         </label>
                         <div className="col-md-6">
                           <textarea
@@ -449,7 +449,7 @@ class VisitsCreateForm extends React.Component {
                           htmlFor="medicamentDescription"
                           className="col-md-4 col-form-label text-md-right"
                         >
-                          Опис:
+                          Доповнення:
                         </label>
                         <div className="col-md-6">
                           <textarea
@@ -532,7 +532,7 @@ class VisitsCreateForm extends React.Component {
                           htmlFor="procedureDescription"
                           className="col-md-4 col-form-label text-md-right"
                         >
-                          Опис:
+                          Доповнення:
                         </label>
                         <div className="col-md-6">
                           <textarea
@@ -615,7 +615,7 @@ class VisitsCreateForm extends React.Component {
                           htmlFor="treatmentDescription"
                           className="col-md-4 col-form-label text-md-right"
                         >
-                          Опис:
+                          Доповнення:
                         </label>
                         <div className="col-md-6">
                           <textarea

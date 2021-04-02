@@ -1,0 +1,4 @@
+export const GET_SYMPTOMS = "GET_SYMPTOMS";
+export const ADD_SYMPTOM = "ADD_SYMPTOM";
+export const DELETE_SYMPTOM = "DELETE_SYMPTOM";
+export const SYMPTOMS_LOADING = "SYMPTOMS_LOADING";

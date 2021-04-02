@@ -16,6 +16,8 @@ import medicamentStatReducer from "./medicamentStatReducer";
 import diagnosStatReducer from "./diagnosStatReducer";
 import symptomStatReducer from "./symptomStatReducer";
 import visitStatReducer from "./visitStatReducer";
+import symptomReducer from "./symptomReducer";
+import diagnosReducer from "./diagnosReducer";
 import diagnosticReducer from "./diagnosticReducer";
 
 export default combineReducers({
@@ -36,5 +38,7 @@ export default combineReducers({
   diagnosStat: diagnosStatReducer,
   symptomStat: symptomStatReducer,
   visitStat: visitStatReducer,
+  symptom: symptomReducer,
+  diagnos: diagnosReducer,
   diagnostic: diagnosticReducer,
 });

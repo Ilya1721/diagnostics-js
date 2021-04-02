@@ -9,7 +9,6 @@ import {
 const initialState = {
   diagnostic: {
     diagnosis: [],
-    unknownSymptoms: [],
   },
   innerData: [],
   loading: false,
@@ -33,6 +32,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    case ADD_DIAGNOSTIC:
+      return {
+        ...state,
+        innerData: [...state.innerData, action.payload],
+        loading: false,
       };
     default:
       return state;

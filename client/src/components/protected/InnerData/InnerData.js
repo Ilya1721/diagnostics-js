@@ -5,7 +5,7 @@ class InnerData extends React.Component {
   render() {
     return (
       <div className="container">
-        <h2 className="text-center mt-3">Статистика</h2>
+        <h2 className="text-center mt-3">Внутрішні дані</h2>
         <table className="table text-center table-light">
           <thead className="thead-dark">
             <tr>

@@ -34,6 +34,8 @@ const treatmentstat = require("./routes/api/treatmentstat");
 const medicamentstat = require("./routes/api/medicamentstat");
 const diagnosstat = require("./routes/api/diagnosstat");
 const symptomstat = require("./routes/api/symptomstat");
+const symptoms = require("./routes/api/symptoms");
+const diagnosis = require("./routes/api/diagnosis");
 const visitstat = require("./routes/api/visitstat");
 const diagnostics = require("./routes/api/diagnostics");
 
@@ -48,6 +50,8 @@ app.use("/api/auth", auth);
 app.use("/api/cities", cities);
 app.use("/api/countries", countries);
 app.use("/api/jobs", jobs);
+app.use("/api/symptoms", symptoms);
+app.use("/api/diagnosis", diagnosis);
 app.use("/api/departments", departments);
 app.use("/api/aws", aws);
 app.use("/api/visits", visits);

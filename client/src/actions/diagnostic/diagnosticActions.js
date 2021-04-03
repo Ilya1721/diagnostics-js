@@ -51,6 +51,32 @@ export const addDiagnostic = (data) => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
+export const getDiagnostic = (id) => (dispatch) => {
+  dispatch(setDiagnosticsLoading());
+  axios.get(`/api/diagnostics/${id}`).then((res) => {
+    dispatch({
+      type: GET_DIAGNOSTICS,
+      payload: res.data,
+    });
+  });
+};
+
+export const editDiagnostic = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setDiagnosticsLoading());
+  axios.put(`/api/diagnostics/${data.diagnos.id}`, body, config).then((res) => {
+    dispatch({
+      type: GET_DIAGNOSTICS,
+      payload: res.data,
+    });
+  });
+};
+
 export const setDiagnosticsLoading = () => (dispatch) => {
   return {
     type: DIAGNOSTICS_LOADING,

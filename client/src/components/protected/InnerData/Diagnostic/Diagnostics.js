@@ -59,11 +59,11 @@ class Diagnostics extends React.Component {
             </thead>
             <tbody>
               {innerData.map((item) => (
-                <tr key={item.diagnos.id}>
+                <tr key={item.diagnos.name}>
                   <td>{item.diagnos.name}</td>
                   <td>
                     {item.symptoms.map((symptom) => (
-                      <span key={symptom.id}>{symptom.name}, </span>
+                      <span key={symptom.name}>{symptom.name}, </span>
                     ))}
                   </td>
                   <td>

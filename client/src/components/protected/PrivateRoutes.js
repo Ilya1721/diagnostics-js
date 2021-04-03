@@ -30,6 +30,7 @@ import DiagnosticsForm from "./Diagnostics/DiagnosticsForm";
 import InnerData from "./InnerData/InnerData";
 import Diagnostics from "./InnerData/Diagnostic/Diagnostics";
 import DiagnosticCreateForm from "./InnerData/Diagnostic/DiagnosticCreateForm";
+import DiagnosticEditForm from "./InnerData/Diagnostic/DiagnosticEditForm";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -204,6 +205,12 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/diagnostics/create"
           component={DiagnosticCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/diagnostics/:id/edit"
+          component={DiagnosticEditForm}
           redirectTo="/login"
         />
       </React.Fragment>

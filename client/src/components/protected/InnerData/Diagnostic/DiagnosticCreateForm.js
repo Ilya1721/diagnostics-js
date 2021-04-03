@@ -77,7 +77,7 @@ class DiagnosticCreateForm extends React.Component {
   };
 
   moreSymptom = () => {
-    const { symptoms, symptomError } = this.state;
+    const { symptoms } = this.state;
     if (!this.isError()) {
       this.setState({
         ...this.state,

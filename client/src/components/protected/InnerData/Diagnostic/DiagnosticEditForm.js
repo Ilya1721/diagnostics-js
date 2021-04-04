@@ -21,6 +21,7 @@ class DiagnosticEditForm extends React.Component {
       diagnostic: {
         diagnos: {},
         symptoms: [],
+        deletedSymptoms: [],
       },
     };
   }
@@ -39,8 +40,14 @@ class DiagnosticEditForm extends React.Component {
         ...this.state,
         loading,
         diagnostic: {
+          ...this.state.diagnostic,
           diagnos: { ...diagnos, isError: false },
-          symptoms: symptoms.map((s) => ({ ...s, isError: false })),
+          symptoms: symptoms.map((s) => ({
+            ...s,
+            isError: false,
+            startName: s.name,
+            isNew: false,
+          })),
         },
       });
     } else if (prevProps.symptom !== this.props.symptom) {
@@ -77,32 +84,58 @@ class DiagnosticEditForm extends React.Component {
   moreSymptom = () => {
     const { symptoms } = this.state.diagnostic;
     if (!this.isError()) {
-      this.setState({
-        ...this.state,
-        diagnostic: {
-          ...this.state.diagnostic,
-          symptoms: [
-            ...symptoms,
-            {
-              id: symptoms[symptoms.length - 1].id + 1,
-              name: "",
-            },
-          ],
-        },
-      });
+      if (symptoms.length > 0) {
+        this.setState({
+          ...this.state,
+          diagnostic: {
+            ...this.state.diagnostic,
+            symptoms: [
+              ...symptoms,
+              {
+                id: symptoms[symptoms.length - 1].id + 1,
+                name: "",
+                isError: false,
+                isNew: true,
+              },
+            ],
+          },
+        });
+      } else {
+        this.setState({
+          ...this.state,
+          diagnostic: {
+            ...this.state.diagnostic,
+            symptoms: [
+              ...symptoms,
+              {
+                id: 1,
+                name: "",
+                isError: false,
+                isNew: true,
+              },
+            ],
+          },
+        });
+      }
     }
   };
 
   deleteSymptom = (id) => {
-    if (this.state.diagnostic.symptoms.length > 1) {
-      const symptoms = this.state.diagnostic.symptoms.filter(
-        (s) => s.id !== id
-      );
-      this.setState({
-        ...this.state,
+    const symptoms = this.state.diagnostic.symptoms.filter((s) => s.id !== id);
+    const deletedSymptom = this.state.diagnostic.symptoms.find(
+      (s) => s.id === id
+    );
+    this.setState({
+      ...this.state,
+      diagnostic: {
+        ...this.state.diagnostic,
         symptoms,
-      });
-    }
+        deletedSymptoms: [
+          ...this.state.diagnostic.deletedSymptoms,
+          deletedSymptom,
+        ],
+      },
+    });
   };
 
   renderError = (msg, isError) => {
@@ -120,15 +153,22 @@ class DiagnosticEditForm extends React.Component {
   };
 
   isError = () => {
-    const { symptoms, diagnos } = this.state.diagnostic;
-    return symptoms.map((s) => s.isError).includes(true) || diagnos.isError;
+    const { symptoms } = this.state.diagnostic;
+    return symptoms.map((s) => s.isError).includes(true);
   };
 
   onSubmit = (e) => {
-    const { diagnos, symptoms } = this.state.diagnostic;
+    const { diagnos, symptoms, deletedSymptoms } = this.state.diagnostic;
+    const newSymptoms = symptoms.filter((s) => s.isNew === true);
+    const symptomsToUpdate = symptoms.filter((s) => s.isNew === false);
     e.preventDefault();
     if (!this.isError()) {
-      this.props.editDiagnostic({ diagnos, symptoms });
+      this.props.editDiagnostic({
+        diagnos,
+        symptoms: symptomsToUpdate,
+        newSymptoms,
+        deletedSymptoms,
+      });
       this.props.history.goBack();
     }
   };
@@ -169,7 +209,7 @@ class DiagnosticEditForm extends React.Component {
                     </div>
                     <hr />
                     {symptoms.map((symptom) => (
-                      <React.Fragment key={symptom.name}>
+                      <React.Fragment key={symptom.id}>
                         <div className="form-group row">
                           <label
                             htmlFor="symptom"

@@ -107,7 +107,7 @@ router.get("/:id", (req, res) => {
 
 // @route PUT /api/diagnostics/id
 router.put("/:id", (req, res) => {
-  const { diagnos, symptoms } = req.body;
+  const { diagnos, symptoms, newSymptoms, deletedSymptoms } = req.body;
   const id = req.params.id;
   if (!{ ...req.body }) {
     return res.status(400).json({ msg: "Please enter all fields" });
@@ -115,29 +115,72 @@ router.put("/:id", (req, res) => {
   const updateSymptoms = new Promise(async (resolve, reject) => {
     try {
       let symptomArr = [];
+      console.log("symptoms", symptoms);
       for (const symptom of symptoms) {
         const symptomQuery =
-          "SELECT s.id, s.name FROM symptoms s" +
+          "SELECT s.id, s.name FROM symptoms s " +
           `WHERE s.name = "${symptom.name}";`;
         const symptomIds = await conn.promise().query(symptomQuery);
         const symptomId = symptomIds[0][0].id;
+        console.log("symptomId", symptomId);
+        const oldSymptomQuery =
+          "SELECT s.id, s.name FROM symptoms s " +
+          `WHERE s.name = "${symptom.startName}";`;
+        const oldSymptomIds = await conn.promise().query(oldSymptomQuery);
+        const oldSymptomId = oldSymptomIds[0][0].id;
+        console.log("oldSymptomId", oldSymptomId);
+        const rowIdQuery =
+          "SELECT sd.id FROM symptom_disease sd " +
+          `WHERE sd.symptom_id = ${oldSymptomId} AND sd.disease_id = ${id};`;
+        const rowIds = await conn.promise().query(rowIdQuery);
+        const rowId = rowIds[0][0].id;
+        console.log("rowId", rowId);
         const updateQuery =
           "UPDATE symptom_disease SET " +
-          `symptom_id = ${symptomId} WHERE disease_id = ${id};`;
-        const results = conn.promise().query(updateQuery);
+          `symptom_id = ${symptomId} WHERE id = ${rowId};`;
+        const results = await conn.promise().query(updateQuery);
+        console.log("symptomId", symptomId);
         symptomArr.push({ ...symptom, id: symptomId });
+      }
+      console.log("newSymptoms", newSymptoms);
+      for (const symptom of newSymptoms) {
+        const symptomQuery =
+          "SELECT id, name FROM symptoms " + `WHERE name = "${symptom.name}";`;
+        const symptomIds = await conn.promise().query(symptomQuery);
+        const symptomId = symptomIds[0][0].id;
+        const insertQuery =
+          "INSERT INTO symptom_disease(symptom_id, disease_id) " +
+          `VALUES(${symptomId}, ${id});`;
+        const insertId = await conn.promise().query(insertQuery);
+        symptomArr.push({ ...symptom, id: symptomId });
+      }
+      console.log("deletedSymptoms", deletedSymptoms);
+      for (const symptom of deletedSymptoms) {
+        const symptomQuery =
+          "SELECT id, name FROM symptoms " + `WHERE name = "${symptom.name}";`;
+        const symptomIds = await conn.promise().query(symptomQuery);
+        const symptomId = symptomIds[0][0].id;
+        const deleteIdQuery =
+          "SELECT sd.id FROM symptom_disease sd " +
+          `WHERE sd.symptom_id = ${symptomId} AND sd.disease_id = ${id};`;
+        const deleteIds = await conn.promise().query(deleteIdQuery);
+        const deleteId = deleteIds[0][0].id;
+        console.log("deletedId", deleteId);
+        const deleteQuery = `DELETE FROM symptom_disease WHERE id = ${deleteId};`;
+        const result = await conn.promise().query(deleteQuery);
       }
       const diagnostic = {
         diagnos,
         symptoms: symptomArr,
       };
+      console.log(diagnostic);
       resolve(diagnostic);
     } catch (err) {
       reject(err);
     }
   })
     .then((diagnostic) => {
-      return res.json(diagnostic);
+      return res.json([diagnostic]);
     })
     .catch((err) => {
       return res.status(400).json(err);

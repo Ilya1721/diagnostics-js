@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { getSymptoms } from "../../../../actions/symptom/symptomActions";
 import { getDiagnosis } from "../../../../actions/diagnos/diagnosActions";
 import { addDiagnostic } from "../../../../actions/diagnostic/diagnosticActions";
@@ -11,6 +11,7 @@ class DiagnosticCreateForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isComplete: false,
       presentDiagnosis: [],
       presentSymptoms: [],
       diagnos: { id: 1, name: "", isError: false },
@@ -116,6 +117,16 @@ class DiagnosticCreateForm extends React.Component {
     }
   };
 
+  redirect = () => {
+    if (this.props.diagnostic !== undefined) {
+      const { isComplete } = this.state;
+      const { loading } = this.props.diagnostic;
+      if (!loading && isComplete) {
+        return <Redirect to="/innerData/diagnostics" />;
+      }
+    }
+  };
+
   isError = () => {
     const { symptoms, diagnos } = this.state;
     return symptoms.map((s) => s.isError).includes(true) || diagnos.isError;
@@ -126,7 +137,10 @@ class DiagnosticCreateForm extends React.Component {
     e.preventDefault();
     if (!this.isError()) {
       this.props.addDiagnostic({ diagnos, symptoms });
-      this.props.history.goBack();
+      this.setState({
+        ...this.state,
+        isComplete: true,
+      });
     }
   };
 
@@ -224,6 +238,7 @@ class DiagnosticCreateForm extends React.Component {
                       </Link>
                     </div>
                   </div>
+                  {this.redirect()}
                 </form>
               </div>
             </div>
@@ -247,10 +262,8 @@ const mapStateToProps = (state) => ({
   diagnos: state.diagnos,
 });
 
-export default withRouter(
-  connect(mapStateToProps, {
-    getSymptoms,
-    getDiagnosis,
-    addDiagnostic,
-  })(DiagnosticCreateForm)
-);
+export default connect(mapStateToProps, {
+  getSymptoms,
+  getDiagnosis,
+  addDiagnostic,
+})(DiagnosticCreateForm);

@@ -72,6 +72,7 @@ export const editDepartment = (data) => (dispatch) => {
   const body = JSON.stringify(data);
   dispatch(setDepartmentsLoading());
   axios.put(`/api/departments/${data.id}`, body, config).then((res) => {
+    console.log(res.data);
     dispatch({
       type: GET_DEPARTMENTS,
       payload: res.data,

@@ -65,7 +65,7 @@ export const editPatient = (data) => (dispatch) => {
     .put(`/api/patients/${data.id}`, body, config)
     .then((res) => {
       dispatch({
-        type: GET_PATIENTS,
+        type: EDIT_PATIENT,
         payload: res.data,
       });
     })

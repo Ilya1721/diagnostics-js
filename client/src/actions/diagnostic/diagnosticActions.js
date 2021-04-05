@@ -1,6 +1,8 @@
 import {
   GET_DIAGNOSTICS,
   ADD_DIAGNOSTIC,
+  EDIT_DIAGNOSTIC,
+  DELETE_DIAGNOSTIC,
   GENERATE_DIAGNOSTICS,
   DIAGNOSTICS_LOADING,
 } from "./diagnosticTypes";
@@ -69,10 +71,22 @@ export const editDiagnostic = (data) => (dispatch) => {
   };
   const body = JSON.stringify(data);
   dispatch(setDiagnosticsLoading());
-  axios.put(`/api/diagnostics/${data.diagnos.id}`, body, config).then((res) => {
+  axios
+    .put(`/api/diagnostics/${data.diagnos.id}`, body, config)
+    .then((res) => {
+      dispatch({
+        type: EDIT_DIAGNOSTIC,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const deleteDiagnostic = (id) => (dispatch) => {
+  axios.delete(`/api/diagnostics/${id}`).then((res) => {
     dispatch({
-      type: GET_DIAGNOSTICS,
-      payload: res.data,
+      type: DELETE_DIAGNOSTIC,
+      payload: id,
     });
   });
 };

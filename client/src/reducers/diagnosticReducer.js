@@ -2,6 +2,7 @@ import {
   GET_DIAGNOSTICS,
   GENERATE_DIAGNOSTICS,
   ADD_DIAGNOSTIC,
+  EDIT_DIAGNOSTIC,
   DELETE_DIAGNOSTIC,
   DIAGNOSTICS_LOADING,
 } from "../actions/diagnostic/diagnosticTypes";
@@ -38,6 +39,24 @@ export default function (state = initialState, action) {
         ...state,
         innerData: [...state.innerData, action.payload],
         loading: false,
+      };
+    case EDIT_DIAGNOSTIC:
+      const copy = state.innerData;
+      const index = copy.findIndex(
+        (item) => item.diagnos.id === action.payload.diagnos.id
+      );
+      copy[index] = action.payload;
+      return {
+        ...state,
+        innerData: copy,
+        loading: false,
+      };
+    case DELETE_DIAGNOSTIC:
+      return {
+        ...state,
+        innerData: state.innerData.filter(
+          (item) => item.diagnos.id !== action.payload
+        ),
       };
     default:
       return state;

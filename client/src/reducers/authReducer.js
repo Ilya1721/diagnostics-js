@@ -2,6 +2,7 @@ import {
   USER_LOADED,
   USER_LOADING,
   USER_UNLOADED,
+  USER_EDIT,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -32,6 +33,11 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         loading: false,
+        user: action.payload,
+      };
+    case USER_EDIT:
+      return {
+        ...state,
         user: action.payload,
       };
     case USER_UNLOADED:

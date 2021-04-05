@@ -1,4 +1,10 @@
-import { GET_ROOMS, ADD_ROOM, DELETE_ROOM, ROOMS_LOADING } from "./roomTypes";
+import {
+  GET_ROOMS,
+  ADD_ROOM,
+  EDIT_ROOM,
+  DELETE_ROOM,
+  ROOMS_LOADING,
+} from "./roomTypes";
 import axios from "axios";
 
 export const getRooms = () => (dispatch) => {
@@ -68,7 +74,7 @@ export const editRoom = (data) => (dispatch) => {
   dispatch(setRoomsLoading());
   axios.put(`/api/rooms/${data.id}`, body, config).then((res) => {
     dispatch({
-      type: GET_ROOMS,
+      type: EDIT_ROOM,
       payload: res.data,
     });
   });

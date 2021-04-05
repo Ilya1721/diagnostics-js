@@ -1,6 +1,7 @@
 import {
   GET_DEPARTMENTS,
   ADD_DEPARTMENT,
+  EDIT_DEPARTMENT,
   DELETE_DEPARTMENT,
   DEPARTMENTS_LOADING,
 } from "./departmentTypes";
@@ -74,7 +75,7 @@ export const editDepartment = (data) => (dispatch) => {
   axios.put(`/api/departments/${data.id}`, body, config).then((res) => {
     console.log(res.data);
     dispatch({
-      type: GET_DEPARTMENTS,
+      type: EDIT_DEPARTMENT,
       payload: res.data,
     });
   });

@@ -1,6 +1,7 @@
 import {
   GET_DEPARTMENTS,
   ADD_DEPARTMENT,
+  EDIT_DEPARTMENT,
   DELETE_DEPARTMENT,
   DEPARTMENTS_LOADING,
 } from "../actions/department/departmentTypes";
@@ -27,6 +28,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         departments: [...state.departments, action.payload],
+        loading: false,
+      };
+    case EDIT_DEPARTMENT:
+      const copy = state.departments;
+      const index = copy.findIndex((d) => d.id === action.payload.id);
+      copy[index] = action.payload;
+      return {
+        ...state,
+        departments: copy,
         loading: false,
       };
     case DELETE_DEPARTMENT:

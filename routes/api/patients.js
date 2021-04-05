@@ -38,11 +38,7 @@ router.put("/:id", (req, res) => {
       `phone_number = "${data.phoneNumber}" WHERE id = ${data.id};`,
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
-      return res.json([
-        {
-          patient: { ...data },
-        },
-      ]);
+      return res.json({ ...data });
     }
   );
 });

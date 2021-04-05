@@ -115,7 +115,7 @@ router.put("/:id", (req, res) => {
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
 
-      return res.json([{ ...req.body, clinic_id: id }]);
+      return res.json({ ...req.body, clinic_id: id });
     }
   );
 });

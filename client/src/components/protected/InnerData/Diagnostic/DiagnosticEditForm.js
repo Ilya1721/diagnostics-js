@@ -45,6 +45,7 @@ class DiagnosticEditForm extends React.Component {
           symptoms: symptoms.map((s) => ({
             ...s,
             isError: false,
+            errorMsg: "",
             startName: s.name,
             isNew: false,
           })),
@@ -71,6 +72,14 @@ class DiagnosticEditForm extends React.Component {
         .includes(name.toLowerCase())
     ) {
       symptoms[index].isError = true;
+      symptoms[index].errorMsg = "Системі невідомий даний симптом";
+    } else if (
+      this.state.diagnostic.symptoms.filter(
+        (s) => s.name.toLowerCase() === name.toLowerCase()
+      ).length > 1
+    ) {
+      symptoms[index].isError = true;
+      symptoms[index].errorMsg = "Ви вже вводили такий симптом";
     }
     this.setState({
       ...this.state,
@@ -92,9 +101,10 @@ class DiagnosticEditForm extends React.Component {
             symptoms: [
               ...symptoms,
               {
-                id: symptoms[symptoms.length - 1].id + 1,
+                id: Math.max(...symptoms.map((s) => s.id)) + 1,
                 name: "",
                 isError: false,
+                errorMsg: "",
                 isNew: true,
               },
             ],
@@ -111,6 +121,7 @@ class DiagnosticEditForm extends React.Component {
                 id: 1,
                 name: "",
                 isError: false,
+                errorMsg: "",
                 isNew: true,
               },
             ],
@@ -169,7 +180,20 @@ class DiagnosticEditForm extends React.Component {
         newSymptoms,
         deletedSymptoms,
       });
-      this.props.history.goBack();
+      this.setState({
+        ...this.state,
+        isComplete: true,
+      });
+    }
+  };
+
+  redirect = () => {
+    if (this.props.diagnostic !== undefined) {
+      const { isComplete } = this.state;
+      const { loading } = this.props.diagnostic;
+      if (!loading && isComplete) {
+        return <Redirect to="/innerData/diagnostics" />;
+      }
     }
   };
 
@@ -179,6 +203,7 @@ class DiagnosticEditForm extends React.Component {
       return <Loading />;
     } else {
       const { diagnos, symptoms } = this.state.diagnostic;
+      console.log(symptoms);
 
       return (
         <div className="container">
@@ -235,10 +260,7 @@ class DiagnosticEditForm extends React.Component {
                             args={[symptom.id]}
                           />
                         </div>
-                        {this.renderError(
-                          "Системі невідомий даний симптом",
-                          symptom.isError
-                        )}
+                        {this.renderError(symptom.errorMsg, symptom.isError)}
                       </React.Fragment>
                     ))}
                     <div className="form-group row">
@@ -267,6 +289,7 @@ class DiagnosticEditForm extends React.Component {
                         </Link>
                       </div>
                     </div>
+                    {this.redirect()}
                   </form>
                 </div>
               </div>

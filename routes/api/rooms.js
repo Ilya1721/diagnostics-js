@@ -83,7 +83,7 @@ router.put("/:id", (req, res) => {
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
 
-      return res.json([{ id, number, department_id: departmentId }]);
+      return res.json({ id, number, department_id: departmentId });
     }
   );
 });

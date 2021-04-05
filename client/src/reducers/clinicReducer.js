@@ -1,6 +1,7 @@
 import {
   GET_CLINICS,
   ADD_CLINIC,
+  EDIT_CLINIC,
   DELETE_CLINIC,
   CLINICS_LOADING,
 } from "../actions/clinic/clinicTypes";
@@ -27,6 +28,17 @@ export default function (state = initialState, action) {
       return {
         ...state,
         clinics: [...state.clinics, action.payload],
+        loading: false,
+      };
+    case EDIT_CLINIC:
+      const copy = state.clinics;
+      const index = copy.findIndex(
+        (c) => c.clinic_id === action.payload.clinic_id
+      );
+      copy[index] = action.payload;
+      return {
+        ...state,
+        clinics: copy,
         loading: false,
       };
     case DELETE_CLINIC:

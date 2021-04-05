@@ -1,6 +1,7 @@
 import {
   GET_ROOMS,
   ADD_ROOM,
+  EDIT_ROOM,
   DELETE_ROOM,
   ROOMS_LOADING,
 } from "../actions/room/roomTypes";
@@ -27,6 +28,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         rooms: [...state.rooms, action.payload],
+        loading: false,
+      };
+    case EDIT_ROOM:
+      const copy = state.rooms;
+      const index = copy.findIndex((r) => r.id === action.payload.id);
+      copy[index] = action.payload;
+      return {
+        ...state,
+        rooms: copy,
         loading: false,
       };
     case DELETE_ROOM:

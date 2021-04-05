@@ -14,8 +14,8 @@ class DiagnosticCreateForm extends React.Component {
       isComplete: false,
       presentDiagnosis: [],
       presentSymptoms: [],
-      diagnos: { id: 1, name: "", isError: false },
-      symptoms: [{ id: 1, name: "", isError: false }],
+      diagnos: { id: 1, name: "", isError: false, errorMsg: "" },
+      symptoms: [{ id: 1, name: "", isError: false, errorMsg: "" }],
     };
   }
 
@@ -51,6 +51,7 @@ class DiagnosticCreateForm extends React.Component {
         .includes(name.toLowerCase())
     ) {
       diagnos.isError = true;
+      diagnos.errorMsg = "Системі невідомий даний діагноз";
     }
     this.setState({
       ...this.state,
@@ -70,6 +71,14 @@ class DiagnosticCreateForm extends React.Component {
         .includes(name.toLowerCase())
     ) {
       symptoms[index].isError = true;
+      symptoms[index].errorMsg = "Системі невідомий даний симптом";
+    } else if (
+      this.state.symptoms.filter(
+        (s) => s.name.toLowerCase() === name.toLowerCase()
+      ).length > 1
+    ) {
+      symptoms[index].isError = true;
+      symptoms[index].errorMsg = "Ви вже вводили такий симптом";
     }
     this.setState({
       ...this.state,
@@ -174,10 +183,7 @@ class DiagnosticCreateForm extends React.Component {
                       />
                     </div>
                   </div>
-                  {this.renderError(
-                    "Системі невідомий даний діагноз",
-                    diagnos.isError
-                  )}
+                  {this.renderError(diagnos.errorMsg, diagnos.isError)}
                   <hr />
                   {symptoms.map((symptom) => (
                     <React.Fragment key={symptom.id}>
@@ -206,10 +212,7 @@ class DiagnosticCreateForm extends React.Component {
                           args={[symptom.id]}
                         />
                       </div>
-                      {this.renderError(
-                        "Системі невідомий даний симптом",
-                        symptom.isError
-                      )}
+                      {this.renderError(symptom.errorMsg, symptom.isError)}
                     </React.Fragment>
                   ))}
                   <div className="form-group row">
@@ -252,6 +255,7 @@ class DiagnosticCreateForm extends React.Component {
 DiagnosticCreateForm.propTypes = {
   symptom: PropTypes.object.isRequired,
   diagnos: PropTypes.object.isRequired,
+  diagnostic: PropTypes.object.isRequired,
   getSymptoms: PropTypes.func.isRequired,
   getDiagnosis: PropTypes.func.isRequired,
   addDiagnostic: PropTypes.func.isRequired,
@@ -260,6 +264,7 @@ DiagnosticCreateForm.propTypes = {
 const mapStateToProps = (state) => ({
   symptom: state.symptom,
   diagnos: state.diagnos,
+  diagnostic: state.diagnostic,
 });
 
 export default connect(mapStateToProps, {

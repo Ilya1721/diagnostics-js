@@ -4,6 +4,7 @@ import {
   USER_LOADED,
   USER_LOADING,
   USER_UNLOADED,
+  USER_EDIT,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -63,6 +64,30 @@ export const logOutUser = () => (dispatch) => {
     type: USER_UNLOADED,
     payload: {},
   });
+};
+
+// Edit User
+export const editUser = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+
+  axios
+    .put(`/api/auth/edit`, body, config)
+    .then((res) => {
+      dispatch({
+        type: USER_EDIT,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "EDIT_USER ERROR")
+      );
+    });
 };
 
 // Get register form data

@@ -26,6 +26,15 @@ export default function (state = initialState, action) {
         patients: [...state.patients, ...action.payload],
         loading: false,
       };
+    case EDIT_PATIENT:
+      const copy = state.patients;
+      const index = copy.findIndex((p) => p.id === action.payload.id);
+      copy[index] = action.payload;
+      return {
+        ...state,
+        patients: copy,
+        loading: false,
+      };
     case PATIENTS_LOADING:
       return {
         ...state,

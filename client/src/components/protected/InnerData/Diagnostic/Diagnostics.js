@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Loading from "../../../modals/Loading";
-import { getDiagnostics } from "../../../../actions/diagnostic/diagnosticActions";
+import {
+  getDiagnostics,
+  deleteDiagnostic,
+} from "../../../../actions/diagnostic/diagnosticActions";
 
 class Diagnostics extends React.Component {
   constructor(props) {
@@ -14,6 +17,7 @@ class Diagnostics extends React.Component {
   }
 
   componentDidMount() {
+    console.log("get diagnostics");
     this.props.getDiagnostics();
   }
 
@@ -26,7 +30,9 @@ class Diagnostics extends React.Component {
   }
 
   onDelete = (id) => {
-    console.log("delete");
+    if (window.confirm("Ви впевнені, що хочете це видалити?")) {
+      this.props.deleteDiagnostic(id);
+    }
   };
 
   render() {
@@ -99,10 +105,13 @@ class Diagnostics extends React.Component {
 Diagnostics.propTypes = {
   diagnostic: PropTypes.object.isRequired,
   getDiagnostics: PropTypes.func.isRequired,
+  deleteDiagnostic: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   diagnostic: state.diagnostic,
 });
 
-export default connect(mapStateToProps, { getDiagnostics })(Diagnostics);
+export default connect(mapStateToProps, { getDiagnostics, deleteDiagnostic })(
+  Diagnostics
+);

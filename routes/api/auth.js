@@ -83,4 +83,27 @@ router.get("/register", (req, res) => {
   });
 });
 
+// @route PUT /api/users/id
+router.put("/edit", (req, res) => {
+  const data = req.body;
+  if (!{ ...data }) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  conn.query(
+    `UPDATE users SET login = "${data.login}" ` +
+      `WHERE id = ${data.id}; UPDATE employees SET ` +
+      `last_name = "${data.lastName}", first_name = "${data.firstName}", ` +
+      `father_name = "${data.fatherName}", about = "${data.about}", ` +
+      `street = "${data.street}", house = "${data.house}", ` +
+      `image = "${data.image}", flat = "${data.flat}", ` +
+      `city_id = ${data.cityId}, job_id = ${data.jobId}, ` +
+      `department_id = ${data.departmentId};`,
+    (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+      return res.json(data);
+    }
+  );
+});
+
 module.exports = router;

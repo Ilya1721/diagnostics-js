@@ -38,7 +38,7 @@ export default function (state = initialState, action) {
     case USER_EDIT:
       return {
         ...state,
-        user: action.payload,
+        user: { ...state.user, ...action.payload },
       };
     case USER_UNLOADED:
       localStorage.removeItem("token");

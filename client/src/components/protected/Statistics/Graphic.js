@@ -1,40 +1,35 @@
 import React from "react";
-import { CanvasJSChart } from "canvasjs-react-charts";
+import { VictoryBar, VictoryChart, VictoryAxis } from "victory";
+import Loading from "../../modals/Loading";
 
 class Graphic extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: this.props.data,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      this.setState({
-        data: this.props.data,
-      });
-    }
-  }
-
   render() {
-    const { data } = this.props;
-    if (data.length > 0) {
-      let chartData = [];
-      for (const item of data) {
-        chartData.push({ label: `${item.name}`, y: item.count });
-      }
-      const options = {
-        data: [
-          {
-            type: "column",
-            dataPoints: chartData,
-          },
-        ],
-      };
-      console.log(chartData);
-      return <CanvasJSChart options={options} />;
+    const { data, yLabel } = this.props;
+    console.log("data: ", data);
+    let chartData = [];
+    let xLabels = [];
+    let xValues = [];
+    for (let i = 0; i < data.length; i++) {
+      const id = i + 1;
+      chartData.push({ x: id, y: data[i].count });
+      xLabels.push(data[i].name);
+      xValues.push(id);
     }
+    console.log("chartData: ", chartData);
+
+    return (
+      <VictoryChart domainPadding={50}>
+        <VictoryAxis tickValues={xValues} tickFormat={xLabels} />
+        <VictoryAxis
+          dependentAxis
+          tickFormat={(x) => (Number.isInteger(x) ? `${x} (${yLabel})` : "")}
+          style={{
+            tickLabels: { fontSize: 5, padding: 1 },
+          }}
+        />
+        <VictoryBar data={chartData} x="x" y="y" />
+      </VictoryChart>
+    );
   }
 }
 

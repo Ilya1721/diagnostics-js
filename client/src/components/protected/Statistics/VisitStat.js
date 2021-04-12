@@ -31,15 +31,16 @@ class VisitStat extends React.Component {
       return <Loading />;
     } else {
       const { hours, days, months } = this.props.visitStat.visitStat;
+      //console.log("visitstat", new Date().getUTCMilliseconds());
       return (
         <div className="container text-center">
           <h2 className="text-center mb-3">Статистика візитів</h2>
           <h4>Навантаження по годинам</h4>
-          <Graphic data={hours} />
+          <Graphic data={hours} yLabel="відвідування" />
           <h4>Навантаження по дням</h4>
-          <Graphic data={days} />
+          <Graphic data={days} yLabel="відвідування" />
           <h4>Навантаження по місяцям</h4>
-          <Graphic data={months} />
+          <Graphic data={months} yLabel="відвідування" />
         </div>
       );
     }

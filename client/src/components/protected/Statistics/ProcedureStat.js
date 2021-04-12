@@ -35,7 +35,7 @@ class ProcedureStat extends React.Component {
         <div className="container text-center">
           <h2 className="mb-3">Статистика процедур</h2>
           <h4>Популярність процедур</h4>
-          <Graphic data={procedureStat} />
+          <Graphic data={procedureStat} yLabel="призначень" />
         </div>
       );
     }

@@ -37,7 +37,7 @@ class MedicamentStat extends React.Component {
         <div className="container text-center">
           <h2 className="mb-3">Статистика медикаментів</h2>
           <h4>Популярність медикаментів</h4>
-          <Graphic data={medicamentStat} />
+          <Graphic data={medicamentStat} yLabel="призначень" />
         </div>
       );
     }

@@ -35,7 +35,7 @@ class TreatmentStat extends React.Component {
         <div className="container">
           <h2 className="text-center mb-3">Статистика схем лікувань</h2>
           <h4>Популярність схем лікувань</h4>
-          <Graphic data={treatmentStat} />
+          <Graphic data={treatmentStat} yLabel="призначень" />
         </div>
       );
     }

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getDiagnosStat } from "../../../actions/diagnosStat/diagnosStatActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import Loading from "../../modals/Loading";
 import Graphic from "./Graphic";
 
@@ -16,6 +17,10 @@ class DiagnosStat extends React.Component {
   componentDidMount() {
     const { id } = this.props.auth.user;
     this.props.getDiagnosStat(id);
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Статистика діагнозів",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -45,6 +50,7 @@ class DiagnosStat extends React.Component {
 DiagnosStat.propTypes = {
   diagnosStat: PropTypes.object.isRequired,
   getDiagnosStat: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -52,4 +58,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getDiagnosStat })(DiagnosStat);
+export default connect(mapStateToProps, { getDiagnosStat, addLink })(
+  DiagnosStat
+);

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getVisits, findVisits } from "../../../actions/visit/visitActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import moment from "moment";
 import TableView from "../Helpers/TableView";
 import Loading from "../../modals/Loading";
@@ -20,6 +21,7 @@ class Visits extends React.Component {
   componentDidMount() {
     const { user } = this.props.auth;
     this.props.getVisits(user);
+    this.props.addLink({ path: window.location.pathname, name: "Візити" });
   }
 
   componentDidUpdate(prevProps) {
@@ -191,6 +193,7 @@ Visits.propTypes = {
   visit: PropTypes.object.isRequired,
   getVisits: PropTypes.func.isRequired,
   findVisits: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -198,4 +201,6 @@ const mapStateToProps = (state) => ({
   visit: state.visit,
 });
 
-export default connect(mapStateToProps, { getVisits, findVisits })(Visits);
+export default connect(mapStateToProps, { getVisits, findVisits, addLink })(
+  Visits
+);

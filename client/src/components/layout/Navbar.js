@@ -70,7 +70,7 @@ class Navbar extends React.Component {
       );
     } else {
       return (
-        <div className="top-right-dropdown">
+        <div className="logout-div">
           <a
             id="navbarDropdown"
             className="nav-link pointer dropdown-toggle"

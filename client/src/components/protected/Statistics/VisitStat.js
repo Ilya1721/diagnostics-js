@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getVisitStat } from "../../../actions/visitStat/visitStatActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import Loading from "../../modals/Loading";
 import Graphic from "./Graphic";
 
@@ -16,6 +17,10 @@ class VisitStat extends React.Component {
   componentDidMount() {
     const { id } = this.props.auth.user;
     this.props.getVisitStat(id);
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Статистика візитів",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -31,7 +36,6 @@ class VisitStat extends React.Component {
       return <Loading />;
     } else {
       const { hours, days, months } = this.props.visitStat.visitStat;
-      //console.log("visitstat", new Date().getUTCMilliseconds());
       return (
         <div className="container text-center">
           <h2 className="text-center mb-3">Статистика візитів</h2>
@@ -50,6 +54,7 @@ class VisitStat extends React.Component {
 VisitStat.propTypes = {
   visitStat: PropTypes.object.isRequired,
   getVisitStat: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -57,4 +62,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getVisitStat })(VisitStat);
+export default connect(mapStateToProps, { getVisitStat, addLink })(VisitStat);

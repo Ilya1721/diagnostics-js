@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getSymptomStat } from "../../../actions/symptomStat/symptomStatActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import Loading from "../../modals/Loading";
 import Graphic from "./Graphic";
 
@@ -16,6 +17,10 @@ class SymptomStat extends React.Component {
   componentDidMount() {
     const { id } = this.props.auth.user;
     this.props.getSymptomStat(id);
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Статистика симптомів",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -45,6 +50,7 @@ class SymptomStat extends React.Component {
 SymptomStat.propTypes = {
   symptomStat: PropTypes.object.isRequired,
   getSymptomStat: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -52,4 +58,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getSymptomStat })(SymptomStat);
+export default connect(mapStateToProps, { getSymptomStat, addLink })(
+  SymptomStat
+);

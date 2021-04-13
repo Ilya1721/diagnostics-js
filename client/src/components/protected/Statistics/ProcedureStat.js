@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getProcedureStat } from "../../../actions/procedureStat/procedureStatActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import Loading from "../../modals/Loading";
 import Graphic from "./Graphic";
 
@@ -16,6 +17,10 @@ class ProcedureStat extends React.Component {
   componentDidMount() {
     const { id } = this.props.auth.user;
     this.props.getProcedureStat(id);
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Статистика процедур",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -45,6 +50,7 @@ class ProcedureStat extends React.Component {
 ProcedureStat.propTypes = {
   procedureStat: PropTypes.object.isRequired,
   getProcedureStat: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -52,4 +58,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getProcedureStat })(ProcedureStat);
+export default connect(mapStateToProps, { getProcedureStat, addLink })(
+  ProcedureStat
+);

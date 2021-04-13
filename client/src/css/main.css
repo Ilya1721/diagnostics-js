@@ -5,6 +5,14 @@ html {
   font-weight: 200;
   margin: 0; }
 
+.logout-div {
+  position: absolute;
+  right: 50px;
+  top: 8px; }
+
+.left-nav-links {
+  font-size: 1.2em; }
+
 .wrapper {
   display: flex;
   flex-direction: column;

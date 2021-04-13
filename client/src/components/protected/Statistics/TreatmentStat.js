@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getTreatmentStat } from "../../../actions/treatmentStat/treatmentStatActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import Loading from "../../modals/Loading";
 import Graphic from "./Graphic";
 
@@ -16,6 +17,10 @@ class TreatmentStat extends React.Component {
   componentDidMount() {
     const { id } = this.props.auth.user;
     this.props.getTreatmentStat(id);
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Статистика схем лікувань",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -45,6 +50,7 @@ class TreatmentStat extends React.Component {
 TreatmentStat.propTypes = {
   treatmentStat: PropTypes.object.isRequired,
   getTreatmentStat: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -52,4 +58,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getTreatmentStat })(TreatmentStat);
+export default connect(mapStateToProps, { getTreatmentStat, addLink })(
+  TreatmentStat
+);

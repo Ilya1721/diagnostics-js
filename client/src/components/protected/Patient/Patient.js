@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { getPatient } from "../../../actions/patient/patientActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import TableView from "../Helpers/TableView";
 import Loading from "../../modals/Loading";
 
@@ -22,6 +23,13 @@ class Patient extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.patient.loading !== this.props.patient.loading) {
+      if (this.props.patient.patients.length === 1) {
+        const { patient } = this.props.patient.patients[0];
+        this.props.addLink({
+          path: window.location.pathname,
+          name: `${patient.lastName} ${patient.firstName} ${patient.fatherName}`,
+        });
+      }
       this.setState({
         loading: this.props.patient.loading,
       });
@@ -67,10 +75,18 @@ class Patient extends React.Component {
                   <div className="col-12">
                     <div className="card border-top-0 border-left-0 border-right-0 rounded-0 container">
                       <div className="card-body">
-                        №{patient.id} {patient.lastName} {patient.firstName}{" "}
-                        {patient.fatherName}; м.
-                        {patient.city} вул.{patient.street} {patient.house} кв.{" "}
-                        {patient.flat}; тел. {patient.phoneNumber}.
+                        <div>
+                          №{patient.id} {patient.lastName} {patient.firstName}{" "}
+                          {patient.fatherName}
+                        </div>
+                        <div>
+                          <h3>Адреса</h3>
+                          м.{patient.city} вул.{patient.street} {patient.house}{" "}
+                          кв. {patient.flat}
+                        </div>
+                        <div>
+                          <h3>Контакти</h3> тел. {patient.phoneNumber}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -100,10 +116,13 @@ class Patient extends React.Component {
 Patient.propTypes = {
   patient: PropTypes.object.isRequired,
   getPatient: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   patient: state.patient,
 });
 
-export default withRouter(connect(mapStateToProps, { getPatient })(Patient));
+export default withRouter(
+  connect(mapStateToProps, { getPatient, addLink })(Patient)
+);

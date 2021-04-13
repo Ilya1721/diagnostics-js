@@ -7,6 +7,7 @@ import {
   deleteClinic,
   editClinic,
 } from "../../../../actions/clinic/clinicActions";
+import { addLink } from "../../../../actions/navigation/navigationActions";
 import AwsClass from "../../../../aws/awsApi";
 import { getImgBuffer } from "../../../../aws/imgBuffer";
 import Loading from "../../../modals/Loading";
@@ -21,6 +22,10 @@ class Clinics extends React.Component {
 
   componentDidMount() {
     this.props.getClinics();
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Клініки",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -108,6 +113,7 @@ Clinics.propTypes = {
   getClinics: PropTypes.func.isRequired,
   deleteClinic: PropTypes.func.isRequired,
   editClinic: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -118,4 +124,5 @@ export default connect(mapStateToProps, {
   getClinics,
   deleteClinic,
   editClinic,
+  addLink,
 })(Clinics);

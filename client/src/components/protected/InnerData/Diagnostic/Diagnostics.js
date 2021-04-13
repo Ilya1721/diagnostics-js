@@ -7,6 +7,7 @@ import {
   getDiagnostics,
   deleteDiagnostic,
 } from "../../../../actions/diagnostic/diagnosticActions";
+import { addLink } from "../../../../actions/navigation/navigationActions";
 
 class Diagnostics extends React.Component {
   constructor(props) {
@@ -17,8 +18,11 @@ class Diagnostics extends React.Component {
   }
 
   componentDidMount() {
-    console.log("get diagnostics");
     this.props.getDiagnostics();
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Діагностика",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -106,12 +110,15 @@ Diagnostics.propTypes = {
   diagnostic: PropTypes.object.isRequired,
   getDiagnostics: PropTypes.func.isRequired,
   deleteDiagnostic: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   diagnostic: state.diagnostic,
 });
 
-export default connect(mapStateToProps, { getDiagnostics, deleteDiagnostic })(
-  Diagnostics
-);
+export default connect(mapStateToProps, {
+  getDiagnostics,
+  deleteDiagnostic,
+  addLink,
+})(Diagnostics);

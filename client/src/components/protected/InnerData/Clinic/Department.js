@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getDepartment } from "../../../../actions/department/departmentActions";
 import { getRoomsById, deleteRoom } from "../../../../actions/room/roomActions";
+import { addLink } from "../../../../actions/navigation/navigationActions";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 import Loading from "../../../modals/Loading";
@@ -23,6 +24,13 @@ class Department extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.room.loading !== this.props.room.loading) {
+      if (this.props.department.departments.length === 1) {
+        const department = this.props.department.departments[0];
+        this.props.addLink({
+          path: window.location.pathname,
+          name: `${department.name}`,
+        });
+      }
       this.setState({
         loading: this.props.room.loading,
       });
@@ -96,6 +104,7 @@ Department.propTypes = {
   room: PropTypes.object.isRequired,
   getRoomsById: PropTypes.func.isRequired,
   deleteRoom: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -104,7 +113,10 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getDepartment, getRoomsById, deleteRoom })(
-    Department
-  )
+  connect(mapStateToProps, {
+    getDepartment,
+    getRoomsById,
+    deleteRoom,
+    addLink,
+  })(Department)
 );

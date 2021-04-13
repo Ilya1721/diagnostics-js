@@ -7,6 +7,7 @@ import Spinner from "../../modals/Spinner";
 import CloseButton from "../../modals/CloseButton";
 import { generateDiagnostics } from "../../../actions/diagnostic/diagnosticActions";
 import { getSymptoms } from "../../../actions/symptom/symptomActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 
 class DiagnosticsForm extends React.Component {
   constructor(props) {
@@ -21,6 +22,10 @@ class DiagnosticsForm extends React.Component {
 
   componentDidMount() {
     this.props.getSymptoms();
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Діагностика",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -230,6 +235,7 @@ DiagnosticsForm.propTypes = {
   symptom: PropTypes.object.isRequired,
   generateDiagnostics: PropTypes.func.isRequired,
   getSymptoms: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -238,7 +244,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { generateDiagnostics, getSymptoms })(
+  connect(mapStateToProps, { generateDiagnostics, getSymptoms, addLink })(
     DiagnosticsForm
   )
 );

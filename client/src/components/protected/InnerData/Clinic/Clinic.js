@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { getClinic } from "../../../../actions/clinic/clinicActions";
 import { getDepartmentsById } from "../../../../actions/department/departmentActions";
 import { deleteDepartment } from "../../../../actions/department/departmentActions";
+import { addLink } from "../../../../actions/navigation/navigationActions";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 import Loading from "../../../modals/Loading";
@@ -28,6 +29,13 @@ class Clinic extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.clinic.loading !== this.props.clinic.loading) {
+      if (this.props.clinic.clinics.length === 1) {
+        const clinic = this.props.clinic.clinics[0];
+        this.props.addLink({
+          path: window.location.pathname,
+          name: `${clinic.clinic_name}`,
+        });
+      }
       this.setState({
         loading: this.props.clinic.loading,
       });
@@ -134,6 +142,7 @@ Clinic.propTypes = {
   department: PropTypes.object.isRequired,
   getDepartmentsById: PropTypes.func.isRequired,
   deleteDepartment: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -142,7 +151,10 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getClinic, getDepartmentsById, deleteDepartment })(
-    Clinic
-  )
+  connect(mapStateToProps, {
+    getClinic,
+    getDepartmentsById,
+    deleteDepartment,
+    addLink,
+  })(Clinic)
 );

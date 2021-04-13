@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Loading from "../../modals/Loading";
 import { getUser } from "../../../actions/user/userActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 
 class PersonalData extends React.Component {
   constructor(props) {
@@ -16,6 +17,10 @@ class PersonalData extends React.Component {
   componentDidMount() {
     const { id } = this.props.auth.user;
     this.props.getUser(id);
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Особисті дані",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -114,6 +119,7 @@ class PersonalData extends React.Component {
 
 PersonalData.propTypes = {
   getUser: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -123,4 +129,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getUser })(PersonalData);
+export default connect(mapStateToProps, { getUser, addLink })(PersonalData);

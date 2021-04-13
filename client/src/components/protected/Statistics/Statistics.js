@@ -1,7 +1,14 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { addLink } from "../../../actions/navigation/navigationActions";
 
 class Statistics extends React.Component {
+  componentDidMount() {
+    this.props.addLink({ path: window.location.pathname, name: "Статистика" });
+  }
+
   render() {
     return (
       <div className="container">
@@ -62,4 +69,12 @@ class Statistics extends React.Component {
   }
 }
 
-export default Statistics;
+Statistics.propTypes = {
+  addLink: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  navigation: state.navigation,
+});
+
+export default connect(mapStateToProps, { addLink })(Statistics);

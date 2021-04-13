@@ -6,6 +6,7 @@ import {
   getPatients,
   findPatients,
 } from "../../../actions/patient/patientActions";
+import { addLink } from "../../../actions/navigation/navigationActions";
 import Loading from "../../modals/Loading";
 
 class Patients extends React.Component {
@@ -21,6 +22,10 @@ class Patients extends React.Component {
   componentDidMount() {
     const { user } = this.props.auth;
     this.props.getPatients(user);
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Пацієнти",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -122,7 +127,7 @@ class Patients extends React.Component {
                       to={`/patients/${patient.id}/show`}
                       className="btn btn-primary"
                     >
-                      Детальніше
+                      Картка пацієнта
                     </Link>
                   </td>
                 </tr>
@@ -140,6 +145,7 @@ Patients.propTypes = {
   patient: PropTypes.object.isRequired,
   getPatients: PropTypes.func.isRequired,
   findPatients: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -147,6 +153,6 @@ const mapStateToProps = (state) => ({
   patient: state.patient,
 });
 
-export default connect(mapStateToProps, { getPatients, findPatients })(
+export default connect(mapStateToProps, { getPatients, findPatients, addLink })(
   Patients
 );

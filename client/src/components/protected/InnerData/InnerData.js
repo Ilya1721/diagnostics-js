@@ -1,7 +1,17 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { addLink } from "../../../actions/navigation/navigationActions";
 
 class InnerData extends React.Component {
+  componentDidMount() {
+    this.props.addLink({
+      path: window.location.pathname,
+      name: "Внутрішні дані",
+    });
+  }
+
   render() {
     return (
       <div className="container">
@@ -34,4 +44,12 @@ class InnerData extends React.Component {
   }
 }
 
-export default InnerData;
+InnerData.propTypes = {
+  addLink: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  navigation: state.navigation,
+});
+
+export default connect(mapStateToProps, { addLink })(InnerData);

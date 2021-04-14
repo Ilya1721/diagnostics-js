@@ -37,6 +37,41 @@ class InnerData extends React.Component {
                 </Link>
               </td>
             </tr>
+            <tr>
+              <td>
+                <Link to="/innerData/symptoms" className="btn btn-link">
+                  Симптоми
+                </Link>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Link to="/innerData/diseases" className="btn btn-link">
+                  Хвороби
+                </Link>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Link to="/innerData/medicaments" className="btn btn-link">
+                  Медикаменти
+                </Link>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Link to="/innerData/procedures" className="btn btn-link">
+                  Процедури
+                </Link>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Link to="/innerData/treatments" className="btn btn-link">
+                  Схеми лікувань
+                </Link>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

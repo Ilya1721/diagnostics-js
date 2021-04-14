@@ -31,6 +31,16 @@ import InnerData from "./InnerData/InnerData";
 import Diagnostics from "./InnerData/Diagnostic/Diagnostics";
 import DiagnosticCreateForm from "./InnerData/Diagnostic/DiagnosticCreateForm";
 import DiagnosticEditForm from "./InnerData/Diagnostic/DiagnosticEditForm";
+import Symptoms from "./InnerData/Symptom/Symptoms";
+import SymptomCreateForm from "./InnerData/Symptom/SymptomCreateForm";
+import Procedures from "./InnerData/Procedure/Procedures";
+import ProcedureCreateForm from "./InnerData/Procedure/ProcedureCreateForm";
+import Diagnosis from "./InnerData/Diagnos/Diagnosis";
+import DiagnosCreateForm from "./InnerData/Diagnos/DiagnosCreateForm";
+import Medicaments from "./InnerData/Medicament/Medicaments";
+import MedicamentCreateForm from "./InnerData/Medicament/MedicamentCreateForm";
+import Treatments from "./InnerData/Treatment/Treatments";
+import TreatmentCreateForm from "./InnerData/Treatment/TreatmentCreateForm";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -211,6 +221,66 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/diagnostics/:id/edit"
           component={DiagnosticEditForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/symptoms"
+          component={Symptoms}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/symptoms/create"
+          component={SymptomCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/diseases"
+          component={Diagnosis}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/diseases/create"
+          component={DiagnosCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/medicaments"
+          component={Medicaments}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/medicaments/create"
+          component={MedicamentCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/procedures"
+          component={Procedures}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/procedures/create"
+          component={ProcedureCreateForm}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/treatments"
+          component={Treatments}
+          redirectTo="/login"
+        />
+        <PrivateRoute
+          isAuth={isAuthenticated && role_id === 2}
+          path="/innerData/treatments/create"
+          component={TreatmentCreateForm}
           redirectTo="/login"
         />
       </React.Fragment>

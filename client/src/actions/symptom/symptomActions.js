@@ -16,6 +16,22 @@ export const getSymptoms = () => (dispatch) => {
   });
 };
 
+export const addSymptom = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setSymptomsLoading());
+  axios.post("/api/symptoms", body, config).then((res) => {
+    dispatch({
+      type: ADD_SYMPTOM,
+      payload: res.data,
+    });
+  });
+};
+
 export const setSymptomsLoading = () => {
   return {
     type: SYMPTOMS_LOADING,

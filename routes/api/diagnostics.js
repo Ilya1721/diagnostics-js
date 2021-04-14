@@ -5,10 +5,36 @@ const conn = require("../../config/db");
 // @route POST /api/diagnostics
 router.post("/generate", (req, res) => {
   const symptoms = req.body;
-  const diagnosisQuery = "SELECT id, name FROM diseases";
-  conn.query(diagnosisQuery, (err, results, fields) => {
+  let symptomsQuery = "";
+  for (const symptom of symptoms) {
+    symptomsQuery += `SELECT id, name FROM symptoms WHERE name = "${symptom.name}"; `;
+  }
+  let diagnosisQuery = "";
+  conn.query(symptomsQuery, (err, results, fields) => {
     if (err) return res.status(400).json(err);
-    return res.json({ diagnosis: results });
+    for (const symptom of results) {
+      const symptomId = Array.isArray(symptom) ? symptom[0].id : symptom.id;
+      diagnosisQuery +=
+        "SELECT d.id, d.name FROM symptom_disease sd " +
+        "INNER JOIN diseases d ON d.id = sd.disease_id " +
+        `WHERE symptom_id = ${symptomId}; `;
+    }
+    conn.query(diagnosisQuery, (err, results, fields) => {
+      if (err) return res.status(400).json(err);
+      let filteredDiagnosArr;
+      if (Array.isArray(results[0])) {
+        filteredDiagnosArr = results[0];
+        for (const diagnosArr of results) {
+          const diagnosIds = diagnosArr.map((d) => d.id);
+          filteredDiagnosArr = filteredDiagnosArr.filter((d) =>
+            diagnosIds.includes(d.id)
+          );
+        }
+      } else {
+        filteredDiagnosArr = results;
+      }
+      return res.json({ diagnosis: filteredDiagnosArr });
+    });
   });
 });
 

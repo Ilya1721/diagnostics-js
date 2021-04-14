@@ -17,6 +17,9 @@ import diagnosStatReducer from "./diagnosStatReducer";
 import symptomStatReducer from "./symptomStatReducer";
 import visitStatReducer from "./visitStatReducer";
 import symptomReducer from "./symptomReducer";
+import medicamentReducer from "./medicamentReducer";
+import procedureReducer from "./procedureReducer";
+import treatmentReducer from "./treatmentReducer";
 import diagnosReducer from "./diagnosReducer";
 import diagnosticReducer from "./diagnosticReducer";
 import navigationReducer from "./navigationReducer";
@@ -40,6 +43,9 @@ export default combineReducers({
   symptomStat: symptomStatReducer,
   visitStat: visitStatReducer,
   symptom: symptomReducer,
+  medicament: medicamentReducer,
+  procedure: procedureReducer,
+  treatment: treatmentReducer,
   diagnos: diagnosReducer,
   diagnostic: diagnosticReducer,
   navigation: navigationReducer,

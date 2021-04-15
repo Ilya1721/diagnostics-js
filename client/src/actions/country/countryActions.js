@@ -16,6 +16,22 @@ export const getCountries = () => (dispatch) => {
   });
 };
 
+export const addCountry = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setCountriesLoading());
+  axios.post("/api/countries", body, config).then((res) => {
+    dispatch({
+      type: ADD_COUNTRY,
+      payload: res.data,
+    });
+  });
+};
+
 export const setCountriesLoading = () => {
   return {
     type: COUNTRIES_LOADING,

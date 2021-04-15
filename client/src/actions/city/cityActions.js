@@ -11,6 +11,22 @@ export const getCities = () => (dispatch) => {
   });
 };
 
+export const addCity = (data) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = JSON.stringify(data);
+  dispatch(setCitiesLoading());
+  axios.post("/api/cities", body, config).then((res) => {
+    dispatch({
+      type: ADD_CITY,
+      payload: res.data,
+    });
+  });
+};
+
 export const setCitiesLoading = () => {
   return {
     type: CITIES_LOADING,

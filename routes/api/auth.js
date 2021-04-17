@@ -20,7 +20,7 @@ router.post("/", (req, res) => {
     "SELECT * FROM users WHERE " + `users.email = \"${email}\";`,
     (err, results, fields) => {
       if (err) return res.json(err);
-      if (results === undefined)
+      if (results.length === 0)
         return res.status(400).json({ msg: "User does not exists" });
       const result = results[0];
       bcrypt

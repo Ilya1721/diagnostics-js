@@ -1,0 +1,39 @@
+@media(max-width: 1000px) {
+  .navbar-collapse {
+    font-size: 0.8em;
+
+    .navbar-nav {
+      flex-direction: row;
+
+      li {
+        padding-right: 6px;
+      }
+    }
+  }
+
+  .card-body {
+    font-size: 0.8em;
+  }
+
+  h1 {
+    font-size: 1.6em;
+  }
+
+  h2 {
+    font-size: 1.4em;
+  }
+
+  h3 {
+    font-size: 1.2em;
+  }
+
+  h4,
+  h5 {
+    font-size: 0.9em;
+  }
+}
+@media(max-width: 750px) {
+  .navbar-collapse {
+    font-size: 0.6em;
+  }
+}

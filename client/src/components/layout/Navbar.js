@@ -101,7 +101,7 @@ class Navbar extends React.Component {
     return (
       <nav className="navbar navbar-light bg-light navbar-expand-lg">
         <div id="header" className="container">
-          <div className="navbar-collapse" id="navbarSupportedContent">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item active">
                 <Link className="nav-link text-secondary" to="/doctors">

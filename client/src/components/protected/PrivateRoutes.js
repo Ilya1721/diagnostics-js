@@ -41,10 +41,6 @@ import Medicaments from "./InnerData/Medicament/Medicaments";
 import MedicamentCreateForm from "./InnerData/Medicament/MedicamentCreateForm";
 import Treatments from "./InnerData/Treatment/Treatments";
 import TreatmentCreateForm from "./InnerData/Treatment/TreatmentCreateForm";
-import Countries from "./InnerData/Country/Countries";
-import CountryCreateForm from "./InnerData/Country/CountryCreateForm";
-import Cities from "./InnerData/City/Cities";
-import CityCreateForm from "./InnerData/City/CityCreateForm";
 import PrivateRoute from "./PrivateRoute";
 
 class PrivateRoutes extends React.Component {
@@ -285,30 +281,6 @@ class PrivateRoutes extends React.Component {
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/treatments/create"
           component={TreatmentCreateForm}
-          redirectTo="/login"
-        />
-        <PrivateRoute
-          isAuth={isAuthenticated && role_id === 2}
-          path="/innerData/countries"
-          component={Countries}
-          redirectTo="/login"
-        />
-        <PrivateRoute
-          isAuth={isAuthenticated && role_id === 2}
-          path="/innerData/countries/create"
-          component={CountryCreateForm}
-          redirectTo="/login"
-        />
-        <PrivateRoute
-          isAuth={isAuthenticated && role_id === 2}
-          path="/innerData/cities"
-          component={Cities}
-          redirectTo="/login"
-        />
-        <PrivateRoute
-          isAuth={isAuthenticated && role_id === 2}
-          path="/innerData/cities/create"
-          component={CityCreateForm}
           redirectTo="/login"
         />
       </React.Fragment>

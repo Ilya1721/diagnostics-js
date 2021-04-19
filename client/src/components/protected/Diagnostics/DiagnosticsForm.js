@@ -129,8 +129,6 @@ class DiagnosticsForm extends React.Component {
 
   render() {
     const { symptoms, diagnosis, loading } = this.state;
-    console.log(symptoms);
-    console.log(diagnosis);
 
     return (
       <div className="container">

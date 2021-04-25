@@ -1,30 +1,39 @@
-const AWS = require("aws-sdk");
+const { CognitoIdentityClient } = require("@aws-sdk/client-cognito-identity");
+const {
+  fromCognitoIdentityPool,
+} = require("@aws-sdk/credential-provider-cognito-identity");
+const {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const axios = require("axios");
 const { getImgBuffer } = require("./imgBuffer");
 
 class AwsClass {
-  s3Bucket = null;
+  s3 = null;
   fullFilePath = null;
 
-  constructor(data) {
-    const { aws_access_key_id, aws_secret_access_key } = data;
-
-    AWS.config.update({
-      accessKeyId: aws_access_key_id,
-      secretAccessKey: aws_secret_access_key,
-      region: "eu-central-1",
-    });
-
-    this.s3Bucket = new AWS.S3({
-      params: {
-        Bucket: "diagnostics-bucket",
-      },
+  constructor() {
+    const REGION = "eu-central-1";
+    this.s3 = new S3Client({
+      region: REGION,
+      credentials: fromCognitoIdentityPool({
+        client: new CognitoIdentityClient({ region: REGION }),
+        identityPoolId: "eu-central-1:da737f53-af8b-47fe-80f7-9e7f506969cd",
+      }),
     });
   }
 
   static build() {
-    return axios.get("/api/aws/config").then((res) => {
-      return new AwsClass(res.data);
+    return new Promise((resolve, reject) => {
+      try {
+        const aws = new AwsClass();
+        resolve(aws);
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
     });
   }
 
@@ -35,22 +44,22 @@ class AwsClass {
   uploadImage = (filePath, buffer, email, folder) => {
     const s3Path = "https://diagnostics-bucket.s3.eu-central-1.amazonaws.com/";
     const bucketPath = `${folder}/${email}/`;
-    const data = {
+    const bucket = "diagnostics-bucket";
+    const params = {
       Key: bucketPath + filePath,
       Body: buffer,
-      ContentEncoding: "base64",
-      ContentType: "image/png",
-      ACL: "public-read-write",
+      Bucket: bucket,
+      ACL: "public-read",
     };
-    return new Promise((resolve, reject) => {
-      this.s3Bucket.putObject(data, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          this.filePath = s3Path + bucketPath + filePath;
-          resolve(s3Path + bucketPath + filePath);
-        }
-      });
+    return new Promise(async (resolve, reject) => {
+      try {
+        const data = await this.s3.send(new PutObjectCommand(params));
+        this.filePath = s3Path + bucketPath + filePath;
+        resolve(s3Path + bucketPath + filePath);
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
     });
   };
 
@@ -58,18 +67,18 @@ class AwsClass {
     const index = filePath.indexOf("com/");
     let substr = filePath.substr(index + 4, filePath.length);
     substr = substr.replace("%40", "@");
-    const data = {
+    const params = {
       Bucket: "diagnostics-bucket",
       Key: substr,
     };
-    return new Promise((resolve, reject) => {
-      this.s3Bucket.deleteObject(data, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
+    return new Promise(async (resolve, reject) => {
+      try {
+        const data = await this.s3.send(new DeleteObjectCommand(params));
+        resolve(data);
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
     });
   };
 }

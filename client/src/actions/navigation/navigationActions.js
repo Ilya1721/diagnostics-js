@@ -50,7 +50,10 @@ export const replaceLastLink = (link) => (dispatch) => {
 
 export const initialize = () => (dispatch) => {
   const links = JSON.parse(localStorage.getItem("navigation") || "[]");
-  if (window.location.pathname === links[links.length - 1].path) {
+  if (
+    links.length > 0 &&
+    window.location.pathname === links[links.length - 1].path
+  ) {
     dispatch({
       type: NAV_REPLACE,
       payload: links,

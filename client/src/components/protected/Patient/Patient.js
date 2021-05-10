@@ -23,8 +23,11 @@ class Patient extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.patient.loading !== this.props.patient.loading) {
-      if (this.props.patient.patients.length === 1) {
-        const { patient } = this.props.patient.patients[0];
+      if (
+        this.props.patient.patients[0] !== undefined &&
+        this.props.patient.patients[0].patient !== undefined
+      ) {
+        const patient = this.props.patient.patients[0].patient;
         this.props.addLink({
           path: window.location.pathname,
           name: `${patient.lastName} ${patient.firstName} ${patient.fatherName}`,

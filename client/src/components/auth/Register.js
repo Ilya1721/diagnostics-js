@@ -362,7 +362,14 @@ class Register extends React.Component {
       const { rooms } = this.props.room;
       const { registerData } = this.props.auth;
       const emails = registerData.map((obj) => obj.email);
-      if (rooms.length > 0) {
+      if (
+        rooms.length > 0 &&
+        departments.length > 0 &&
+        jobs.length > 0 &&
+        clinics.length > 0 &&
+        countries.length > 0 &&
+        cities.length > 0
+      ) {
         const defaultCities = cities.filter(
           (city) => city.country_id === countries[0].id
         );

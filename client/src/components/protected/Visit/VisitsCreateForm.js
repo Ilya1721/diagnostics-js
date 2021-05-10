@@ -30,7 +30,7 @@ class VisitsCreateForm extends React.Component {
   }
 
   onSubmit = (e) => {
-    const { isOverallError, overallErrorMsg } = this.state;
+    const { isOverallError, overallErrorMsg, visit } = this.state;
     e.preventDefault();
     if (isOverallError) {
       alert(overallErrorMsg);
@@ -42,8 +42,42 @@ class VisitsCreateForm extends React.Component {
         console.log(err);
       }
       const userId = this.props.auth.user.id;
-      this.props.createVisit({
+      let symptoms, diagnosis, medicaments, procedures, treatments;
+      if (visit.symptoms[0].name === "") {
+        symptoms = [];
+      } else {
+        symptoms = visit.symptoms;
+      }
+      if (visit.diagnosis[0].name === "") {
+        diagnosis = [];
+      } else {
+        diagnosis = visit.diagnosis;
+      }
+      if (visit.medicaments[0].name === "") {
+        medicaments = [];
+      } else {
+        medicaments = visit.medicaments;
+      }
+      if (visit.procedures[0].name === "") {
+        procedures = [];
+      } else {
+        procedures = visit.procedures;
+      }
+      if (visit.treatments[0].name === "") {
+        treatments = [];
+      } else {
+        treatments = visit.treatments;
+      }
+      const nVisit = {
         ...this.state.visit,
+        symptoms,
+        diagnosis,
+        medicaments,
+        procedures,
+        treatments,
+      };
+      this.props.createVisit({
+        ...nVisit,
         patientId,
         userId,
       });
@@ -270,7 +304,6 @@ class VisitsCreateForm extends React.Component {
                                 id: symptom.id,
                               })
                             }
-                            required
                           />
                         </div>
                         <CloseButton
@@ -353,7 +386,6 @@ class VisitsCreateForm extends React.Component {
                                 id: diagnos.id,
                               })
                             }
-                            required
                           />
                         </div>
                         <CloseButton
@@ -436,7 +468,6 @@ class VisitsCreateForm extends React.Component {
                                 id: medicament.id,
                               })
                             }
-                            required
                           />
                         </div>
                         <CloseButton
@@ -519,7 +550,6 @@ class VisitsCreateForm extends React.Component {
                                 id: procedure.id,
                               })
                             }
-                            required
                           />
                         </div>
                         <CloseButton
@@ -602,7 +632,6 @@ class VisitsCreateForm extends React.Component {
                                 id: treatment.id,
                               })
                             }
-                            required
                           />
                         </div>
                         <CloseButton

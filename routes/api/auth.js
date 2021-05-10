@@ -91,17 +91,24 @@ router.put("/edit", (req, res) => {
   }
 
   conn.query(
-    `UPDATE users SET login = "${data.login}" ` +
-      `WHERE id = ${data.id}; UPDATE employees SET ` +
-      `last_name = "${data.lastName}", first_name = "${data.firstName}", ` +
-      `father_name = "${data.fatherName}", about = "${data.about}", ` +
-      `street = "${data.street}", house = "${data.house}", ` +
-      `image = "${data.image}", flat = "${data.flat}", ` +
-      `city_id = ${data.cityId}, job_id = ${data.jobId}, ` +
-      `department_id = ${data.departmentId};`,
+    "SELECT id, employee_id FROM users " + `WHERE id = ${data.id}`,
     (err, results, fields) => {
       if (err) return res.status(400).json(err);
-      return res.json(data);
+      const { id, employee_id } = results[0];
+      conn.query(
+        `UPDATE users SET login = "${data.login}" ` +
+          `WHERE id = ${id}; UPDATE employees SET ` +
+          `last_name = "${data.lastName}", first_name = "${data.firstName}", ` +
+          `father_name = "${data.fatherName}", about = "${data.about}", ` +
+          `street = "${data.street}", house = "${data.house}", ` +
+          `image = "${data.image}", flat = "${data.flat}", ` +
+          `city_id = ${data.cityId}, job_id = ${data.jobId}, ` +
+          `department_id = ${data.departmentId} WHERE id = ${employee_id};`,
+        (err, results, fields) => {
+          if (err) return res.status(400).json(err);
+          return res.json(data);
+        }
+      );
     }
   );
 });

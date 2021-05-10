@@ -22,6 +22,7 @@ class TableView extends React.Component {
 
   render() {
     const { data, name } = this.props;
+    let index = 0;
     return (
       <div className="container">
         <h4 className="text-center">{name}</h4>
@@ -35,11 +36,11 @@ class TableView extends React.Component {
           </thead>
           <tbody>
             {data.map((item) => (
-              <tr key={item.id}>
+              <tr key={index++}>
                 <td align="center">{item.name}</td>
                 <td align="center">{item.description}</td>
                 <td align="center">
-                  {moment(item.dateFact).format("DD.MM.YYYY")}
+                  {moment(item.dateFact).format("DD.MM.YYYY HH:mm")}
                 </td>
               </tr>
             ))}

@@ -74,7 +74,7 @@ export const editUser = (data) => (dispatch) => {
     },
   };
   const body = JSON.stringify(data);
-
+  dispatch({ type: USER_LOADING });
   axios
     .put(`/api/auth/edit`, body, config)
     .then((res) => {

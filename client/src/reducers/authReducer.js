@@ -24,6 +24,7 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case USER_LOADING:
+      console.log("user loading");
       return {
         ...state,
         loading: true,
@@ -39,6 +40,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         user: { ...state.user, ...action.payload },
+        loading: false,
       };
     case USER_UNLOADED:
       localStorage.removeItem("token");

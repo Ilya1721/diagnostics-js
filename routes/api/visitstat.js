@@ -8,13 +8,13 @@ router.get("/", (req, res) => {
   const startQuery = "SET lc_time_names = 'uk_UA';";
   const hourQuery =
     "SELECT HOUR(start_at) AS name, id, " +
-    "COUNT(*) AS count FROM presences GROUP BY name;";
+    `COUNT(*) AS count FROM presences WHERE doctor_id = ${id} GROUP BY name;`;
   const dayQuery =
     "SELECT DAYNAME(start_at) AS name, id, " +
-    "COUNT(*) AS count FROM presences GROUP BY name;";
+    `COUNT(*) AS count FROM presences WHERE doctor_id = ${id} GROUP BY name;`;
   const monthQuery =
     "SELECT MONTHNAME(start_at) AS name, id, " +
-    "COUNT(*) AS count FROM presences GROUP BY(name);";
+    `COUNT(*) AS count FROM presences WHERE doctor_id = ${id} GROUP BY(name);`;
 
   conn.query(startQuery, (err, results, fields) => {
     if (err) return res.status(400).json(err);

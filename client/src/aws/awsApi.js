@@ -7,8 +7,6 @@ const {
   PutObjectCommand,
   DeleteObjectCommand,
 } = require("@aws-sdk/client-s3");
-const axios = require("axios");
-const { getImgBuffer } = require("./imgBuffer");
 
 class AwsClass {
   s3 = null;

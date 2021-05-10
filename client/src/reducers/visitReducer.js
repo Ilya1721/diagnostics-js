@@ -19,6 +19,11 @@ export default function (state = initialState, action) {
         visits: action.payload,
         loading: false,
       };
+    case ADD_VISIT:
+      return {
+        ...state,
+        loading: false,
+      };
     case VISITS_LOADING:
       return {
         ...state,

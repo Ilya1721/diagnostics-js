@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
 import HomeLayout from "../layout/HomeLayout";
+import UnAuthLayout from "../layout/UnAuthLayout";
 
 const PrivateRoute = ({
   component: Component,
@@ -11,7 +12,11 @@ const PrivateRoute = ({
   ...props
 }) => {
   if (!isAuth) {
-    return <Redirect to={redirectTo} />;
+    return (
+      <Route exact path={path}>
+        <UnAuthLayout Child={redirectTo} />
+      </Route>
+    );
   }
   return (
     <Route exact path={path}>

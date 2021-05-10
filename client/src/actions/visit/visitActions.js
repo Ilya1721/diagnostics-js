@@ -52,8 +52,9 @@ export const createVisit = (data) => (dispatch) => {
   };
 
   const body = JSON.stringify(data);
-
+  dispatch(setVisitsLoading());
   axios.post("/api/visits", body, config).then((res) => {
+    console.log("create visit", res);
     dispatch({
       type: ADD_VISIT,
       payload: res.data,

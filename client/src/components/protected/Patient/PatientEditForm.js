@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Link, Redirect } from "react-router-dom";
+import { replaceLastLink } from "../../../actions/navigation/navigationActions";
 import { getCities } from "../../../actions/city/cityActions";
 import {
   editPatient,
@@ -49,8 +50,12 @@ class PatientEditForm extends React.Component {
   }
 
   onSubmit = (e) => {
+    const { patient } = this.state;
     e.preventDefault();
-    this.props.editPatient(this.state.patient);
+    this.props.editPatient(patient);
+    this.props.replaceLastLink({
+      name: `${patient.lastName} ${patient.firstName} ${patient.fatherName}`,
+    });
     this.setState({
       ...this.state,
       isComplete: true,
@@ -319,6 +324,7 @@ PatientEditForm.propTypes = {
   getCities: PropTypes.func.isRequired,
   editPatient: PropTypes.func.isRequired,
   getPatient: PropTypes.func.isRequired,
+  replaceLastLink: PropTypes.func.isRequired,
   city: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
@@ -331,7 +337,10 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getCities, editPatient, getPatient })(
-    PatientEditForm
-  )
+  connect(mapStateToProps, {
+    getCities,
+    editPatient,
+    getPatient,
+    replaceLastLink,
+  })(PatientEditForm)
 );

@@ -5,7 +5,6 @@ import Loading from "../../modals/Loading";
 class Graphic extends React.Component {
   render() {
     const { data, yLabel } = this.props;
-    console.log("data: ", data);
     let chartData = [];
     let xLabels = [];
     let xValues = [];
@@ -15,7 +14,6 @@ class Graphic extends React.Component {
       xLabels.push(data[i].name);
       xValues.push(id);
     }
-    console.log("chartData: ", chartData);
 
     return (
       <VictoryChart domainPadding={50}>

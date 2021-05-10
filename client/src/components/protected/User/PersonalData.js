@@ -3,20 +3,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Loading from "../../modals/Loading";
-import { getUser } from "../../../actions/user/userActions";
 import { addLink } from "../../../actions/navigation/navigationActions";
 
 class PersonalData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      loading: this.props.auth.loading,
     };
   }
 
   componentDidMount() {
-    const { id } = this.props.auth.user;
-    this.props.getUser(id);
     this.props.addLink({
       path: window.location.pathname,
       name: "Особисті дані",
@@ -24,9 +21,9 @@ class PersonalData extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.user.loading !== this.props.user.loading) {
+    if (prevProps.auth.loading !== this.props.auth.loading) {
       this.setState({
-        loading: this.props.user.loading,
+        loading: this.props.auth.loading,
       });
     }
   }
@@ -54,7 +51,7 @@ class PersonalData extends React.Component {
         phoneNumber,
         image,
         id,
-      } = this.props.user.users[0];
+      } = this.props.auth.user;
 
       return (
         <div className="card">
@@ -118,15 +115,12 @@ class PersonalData extends React.Component {
 }
 
 PersonalData.propTypes = {
-  getUser: PropTypes.func.isRequired,
   addLink: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getUser, addLink })(PersonalData);
+export default connect(mapStateToProps, { addLink })(PersonalData);

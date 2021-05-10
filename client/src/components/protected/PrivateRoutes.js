@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import AdminAccessDenied from "./Helpers/AdminAccessDenied";
+import UserAccessDenied from "./Helpers/UserAccessDenied";
 import Visits from "./Visit/Visits";
 import VisitsCreateForm from "./Visit/VisitsCreateForm";
 import Patients from "./Patient/Patients";
@@ -50,266 +52,269 @@ import PrivateRoute from "./PrivateRoute";
 class PrivateRoutes extends React.Component {
   render() {
     const { isAuthenticated } = this.props.auth;
-    const { role_id } = this.props.auth.user;
+    let role_id = 0;
+    if (isAuthenticated) {
+      role_id = this.props.auth.user.role_id;
+    }
     return (
       <React.Fragment>
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/visits"
           component={Visits}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/patients/:id/visits/create"
           component={VisitsCreateForm}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/patients"
           component={Patients}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path={`/patients/:id/show`}
           component={Patient}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/patients/create"
           component={PatientCreateForm}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/patients/:id/edit"
           component={PatientEditForm}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/personalData"
           component={PersonalData}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/users/:id/edit"
           component={UserEditForm}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/statistics"
           component={Statistics}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/statistics/procedures"
           component={ProcedureStat}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/statistics/treatments"
           component={TreatmentStat}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/statistics/medicaments"
           component={MedicamentStat}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/statistics/diagnosis"
           component={DiagnosStat}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/statistics/symptoms"
           component={SymptomStat}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/statistics/visits"
           component={VisitStat}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated}
           path="/diagnostics"
           component={DiagnosticsForm}
-          redirectTo="/login"
+          redirectTo={UserAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData"
           component={InnerData}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/clinics"
           component={Clinics}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path={"/innerData/clinics/create"}
           component={ClinicCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/clinics/:id/show"
           component={Clinic}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/clinics/:id/edit"
           component={ClinicEditForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/clinics/:clinic_id/departments/:id/show"
           component={Department}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path={`/innerData/clinics/:id/departments/create`}
           component={DepartmentCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path={`/innerData/clinics/:clinic_id/departments/:id/edit`}
           component={DepartmentEditForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path={`/innerData/clinics/:clinic_id/departments/:id/rooms/create`}
           component={RoomCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path={`/innerData/clinics/:clinic_id/departments/:department_id/rooms/:id/edit`}
           component={RoomEditForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/diagnostics"
           component={Diagnostics}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/diagnostics/create"
           component={DiagnosticCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/diagnostics/:id/edit"
           component={DiagnosticEditForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/symptoms"
           component={Symptoms}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/symptoms/create"
           component={SymptomCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/diseases"
           component={Diagnosis}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/diseases/create"
           component={DiagnosCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/medicaments"
           component={Medicaments}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/medicaments/create"
           component={MedicamentCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/procedures"
           component={Procedures}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/procedures/create"
           component={ProcedureCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/treatments"
           component={Treatments}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/treatments/create"
           component={TreatmentCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/countries"
           component={Countries}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/countries/create"
           component={CountryCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/cities"
           component={Cities}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
         <PrivateRoute
           isAuth={isAuthenticated && role_id === 2}
           path="/innerData/cities/create"
           component={CityCreateForm}
-          redirectTo="/login"
+          redirectTo={AdminAccessDenied}
         />
       </React.Fragment>
     );

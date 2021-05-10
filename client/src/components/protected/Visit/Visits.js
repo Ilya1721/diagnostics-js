@@ -171,11 +171,11 @@ class Visits extends React.Component {
                 <div className="col">
                   <div className="card rounded-0 border-left-0 border-bottom-0 border-top-1 border-right-0 container">
                     <div className="card-body">
-                      <TableView data={visit.diagnosis} name="Діагнози" />
-                      <TableView data={visit.treatments} name="Лікування" />
                       <TableView data={visit.symptoms} name="Симптоми" />
+                      <TableView data={visit.diagnosis} name="Діагнози" />
                       <TableView data={visit.medicaments} name="Медикаменти" />
                       <TableView data={visit.procedures} name="Процедури" />
+                      <TableView data={visit.treatments} name="Лікування" />
                     </div>
                   </div>
                 </div>

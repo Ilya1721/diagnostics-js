@@ -28,13 +28,32 @@ export const addLink = (link) => (dispatch) => {
     ) {
       dispatch({
         type: NAV_REPLACE,
-        payload: linkToInsert,
+        payload: [linkToInsert],
       });
     }
   } else {
     dispatch({
       type: NAV_DOWN,
       payload: linkToInsert,
+    });
+  }
+};
+
+export const replaceLastLink = (link) => (dispatch) => {
+  let links = store.getState().navigation.links;
+  links[links.length - 1].name = link.name;
+  dispatch({
+    type: NAV_REPLACE,
+    payload: links,
+  });
+};
+
+export const initialize = () => (dispatch) => {
+  const links = JSON.parse(localStorage.getItem("navigation") || "[]");
+  if (window.location.pathname === links[links.length - 1].path) {
+    dispatch({
+      type: NAV_REPLACE,
+      payload: links,
     });
   }
 };

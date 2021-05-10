@@ -5,7 +5,7 @@ class Welcome extends React.Component {
     return (
       <div className="container mt-3">
         <h1 className="text-center">
-          Автоматизоване робоче місце терапевта поліклініки
+          Автоматизована система допомоги в діагностуванні хвороби терапевтом
         </h1>
         <div className="row mt-5">
           <div className="col">
